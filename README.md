@@ -1,4 +1,4 @@
-# notthebee/infra
+# infra
 
 An Ansible playbook that sets up an Ubuntu-based home media server/NAS with reasonable security, auto-updates, e-mail notifications for S.M.A.R.T. and Snapraid errors and dynamic DNS. 
 
@@ -60,33 +60,45 @@ Install Ansible (macOS):
 ```
 brew install ansible
 ```
+Install Ansible (Linux):
+```
+sudo apt get install ansible \
+    libsecret-tools  #for storing/accesing credentials
+```
 
 Clone the repository:
 ```
-git clone https://github.com/notthebee/infra
+git clone https://github.com/fcolasuonno/infra
 ```
 
-Create a host varialbe file and adjust the variables:
+Create a host variable file and adjust the variables:
 ```
 cd infra/
-mkdir -p host_vars/YOUR_HOSTNAME
-vi host_vars/YOUR_HOSTNAME/vars.yml
+mkdir -p host_vars/$YOUR_HOSTNAME
+vi host_vars/$YOUR_HOSTNAME/vars.yml
 ```
 
 Create a Keychain item for your Ansible Vault password (on macOS):
 ```
 security add-generic-password \
-               -a YOUR_USERNAME \
+               -a $YOUR_USERNAME \
                -s ansible-vault-password \
                -w
+```
+
+Create a Keyring item for your Ansible Vault password (on Linux):
+```
+secret-tool store \
+    --label='ansible-vault-password' \
+    application ansible-vault-password
 ```
 
 The `pass.sh` script will extract the Ansible Vault password from your Keychain automatically each time Ansible requests it.
 
 Create an encrypted `secret.yml` file and adjust the variables:
 ```
-ansible-vault create host_vars/YOUR_HOSTNAME/secret.yml
-ansible-vault edit host_vars/YOUR_HOSTNAME/secret.yml
+ansible-vault create host_vars/$YOUR_HOSTNAME/secret.yml
+ansible-vault edit host_vars/$YOUR_HOSTNAME/secret.yml
 ```
 
 Add your custom inventory file to `hosts`:
