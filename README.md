@@ -27,7 +27,6 @@ The playbook is mostly being developed for personal use, so stuff is going to be
 #### Services
 * [Authelia](https://hub.docker.com/r/authelia/authelia) (An authentication provider)
 * [cloudflare-ddns](https://hub.docker.com/r/oznu/cloudflare-ddns) (A dynamic DNS updater for Cloudflare)
-* [UniFi Controller](https://hub.docker.com/r/linuxserver/unifi-controller) (A controller for UniFi devices)
 * [Homer](https://hub.docker.com/r/b4bz/homer) (A static home page)
 * [Flame](https://github.com/pawelmalak/flame) (Another static home page)
 * [Nextcloud](https://hub.docker.com/r/linuxserver/nextcloud) (A self-hosted cloud platform)
@@ -36,7 +35,6 @@ The playbook is mostly being developed for personal use, so stuff is going to be
 * [MariaDB](https://hub.docker.com/r/linuxserver/mariadb) (A database server for Nextcloud)
 * [Vaultwarden](https://hub.docker.com/r/vaultwarden/server) (A FOSS Bitwarden fork written in Rust)
 * [Wireguard](https://hub.docker.com/r/linuxserver/wireguard) (A VPN server)
-* [IKEv2](https://hub.docker.com/r/notthebee/ikev2) (An IKEv2 VPN server for Apple devices)
 
 #### Misc
 * [Watchtower](https://hub.docker.com/r/containrrr/watchtower) (An automated updater for Docker images)

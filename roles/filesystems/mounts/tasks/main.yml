@@ -56,12 +56,3 @@
     state: mounted
   when: cache_disks[0] is defined
 
-- name: Mount the Time Machine drive
-  mount:
-    name: "{{ timemachine_root }}"
-    src: "{{ timemachine_drive }}"
-    fstype: ext4
-    opts: defaults,discard
-    state: mounted
-    passno: "2"
-  when: enable_timemachine | default(False)

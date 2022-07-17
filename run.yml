@@ -101,13 +101,6 @@
             - containers
         when: enable_wireguard | default(False)
 
-      - role: network/ikev2
-        become: no
-        tags:
-            - ikev2
-            - containers
-        when: enable_ikev2 | default(False)
-
       - role: network/ddclient
         become: yes
         when: enable_ddclient | default(False)
@@ -133,13 +126,6 @@
             - adguard
             - containers
         when: enable_adguard | default(False)
-
-      - role: network/ikev2
-        become: no
-        when: enable_ikev2 | default(False)
-        tags:
-            - containers
-            - ikev2
 
       #
       # Filesystems
@@ -199,13 +185,6 @@
         tags:
             - watchtower
             - containers
-
-      - role: containers/system/unifi
-        become: no
-        tags:
-            - unifi
-            - containers
-        when: enable_unifi | default(False)
 
       #
       # Media

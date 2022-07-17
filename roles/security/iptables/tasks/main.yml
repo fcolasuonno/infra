@@ -71,17 +71,6 @@
     comment: Ansible managed
   when: (enable_bunkerized_nginx | default(False)) or (enable_swag | default(False))
 
-- name: Allow IKEv2
-  ansible.builtin.iptables:
-    chain: INPUT
-    protocol: udp
-    destination_ports:
-      - "4500"
-      - "500"
-    jump: ACCEPT
-    comment: Ansible managed
-  when: enable_ikev2 | default(False)
-
 - name: Allow Wireguard
   iptables:
     chain: INPUT
