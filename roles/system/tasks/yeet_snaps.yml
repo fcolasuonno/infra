@@ -12,9 +12,9 @@
       state: unmounted
 
   - name: Remove the pre-installed snaps
-    snap:
-      name: "*"
-      state: absent
+    become: yes
+    shell:
+      cmd: "snap remove $(snap list | grep -v snapd | awk '!/^Name|^core/ {print $1}')"
 
   - name: Remove the snap package from apt
     apt:
