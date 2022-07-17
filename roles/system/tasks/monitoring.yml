@@ -39,7 +39,6 @@
     user: ncabatoff
     repo: process-exporter
     action: latest_release
-    token: "{{ github_token }}"
   register: process_exporter_release
   changed_when: process_exporter_release.tag != ("v" + process_exporter_version.stdout)
 
