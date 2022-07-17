@@ -1,6 +1,7 @@
 #
 # Process-exporter
 #
+- include_tasks: repo_arch.yml
 
 - name: Install python3 and pip
   package:
@@ -44,7 +45,7 @@
 
 - name: Install latest process-exporter
   apt: 
-    deb: "https://github.com/ncabatoff/process-exporter/releases/download/{{ process_exporter_release.tag }}/process-exporter_{{ process_exporter_release.tag | regex_replace('^v','') }}_linux_{{ arch }}.deb"
+    deb: "https://github.com/ncabatoff/process-exporter/releases/download/{{ process_exporter_release.tag }}/process-exporter_{{ process_exporter_release.tag | regex_replace('^v','') }}_linux_{{ repo_arch }}.deb"
   when: process_exporter_release.tag != ("v" + process_exporter_version.stdout)
 
 #
