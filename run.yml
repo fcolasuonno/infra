@@ -21,10 +21,6 @@
         tags:
             - system
 
-      - role: neovim
-        tags:
-            - neovim
-
       - role: geerlingguy.security
         tags:
             - security
