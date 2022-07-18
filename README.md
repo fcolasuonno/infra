@@ -112,6 +112,12 @@ Install the dependencies:
 ansible-galaxy install -r requirements.yml
 ```
 
+Make sure snapraid works:
+```
+vi ~/.ansible/roles/ironicbadger.snapraid/tasks/install-debian.ym
+    version: fe6d34b3359867d0ca9b8248cf1b0e9059ff2cc5 #for build snapraid | clone git repo
+```
+
 Finally, run the playbook:
 ```
 ansible-playbook run.yml -l your-host-here -K
