@@ -134,12 +134,19 @@
       recurse: yes
     when: not persistent_data.stat.exists
 
+  - name: Ensure the "{{ docker_dir }}" folder exists
+    become: yes
+    file:
+      path: "{{ mergerfs_root }}/docker_data/data"
+      state: directory
+    when: persistent_data_find.matched < 20 or not persistent_data.stat.exists
+
   - name: Restore the "{{ docker_dir }}" folder from the MergerFS array
     synchronize:
       src: "{{ mergerfs_root }}/docker_data/data"
       dest: "{{ docker_dir }}/"
       delete: true
-      recurse: yes
+      recursive: yes
     delegate_to: "{{ inventory_hostname }}"
     when: persistent_data_find.matched < 20 or not persistent_data.stat.exists
 
