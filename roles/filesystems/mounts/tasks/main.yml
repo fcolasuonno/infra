@@ -2,7 +2,7 @@
   mount:
     name: "{{ item.path }}"
     src: "{{ item.src }}"
-    fstype: xfs
+    fstype: ext4
     state: mounted
     passno: "2"
   with_items: "{{ disks }}"
@@ -23,7 +23,7 @@
   mount:
     name: "{{ item.path }}"
     src: "{{ item.src }}"
-    fstype: xfs
+    fstype: ext4
     state: mounted
     passno: "2"
   with_items: "{{ parity_disks }}"
