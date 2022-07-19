@@ -233,7 +233,7 @@ samba_users:
     - name: '{{ username }}'
       password: '{{ password }}'
     - name: '{{ additional_users[0].name }}'
-      password: '{{ password2 }}'
+      password: '{{ samba_guest_password }}'
 
 samba_global_include: global-include.conf
 
@@ -245,35 +245,43 @@ samba_server_max_protocol: 'SMB3'
 
 samba_server_min_protocol: 'SMB3'
 
+additional_users:
+  - name: guest
+    groups:
+
+samba_map_to_guest: 'bad user'
+
+samba_guest_account: '{{ additional_users[0].name }}'
+
 samba_shares:
     - name: Trash
-      guest_ok: no
-      public: no
-      read_only: no
-      writable: yes
+      guest_ok: 'no'
+      public: 'no'
+      read_only: 'no'
+      writable: 'yes'
       owner: '{{ username }}'
-      browseable: yes
+      browseable: 'yes'
       path: '{{ mergerfs_root }}'
       valid_users: '{{ username }}, {{ additional_users[0].name }}'
       write_list: '{{ username }}, {{ additional_users[0].name }}'
 
     - name: Downloads
-      guest_ok: no
-      public: no
-      read_only: no
-      writable: yes
-      browseable: yes
+      guest_ok: 'no'
+      public: 'no'
+      read_only: 'no'
+      writable: 'yes'
+      browseable: 'yes'
       owner: '{{ username }}'
       path: '{{ mergerfs_root }}/Downloads'
       valid_users: '{{ username }}, {{ additional_users[0].name }}'
       write_list: '{{ username }}, {{ additional_users[0].name }}'
 
     - name: Media
-      guest_ok: no
-      public: no
-      read_only: no
-      writable: yes
-      browseable: yes
+      guest_ok: 'no'
+      public: 'no'
+      read_only: 'no'
+      writable: 'yes'
+      browseable: 'yes'
       owner: '{{ username }}'
       path: '{{ mergerfs_root }}/Media'
       valid_users: '{{ username }}, {{ additional_users[0].name }}'
