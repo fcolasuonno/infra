@@ -7,36 +7,46 @@
 #
 # Networks
 #
-vpn_network: '10.13.13.0/24'
+lan_network: 'x.x.x.0/24'
+lan_gateway: "{{ lan_network | ansible.utils.nthhost(GATEWAY_IP_LAST) }}" # GATEWAY_IP_LAST = 1
+vpn_network: '10.x.x.0/24'
+swag_interface: eth0 # main eth interface
+swag_network: 'x.x.x.192/27'
+dns_nameservers: ['1.1.1.1', '1.0.0.1']
 
-lan_network: '192.168.3.0/24'
+netplan_dispatch: "#! /bin/bash\nip link add vlan_shim link {{ swag_interface }} type macvlan mode bridge"
 
-swag_network: '10.0.0.0/27'
+netplan_config:
+  network:
+    version: 2
+    ethernets:
+      eno1:
+        addresses:
+          - "{{ lan_network | ansible.utils.ipaddr('HOST_IP_LAST') }}" # HOST_IP_LAST = 10
+        nameservers:
+          search: ["{{ host_local }}"]
+          addresses: "{{ dns_nameservers }}"
+        routes:
+          - to: default
+            via: "{{ lan_gateway }}"
+      vlan_shim:
+        addresses:
+          - "{{ swag_network | ansible.utils.ipaddr('HOST_IP_LAST') | ansible.utils.ipsubnet }}"
+        routes:
+          - to: "{{ swag_network }}"
+            via: "{{ lan_network | ansible.utils.ipaddr('HOST_IP_LAST') }}"
+            metric: 100
 
-swag_base: "{{ '.'.join(swag_network.split('.')[0:3]) }}"
-
-swag_gateway: "{{ '.'.join(swag_network.split('.')[0:3]) }}.1"
-
-swag_interface: eth1
-
-lan_address: "{{ '.'.join(lan_network.split('.')[0:3]) }}.230"
-
-lan_base: "{{ '.'.join(lan_network.split('.')[0:3]) }}"
-
-lan_gateway: "{{ '.'.join(lan_network.split('.')[0:3]) }}.1"
-
-macvlan_address: "{{ '.'.join(lan_gateway.split('.')[0:3]) }}.2"
+domain: "example.com" #registered zone in cloudflare
+host_local: "SOMETHING.{{ domain }}"  #registered in cloudflare too
+ddns_subdomain: "DDNS_SUBDOMAIN"
 
 dmz_network: "{{ '.'.join(lan_gateway.split('.')[0:2]) }}.44.0/24"
-
 dmz_gateway: "{{ '.'.join(dmz_network.split('.')[0:3]) }}.1"
 
 iot_network: "{{ '.'.join(lan_gateway.split('.')[0:2]) }}.32.0/24"
-
 iot_gateway: "{{ '.'.join(iot_network.split('.')[0:3]) }}.1"
-
 iot_base: "{{ '.'.join(iot_network.split('.')[0:3]) }}"
-
 iot_interface: eth 2
 
 #
@@ -46,32 +56,25 @@ hostname: '{{ inventory_hostname }}'
 
 timezone: Europe/London
 
-
 ntp_timezone: '{{ timezone }}'
 
 locale: en_GB.UTF-8
 
-dns_nameservers: ['1.1.1.1', '1.0.0.1']
-
-fish_prompt_color: blue
-
 keyboard_layout: gb
 
-username: notthebee
+username: USERNAME
 
 guid: '1000'
 
 shell: /bin/bash
 
-docker_dir: /opt/docker/data
+docker_dir: SOMEWHERE_IN_THE_DISKS_BUT_NOT_IN_MERGERFS_DIR
 
-boot_drive_serial: ''
+docker_backup_dir: "{{ mergerfs_root_slow }}/docker_backup"
+
+enable_hwe_kernel: false
 
 spindown_time: 600 # in seconds
-
-colorscheme: nord
-
-subdomains: { 'nextcloud': 'nextcloud', 'vaultwarden': 'vaultwarden' }
 
 #
 # Packages
@@ -87,24 +90,23 @@ extra_packages:
     - lm-sensors
     - iotop
     - ncdu
-#    - hddtemp    #replaced by kernel driver drivetemp
 
 #
 # Apt mirrors
 #
 version: jammy
 
-apt_mirror: https://mirrors.gethosted.online/ubuntu/
+apt_mirror: http://mirrors.ukfast.co.uk/sites/archive.ubuntu.com/
 
 #
 # Email credentials (for SMART and Snapraid error reporting)
 #
 
-email: moe@notthebe.ee
+email: EMAIL_FROM_SENDINBLUE
 
 email_login: '{{ email }}'
 
-email_smtp_host: smtp.mailbox.org
+email_smtp_host: SENDINBLUE_HOST
 
 email_smtp_port: 465
 
@@ -117,7 +119,7 @@ msmtp_accounts:
       port: '{{ email_smtp_port_startls }}'
       auth: 'on'
       from: '{{ email }}'
-      user: '{{ email }}'
+      user: '{{ email_login }}'
       password: '{{ email_password }}'
 
 msmtp_default_account: 'mailbox'
@@ -127,11 +129,13 @@ msmtp_alias_default: '{{ email }}'
 #
 # SSH (geerlingguy.security)
 #
-security_ssh_port: 69
+security_ssh_port: SOME_RANDOM_PORT # SOME_RANDOM_PORT=99
+
+ssh_public_key: 'ssh-rsa VERY_LONG_KEY_BASE64= USER@HOST' # from ~/.ssh/id*.pub
 
 security_sudoers_passwordless: ['{{ username }}']
 
-security_autoupdate_reboot: true
+security_autoupdate_reboot: false
 
 security_autoupdate_mail_to: '{{ email }}'
 
@@ -158,8 +162,6 @@ enable_plex: false
 
 enable_jellyfin: false
 
-enable_photoprism: false
-
 enable_booksonic: false
 
 # Yo-ho-ho
@@ -176,35 +178,31 @@ enable_openbooks: false
 
 enable_jackett: false
 
-# Public-facing services
-
-enable_nextcloud: false
-
-enable_vaultwarden: false
-
-enable_swag_public: false
-
-enable_swag_internal: false
+enable_swag_internal: false # most services depend on this
 
 enable_bunkerized_nginx: false
 
 # DDNS
 
-enable_duckdns: false
+cloudflare_zone: CLOUDFLARE_ZONE_ID # from cloudflare home page, bottom left
+
+cloudflare_dns_record: CLOUDFLARE_DNS_RECORD_ID # curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$CLOUDFLARE_ZONE_ID/dns_records?type=A&name=$HOST_LOCAL"  -H "X-Auth-Email: $cloudflare_auth_email" -H "X-Auth-Key: $cloudflare_auth_key"  -H "Content-Type: application/json" | jq -r '{"result"}[] | .[0] | .id')
 
 enable_cloudflare_ddns: false
-
-enable_ddclient: false
 
 # VPN
 
 enable_wireguard: false
 
+wireguard_peers:
+  - peer1
+  - peer2_etc
+
 enable_ikev2: false
 
 # Homepages
 
-enable_flame: false
+enable_dashy: false
 
 # Monitoring
 #
@@ -212,7 +210,7 @@ enable_grafana: false
 
 enable_prometheus: false
 
-enable_node_exporter: true
+enable_node_exporter: false
 
 # Misc
 
@@ -221,8 +219,6 @@ enable_authelia: false
 enable_adguard: false
 
 enable_watchtower: false
-
-enable_endlessh: false
 
 #
 # Samba
@@ -237,7 +233,7 @@ samba_users:
 
 samba_global_include: global-include.conf
 
-samba_apple_extensions: yes
+samba_apple_extensions: no
 
 samba_mitigate_cve_2017_7494: false
 
@@ -287,26 +283,35 @@ samba_shares:
       valid_users: '{{ username }}, {{ additional_users[0].name }}'
       write_list: '{{ username }}, {{ additional_users[0].name }}'
 
+    - name: MediaRO
+      guest_ok: 'yes'
+      public: 'yes'
+      read_only: 'yes'
+      writable: 'no'
+      browseable: 'yes'
+      owner: '{{ username }}'
+      path: '{{ mergerfs_root }}/Media'
+
 #
 # Snapraid and MergerFS
 #
 mergerfs_root: /mnt/storage
+
+mergerfs_root_slow: "{{ mergerfs_root }}_slow"
 
 cache_root: /mnt/storage_cache
 
 enable_mergerfs: false
 
 disks:
-    - { path: /mnt/data1, src: /dev/disk/by-label/Data1, content: true }
-    - { path: /mnt/data2, src: /dev/disk/by-label/Data2, content: true }
-    - { path: /mnt/data3, src: /dev/disk/by-label/Data3, content: true }
+  - { path: /mnt/data1, src: /dev/disk/by-label/Data1, content: true }
+  - { path: /mnt/data2, src: /dev/disk/by-label/Data2, content: true }
 
 cache_disks:
-    - { path: /mnt/cache1, src: /dev/disk/by-label/Cache1, content: true }
-    - { path: /mnt/cache2, src: /dev/disk/by-label/Cache2, content: true }
+  - { path: /mnt/cache1, src: /dev/disk/by-label/Cache1, content: true }
 
 parity_disks:
-    - { path: /mnt/parity1, src: /dev/disk/by-label/Parity1, content: true }
+  - { path: /mnt/parity1, src: /dev/disk/by-label/Parity1, content: true }
 
 snapraid_data_disks: '{{ disks }}'
 
@@ -332,10 +337,10 @@ snapraid_runner_command: 'python3 {{ snapraid_runner_bin }} -c {{ snapraid_runne
 # Stopping the containers is necessary – backing up the data folder with the containers running will result in corrputed database files and no files can be changed during the Snapraid sync
 snapraid_runner_cron_jobs:
     - {
-          job: 'docker stop $(docker ps -q); rsync -avz --delete --exclude cache {{ docker_dir }} {{ mergerfs_root }}/docker_data; docker start $(docker ps -a -q) && {{ snapraid_runner_command }} ',
+          job: 'docker stop $(docker ps -q); rsync -avz --delete --exclude cache {{ docker_dir }} {{ docker_backup_dir }}; docker start $(docker ps -a -q) && {{ snapraid_runner_command }} ',
           name: 'snapraid_runner',
-          weekday: '0',
-          hour: '3',
+          weekday: '0,2,4',
+          hour: '1',
       }
 
 snapraid_runner_delete_threshold: 999999
@@ -353,6 +358,7 @@ snapraid_config_excludes:
     - '*.!sync'
     - /tmp/
     - '/Downloads/*'
+    - '/docker/'
 
 #
 # SMART error reporting
@@ -366,11 +372,14 @@ enable_crowdsec: false
 
 enable_iptables: false
 
-enable_fail2ban: false
-
-# We have our own f2b rules
-security_fail2ban_enabled: false
-
 # Powersaving (powertop, cpufreq)
 
 enable_powersaving: false
+
+#SECRETS (NOT STORED HERE)
+#password: USER_PASSWORD
+#ansible_become_pass: PASSWORD_FOR_SUDO
+#email_password: PASSWORD_FOR_SMTP
+#samba_guest_password: PASSWORD_FOR_SMB_GUEST
+#cloudflare_dns_token: TOKEN_TO_UPDATE_CLOUDFLARE
+#plex_claim: PLEX_CLAIM
