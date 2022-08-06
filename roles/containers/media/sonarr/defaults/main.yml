@@ -3,6 +3,8 @@ container_name: sonarr
 
 url: "sonarr.{{ host_local }}"
 
-homer_category: media
+ip_address: "{{ swag_network | ansible.utils.nthhost(16) }}"
 
-ip_address: "{{ swag_base }}.16"
+dashboard_category: media
+
+enabled: "{{ enable_sonarr }}"

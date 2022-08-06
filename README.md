@@ -27,19 +27,13 @@ The playbook is mostly being developed for personal use, so stuff is going to be
 #### Services
 * [Authelia](https://hub.docker.com/r/authelia/authelia) (An authentication provider)
 * [cloudflare-ddns](https://hub.docker.com/r/oznu/cloudflare-ddns) (A dynamic DNS updater for Cloudflare)
-* [Homer](https://hub.docker.com/r/b4bz/homer) (A static home page)
-* [Flame](https://github.com/pawelmalak/flame) (Another static home page)
-* [Nextcloud](https://hub.docker.com/r/linuxserver/nextcloud) (A self-hosted cloud platform)
-* [PhotoPrism](https://hub.docker.com/r/linuxserver/photoprism) (A photo library)
+* [Dashy](https://github.com/Lissy93/dashy) (A static home page)
 * [PiHole + Unbound](https://github.com/chriscrowe/docker-pihole-unbound) (An all-in-one DNS solution with built-in ad-blocking)
-* [MariaDB](https://hub.docker.com/r/linuxserver/mariadb) (A database server for Nextcloud)
-* [Vaultwarden](https://hub.docker.com/r/vaultwarden/server) (A FOSS Bitwarden fork written in Rust)
 * [Wireguard](https://hub.docker.com/r/linuxserver/wireguard) (A VPN server)
 
 #### Misc
 * [Watchtower](https://hub.docker.com/r/containrrr/watchtower) (An automated updater for Docker images)
-* [DuckDNS](https://hub.docker.com/r/linuxserver/duckdns/) (A dynamic DNS client for DuckDNS)
-* [SWAG](https://hub.docker.com/r/linuxserver/swag) (A reverse proxy with built-in support for dynamic DNS, Certbot and fail2ban)
+* [SWAG](https://hub.docker.com/r/linuxserver/swag) (A reverse proxy with built-in support for dynamic DNS, Certbot)
 * [bunkerized-nginx](https://github.com/bunkerity/bunkerized-nginx) (A NGINX-based web server focused on security)
 
 #### Home Automation
@@ -49,9 +43,7 @@ The playbook is mostly being developed for personal use, so stuff is going to be
 ## Other features:
 * MergerFS with Snapraid
 * Samba
-* Fail2Ban for Nextcloud, Vaultwarden and endlessh with Cloudflare support
 * CrowdSec with the iptables bouncer
-* endlessh
 
 ## Usage
 Install Ansible (macOS):

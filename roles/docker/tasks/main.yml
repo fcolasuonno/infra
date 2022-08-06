@@ -104,7 +104,7 @@
     name: "{{ item.path.split('/')[-1] }}"
     state: absent
   when: not lookup('vars', 'enable_' + item.path.split('/')[-1])
-  with_items: "{{ containers.files }}"
+  loop: "{{ containers.files }}"
 
 - name: Handle persistent data
   become: no
@@ -117,11 +117,10 @@
     when: "enable_nas_stuff | default(False)"
 
   - name: Check if the persistent data folder is empty
-    find:
-      paths:
-        - "{{ docker_dir }}/"
-      recurse: yes
-    register: persistent_data_find
+    shell: "ls */* -lA"
+    args:
+      chdir: "{{ docker_dir }}/"
+    register: contents
     when: "enable_nas_stuff | default(False)"
 
   - name: Create the persistent data folder on the remote machine
@@ -134,21 +133,21 @@
       recurse: yes
     when: not persistent_data.stat.exists
 
-  - name: Ensure the "{{ docker_dir }}" folder exists
+  - name: Ensure the "{{ docker_backup_dir }}" folder exists
     become: yes
     file:
-      path: "{{ mergerfs_root }}/docker_data/data"
+      path: "{{ docker_backup_dir }}"
       state: directory
-    when: persistent_data_find.matched < 20 or not persistent_data.stat.exists
+    when: contents["stdout_lines"] | length < 20 or not persistent_data.stat.exists
 
-  - name: Restore the "{{ docker_dir }}" folder from the MergerFS array
+  - name: Restore the "{{ docker_backup_dir }}" folder from the MergerFS array
     synchronize:
-      src: "{{ mergerfs_root }}/docker_data/data"
+      src: "{{ docker_backup_dir }}"
       dest: "{{ docker_dir }}/"
       delete: true
       recursive: yes
     delegate_to: "{{ inventory_hostname }}"
-    when: persistent_data_find.matched < 20 or not persistent_data.stat.exists
+    when: contents["stdout_lines"] | length < 20 or not persistent_data.stat.exists
 
 - name: Chmod the data folder
   become: yes
@@ -159,3 +158,4 @@
     mode: "0775"
     group: "users"
     recurse: yes
+  when: contents["stdout_lines"] | length < 20 or not persistent_data.stat.exists

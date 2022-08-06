@@ -7,9 +7,26 @@
       - 00-ansible-managed.yaml
   register: previous_config
 
+- name: ensure configured directory exists
+  become: yes
+  file:
+    path: "/etc/networkd-dispatcher/configured.d/"
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Install the netplan dispatch
+  copy:
+    content: '{{ netplan_dispatch }}'
+    dest: '/etc/networkd-dispatcher/configured.d/10-macvlan-interfaces.sh'
+    owner: root
+    group: root
+    mode: 0755
+
 - name: Install the netplan config
   copy:
-    content: '{{ netplan_config }}'
+    content: '{{ netplan_config | to_nice_yaml }}'
     dest: '/etc/netplan/00-ansible-managed.yaml'
     owner: root
     group: root
@@ -19,4 +36,5 @@
 - name: Delete the irrelevant configs
   file:
     path: "{{ item.path }}"
-  with_items: "{{ previous_config['files'] }}"
+    state: absent
+  loop: "{{ previous_config['files'] }}"

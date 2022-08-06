@@ -5,9 +5,8 @@
     state: directory
     recurse: yes
     mode: 0755
-  with_items: 
+  loop:
     - internal
-    - public
 
 - name: Install the SWAG config files
   template:
@@ -17,12 +16,9 @@
   when: (item | basename).split('.')[0] in web_applications
   with_fileglob:
     - templates/internal/*.j2
-    - templates/public/*.j2
   notify:
     - restart swag internal
-    - restart swag public
     - test nginx internal
-    - test nginx public
   register: swag_config
 
 - name: Create the DNS conf folder
@@ -38,5 +34,4 @@
     dest: "{{ docker_dir }}/swag/dns-conf/cloudflare.ini"
     mode: 0644
   notify:
-    - restart swag public
     - restart swag internal

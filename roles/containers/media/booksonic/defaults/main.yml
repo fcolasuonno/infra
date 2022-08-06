@@ -3,7 +3,8 @@ container_name: booksonic
 
 url: "booksonic.{{ host_local }}"
 
-ip_address: "{{ swag_base }}.14"
+ip_address: "{{ swag_network | ansible.utils.nthhost(14) }}"
 
-homer_category: media
+dashboard_category: media
 
+enabled: "{{ enable_booksonic }}"

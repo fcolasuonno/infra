@@ -1,4 +1,6 @@
 ---
 container_name: mqtt
 
-ip_address: "{{ swag_base }}.13"
+ip_address: "{{ swag_network | ansible.utils.nthhost(13) }}"
+
+enabled: "{{ enable_mqtt }}"

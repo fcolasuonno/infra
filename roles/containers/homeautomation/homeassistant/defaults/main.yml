@@ -3,8 +3,10 @@ container_name: homeassistant
 
 url: 'homeassistant.{{ host_local }}'
 
-ip_address: '{{ swag_base }}.18'
+ip_address: '{{ swag_network | ansible.utils.nthhost(18) }}'
 
-homer_category: smarthome
+dashboard_category: smarthome
 
 dashboard_name: 'Home Assistant'
+
+enabled: "{{ enable_homeassistant }}"

@@ -6,20 +6,10 @@
       driver_options:
           parent: '{{ swag_interface }}'
       ipam_config:
-          - subnet: '{{ swag_network }}'
-            gateway: '{{ swag_gateway }}'
+          - subnet: '{{ lan_network }}'
+            gateway: '{{ lan_gateway }}'
+            iprange: '{{ swag_network }}'
+            aux_addresses:
+              host1: '{{ swag_network | ansible.utils.nthhost(2) }}'
   notify:
       - restart swag internal
-
-- name: Create a public macvlan network
-  when: enable_swag_public | default(False)
-  docker_network:
-      name: swag_public_macvlan
-      driver: macvlan
-      driver_options:
-          parent: '{{ dmz_interface }}'
-      ipam_config:
-          - subnet: '{{ dmz_network }}'
-            gateway: '{{ dmz_gateway }}'
-  notify:
-      - restart swag public

@@ -13,7 +13,7 @@
       name: "{{ item }}"
       state: stopped
       enabled: no
-    with_items:
+    loop:
       - iscsid
       - open-iscsi
 

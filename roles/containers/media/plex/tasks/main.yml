@@ -15,8 +15,11 @@
       "PGID": "{{ guid }}"
       "TZ": "{{ timezone }}"
       "VERSION": "latest"
+      "PLEX_CLAIM": "{{ plex_claim }}"
     volumes:
       - "{{ docker_dir }}/{{ container_name }}:/config"
       - "{{ mergerfs_root }}/Media/TV:/tv"
       - "{{ mergerfs_root }}/Media/Movies:/movies"
+      - "{{ mergerfs_root }}/Media/Movies_ITA:/movies_ita"
+      - "{{ mergerfs_root }}/Media/Music:/music"
     restart_policy: unless-stopped

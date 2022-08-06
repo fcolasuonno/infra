@@ -3,8 +3,10 @@ container_name: plex
 
 url: "plex.{{ host_local }}"
 
-homer_category: media
+ip_address: "{{ swag_network | ansible.utils.nthhost(11) }}"
 
-ip_address: "{{ swag_base }}.11"
+dashboard_category: media
 
 dashboard_name: Plex
+
+enabled: "{{ enable_plex }}"

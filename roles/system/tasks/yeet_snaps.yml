@@ -26,7 +26,7 @@
     file:
       name: "{{ item }}"
       state: absent
-    with_items:
+    loop:
       - /home/{{ username }}/snap
       - /var/snap
       - /var/lib/snap

@@ -3,6 +3,8 @@ container_name: grafana
 
 url: "grafana.{{ host_local }}"
 
-homer_category: system
+ip_address: "{{ swag_network | ansible.utils.nthhost(26) }}"
 
-ip_address: "{{ swag_base }}.26"
+dashboard_category: system
+
+enabled: "{{ enable_grafana }}"

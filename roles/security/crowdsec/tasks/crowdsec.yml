@@ -26,7 +26,7 @@
 - name: Install the necessary collections
   command:
     cmd: "sudo cscli collections install crowdsecurity/{{ item }}"
-  with_items:
+  loop:
     - nginx
     - sshd
     - linux
@@ -57,7 +57,7 @@
     name: "{{ item }}"
     state: started
     enabled: true
-  with_items:
+  loop:
       - crowdsec
       - crowdsec-firewall-bouncer
       - prometheus

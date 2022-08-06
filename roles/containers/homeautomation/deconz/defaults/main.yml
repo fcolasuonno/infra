@@ -3,8 +3,10 @@ container_name: deconz
 
 url: "deconz.{{ host_local }}"
 
-ip_address: "{{ swag_base }}.25"
+ip_address: "{{ swag_network | ansible.utils.nthhost(25) }}"
 
-homer_category: smarthome
+dashboard_category: smarthome
 
 dashboard_name: "deCONZ"
+
+enabled: "{{ enable_deconz }}"

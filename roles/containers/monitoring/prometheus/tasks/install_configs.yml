@@ -1,13 +1,14 @@
 ---
 - name: Create and chmod folders
+  become: yes
   file:
     path: "{{ item }}"
     owner: "{{ username }}"
     group: "{{ username }}"
     state: directory
-    mode: 0755
+    mode: 0777
     recurse: yes
-  with_items:
+  loop:
     - "{{ docker_dir }}/{{ container_name }}/etc"
     - "{{ docker_dir }}/{{ container_name }}/prometheus"
 

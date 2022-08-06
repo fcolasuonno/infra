@@ -12,7 +12,7 @@
       - sys_module
     state: 'started'
     env:
-      "SERVERURL": "{{ vpn_host }}"
+      "SERVERURL": "{{ ddns_subdomain }}.{{ domain }}"
       "PEERS": "{{ ', '.join(wireguard_peers) }}"
       "INTERNAL_SUBNET": "10.13.13.0"
       "ALLOWEDIPS": "0.0.0.0/0, {{ swag_network }}, {{ iot_network }}"

@@ -3,6 +3,8 @@ container_name: deluge
 
 url: "deluge.{{ host_local }}"
 
-homer_category: media
+ip_address: "{{ swag_network | ansible.utils.nthhost(10) }}"
 
-ip_address: "{{ swag_base }}.10"
+dashboard_category: media
+
+enabled: "{{ enable_deluge }}"

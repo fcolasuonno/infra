@@ -91,7 +91,7 @@
     state: started
     enabled: true
     name: "{{ item }}"
-  with_items:
+  loop:
     - smartmon.timer
     - process-exporter
 

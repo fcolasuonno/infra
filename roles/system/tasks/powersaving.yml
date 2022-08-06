@@ -24,14 +24,14 @@
     state: started
     enabled: true
     name: "{{ item }}"
-  with_items:
+  loop:
     - powertop.timer
     - cpupower-min.timer
 
 - name: Shut down every day (apart from Sunday) at 1:30 AM
   cron:
     name: "Power off at night to save energy"
-    minute: "30"
+    minute: "00"
     hour: "1"
-    weekday: "1-6"
+    weekday: "1,3,5"
     job: "poweroff"

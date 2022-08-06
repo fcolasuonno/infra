@@ -32,6 +32,15 @@
       - sambashare
     append: true
 
+- name: Create the docker symbolic link
+  become: yes
+  ansible.builtin.file:
+    src: "{{ docker_dir }}"
+    dest: "/docker"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    state: link
+
 - name: Chmod the user home directory
   file:
     path: "/home/{{ username }}"
@@ -62,18 +71,6 @@
     name: "{{ username }}"
     shell: "{{ shell }}"
 
-- name: Disable fish greeting
-  lineinfile:
-    path: /home/{{ username }}/.config/fish/fish_variables
-    state: present
-    regexp: 'fish_greeting:.+'
-    line: 'SETUVAR fish_greeting:'
-    create: true
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: 0644
-  when: '"fish" in shell'
-
 - name: Suppress login messages
   file:
     name: /home/{{ username }}/.hushlogin
@@ -99,6 +96,6 @@
     state: present
     append: true
     shell: /sbin/nologin
-  with_items: "{{ additional_users }}"
+  loop: "{{ additional_users }}"
   when: additional_users is defined
   no_log: true

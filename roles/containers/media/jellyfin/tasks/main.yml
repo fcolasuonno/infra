@@ -7,6 +7,14 @@
       - intel-media-va-driver-non-free
     state: present
 
+- name: Ensure directory are there
+  file:
+    path: "{{ mergerfs_root_slow }}/Media/Transcodes"
+    state: directory
+    mode: 0755
+    owner: "{{ username }}"
+    group: "{{ username }}"
+
 - name: Make sure the {{ container_name }} container is created and running
   docker_container:
     name: "{{ container_name }}"
@@ -17,7 +25,7 @@
     pull: yes
     privileged: yes
     devices:
-      - "/dev/dri/renderD128:/dev/dri/renderD128"
+      - "/dev/dri:/dev/dri"
     state: 'started'
     env:
       "DOCKER_MODS": "linuxserver/mods:jellyfin-opencl-intel"
@@ -28,9 +36,12 @@
     volumes:
       - "{{ docker_dir }}/{{ container_name }}:/config"
       - "{{ mergerfs_root }}/Media/TV:/data/TV"
-      - "{{ mergerfs_root }}_slow/Media/Transcodes:/config/data/transcodes"
+      - "{{ mergerfs_root_slow }}/Media/Transcodes:/config/data/transcodes"
       - "{{ mergerfs_root }}/Media/Metadata:/metadata"
       - "{{ mergerfs_root }}/Media/Cache:/data/Cache"
       - "{{ mergerfs_root }}/Media/Movies:/data/Movies"
+      - "{{ mergerfs_root }}/Media/Movies_ITA:/data/Movies_ITA"
+      - "{{ mergerfs_root }}/Media/Music:/data/Music"
+      - "{{ mergerfs_root }}/Media/Audiobook:/data/Audiobook"
       - "/etc/localtime:/etc/localtime:ro"
     restart_policy: unless-stopped

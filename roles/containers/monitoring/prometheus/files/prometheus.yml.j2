@@ -9,13 +9,17 @@ scrape_configs:
       static_configs:
           - targets:
                 - 'localhost:9090'
-                - '{{ lan_base }}.228:9100'
-                - '{{ lan_base }}.228:9115'
-                - '{{ lan_base }}.230:9100'
-                - '{{ lan_base }}.230:9256'
-                - '{{ lan_base }}.229:9100'
-                - '{{ lan_base }}.229:9256'
 
+{% if enable_jellyfin %}
+    - job_name: 'jellyfin'
+      metrics_path: /metrics
+      scheme: https
+      static_configs:
+          - targets:
+                - '{{ web_applications['jellyfin']['url'] }}'
+{% endif %}
+
+{% if enable_homeassistant %}
     - job_name: 'hass'
       metrics_path: /api/prometheus
       authorization:
@@ -24,3 +28,4 @@ scrape_configs:
       static_configs:
           - targets:
                 - 'homeassistant.goose.party'
+{% endif %}

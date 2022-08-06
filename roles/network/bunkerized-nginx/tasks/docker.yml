@@ -7,7 +7,7 @@
     owner: root
     group: "101"
     mode: "0770"
-  with_items:
+  loop:
       - "{{ docker_dir }}/{{ container_name }}/letsencrypt"
       - "{{ docker_dir }}/{{ container_name }}/nginx"
       - "{{ docker_dir }}/{{ container_name }}/www"
