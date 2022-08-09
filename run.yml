@@ -101,6 +101,12 @@
             - containers
         when: enable_adguard | default(False)
 
+      - role: network/surfshark
+        become: no
+        tags:
+          - surfshark
+          - containers
+        when: enable_surfshark | default(False)
       #
       # Filesystems
       #

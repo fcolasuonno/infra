@@ -1,0 +1,4 @@
+---
+container_name: surfshark
+
+ip_address: "{{ swag_network | ansible.utils.nthhost(surfshark_client_ip) }}"

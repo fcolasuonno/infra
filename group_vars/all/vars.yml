@@ -200,6 +200,13 @@ wireguard_peers:
 
 enable_ikev2: false
 
+enable_surfshark: false
+
+surfshark_user: some@email.com
+
+surfshark_location: SOMEWHERE
+
+surfshark_client_ip: 4
 # Homepages
 
 enable_dashy: false
@@ -383,3 +390,4 @@ enable_powersaving: false
 #samba_guest_password: PASSWORD_FOR_SMB_GUEST
 #cloudflare_dns_token: TOKEN_TO_UPDATE_CLOUDFLARE
 #plex_claim: PLEX_CLAIM
+#surfshark_pass: SOME_PASSWORD
