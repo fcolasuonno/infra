@@ -20,7 +20,7 @@
     name: "{{ container_name }}"
     image: "ghcr.io/linuxserver/jellyfin"
     networks:
-      - name: swag_internal_macvlan
+      - name: swag_macvlan
         ipv4_address: "{{ ip_address }}"
     pull: yes
     privileged: yes

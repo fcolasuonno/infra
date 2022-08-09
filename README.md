@@ -121,4 +121,7 @@ For consecutive runs, if you only want to update the Docker containers, you can 
 ansible-playbook run.yml --tags="port,containers"
 ```
 
-
+List used host
+```
+grep ip_address * -r | grep swag_network | grep -o 'nthhost.*)' | egrep -o '[0-9]+' | sort -nu
+```

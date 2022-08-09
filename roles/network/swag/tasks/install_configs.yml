@@ -1,12 +1,10 @@
 ---
 - name: Create the proxy-conf folders
   file:
-    path: "{{ docker_dir }}/swag/{{ item }}/nginx/proxy-confs/"
+    path: "{{ docker_dir }}/swag/internal/nginx/proxy-confs/"
     state: directory
     recurse: yes
     mode: 0755
-  loop:
-    - internal
 
 - name: Install the SWAG config files
   template:
@@ -17,8 +15,8 @@
   with_fileglob:
     - templates/internal/*.j2
   notify:
-    - restart swag internal
-    - test nginx internal
+    - restart swag
+    - test nginx
   register: swag_config
 
 - name: Create the DNS conf folder
@@ -34,4 +32,4 @@
     dest: "{{ docker_dir }}/swag/dns-conf/cloudflare.ini"
     mode: 0644
   notify:
-    - restart swag internal
+    - restart swag

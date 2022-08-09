@@ -5,7 +5,7 @@
     image: "ghcr.io/linuxserver/radarr"
     pull: yes
     networks:
-      - name: swag_internal_macvlan
+      - name: swag_macvlan
         ipv4_address: "{{ ip_address }}"
     state: 'started'
     env:

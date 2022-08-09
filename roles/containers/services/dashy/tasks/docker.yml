@@ -22,7 +22,7 @@
       name: '{{ container_name }}'
       image: lissy93/dashy:2.1.1
       networks:
-          - name: swag_internal_macvlan
+          - name: swag_macvlan
             ipv4_address: '{{ ip_address }}'
       pull: yes
       state: 'started'

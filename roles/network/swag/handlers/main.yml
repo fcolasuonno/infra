@@ -1,14 +1,14 @@
-- name: test nginx internal
+- name: test nginx
   command:
-    cmd: "docker exec swag_internal /usr/sbin/nginx -c /config/nginx/nginx.conf -t"
+    cmd: "docker exec swag /usr/sbin/nginx -c /config/nginx/nginx.conf -t"
   register: swag_nginx_test
   changed_when: "'test is successful' not in swag_nginx_test.stderr"
   failed_when: "'test is successful' not in swag_nginx_test.stderr"
-  when: enable_swag_internal | default(False) and swag_internal_exists is defined and swag_internal_running is defined
+  when: enable_swag | default(False) and swag_exists is defined and swag_running is defined
 
-- name: restart swag internal
+- name: restart swag
   docker_container:
-    name: "swag_internal"
+    name: "swag"
     state: started
     restart: yes
-  when: enable_swag_internal | default(False) and swag_internal_exists is defined and swag_internal_running is defined
+  when: enable_swag | default(False) and swag_exists is defined and swag_running is defined

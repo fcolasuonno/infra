@@ -1,16 +1,16 @@
 - include_tasks: check_status.yml
-  when: enable_swag_internal | default(False)
+  when: enable_swag | default(False)
 
 - include_tasks: list_services.yml
-  when: enable_swag_internal | default(False)
+  when: enable_swag | default(False)
 
 - include_tasks: install_configs.yml
-  when: enable_swag_internal | default(False)
+  when: enable_swag | default(False)
 
 - include_tasks: networks.yml
 
 - include_tasks: docker.yml
-  when: enable_swag_internal | default(False)
+  when: enable_swag | default(False)
 
 - include_tasks: cloudflare_internal_dns.yml
-  when: enable_swag_internal | default(False)
+  when: enable_swag | default(False)

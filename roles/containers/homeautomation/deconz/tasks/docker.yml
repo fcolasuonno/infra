@@ -14,7 +14,7 @@
     name: "{{ container_name }}"
     image: "deconzcommunity/deconz:stable"
     networks:
-      - name: swag_internal_macvlan
+      - name: swag_macvlan
         ipv4_address: "{{ ip_address }}"
     pull: yes
     state: 'started'

@@ -1,12 +1,12 @@
 ---
-- name: Make sure the swag_internal container is created and running
-  when: enable_swag_internal | default(False)
+- name: Make sure the swag container is created and running
+  when: enable_swag | default(False)
   docker_container:
-      name: 'swag_internal'
+      name: 'swag'
       image: 'ghcr.io/linuxserver/swag'
       pull: yes
       networks:
-          - name: swag_internal_macvlan
+          - name: swag_macvlan
             ipv4_address: '{{ swag_network | ansible.utils.nthhost(1) }}'
       capabilities:
           - net_admin

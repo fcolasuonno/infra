@@ -14,7 +14,7 @@
     image: "grafana/grafana:main"
     pull: yes
     networks:
-      - name: swag_internal_macvlan
+      - name: swag_macvlan
         ipv4_address: "{{ ip_address }}"
     state: 'started'
     user: "472"

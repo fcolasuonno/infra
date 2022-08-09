@@ -1,17 +1,15 @@
 ---
 - name: Get infos on the swag containers
   docker_container_info:
-    name: "{{ item }}"
-  register: swag_docker_status
-  loop:
-    - swag_internal
+    name: swag
+  register: swag_docker_result
 
-- name: Does internal container exist?
+- name: Does container exist?
   set_fact:
-    swag_internal_exists: yes
-  when: swag_docker_status.results[0].exists
+    swag_exists: yes
+  when: swag_docker_result.exists
 
-- name: Is internal container running?
+- name: Is container running?
   set_fact:
-    swag_internal_running: yes
-  when: swag_internal_exists is defined and swag_docker_status.results[0].container['State']['Running']
+    swag_running: yes
+  when: swag_exists is defined and swag_docker_result.container['State']['Running']

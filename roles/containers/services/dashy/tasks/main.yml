@@ -1,1 +1,2 @@
+- include_tasks: list_services.yml
 - include_tasks: docker.yml

@@ -1,7 +1,7 @@
-- name: Create an internal macvlan network
-  when: enable_swag_internal | default(False)
+- name: Create an macvlan network
+  when: enable_swag | default(False)
   docker_network:
-      name: swag_internal_macvlan
+      name: swag_macvlan
       driver: macvlan
       driver_options:
           parent: '{{ swag_interface }}'
@@ -12,4 +12,4 @@
             aux_addresses:
               host1: '{{ swag_network | ansible.utils.nthhost(2) }}'
   notify:
-      - restart swag internal
+      - restart swag
