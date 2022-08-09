@@ -211,6 +211,10 @@ surfshark_client_ip: 4
 
 enable_dashy: false
 
+# Services:
+
+enable_firefox: false
+
 # Monitoring
 
 enable_grafana: false

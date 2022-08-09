@@ -247,6 +247,11 @@
       #
       # Services
       #
+      - role: containers/services/firefox
+        tags:
+          - firefox
+          - containers
+        when: enable_firefox | default(False)
 
       #
       # Home automation
