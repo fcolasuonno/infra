@@ -12,6 +12,11 @@
     src: 'files/icons'
     dest: "{{ docker_dir }}/{{ container_name }}/data"
 
+- name: Install the configuration file json
+  copy:
+    content: "{{lookup('template', 'templates/conf.yml.j2') | to_nice_json }}"
+    dest: "{{ docker_dir }}/{{ container_name }}/data/conf.json"
+
 - name: Install the configuration file
   template:
       src: conf.yml.j2

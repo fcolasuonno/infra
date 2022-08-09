@@ -1,0 +1,32 @@
+---
+- name: upload the site directory to the docker host
+  synchronize:
+    src: "site"
+    dest: "/tmp/rdesktop-build"
+
+- name: build the image
+  docker_image:
+    build:
+      path: "/tmp/rdesktop-build/site"
+    name: "lscr.io/linuxserver/redesktop_firefox_mediaelch"
+    tag: jammy_latest
+    source: build
+    state: present
+
+- name: Make sure the {{ container_name }} container is created and running
+  docker_container:
+    name: "{{ container_name }}"
+    image: "lscr.io/linuxserver/redesktop_firefox_mediaelch:jammy_latest"
+    network_mode: "container:surfshark"
+    purge_networks: yes
+    state: 'started'
+    env:
+      "PUID": "{{ guid }}"
+      "PGID": "{{ guid }}"
+      "TZ": "{{ timezone }}"
+    shm_size: "2GB"
+    volumes:
+      - "{{ docker_dir }}/{{ container_name }}:/config"
+      - "{{ mergerfs_root }}/Media:/media"
+      - "{{ mergerfs_root }}/Downloads:/downloads"
+    restart_policy: unless-stopped

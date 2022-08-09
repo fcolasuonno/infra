@@ -215,6 +215,8 @@ enable_dashy: false
 
 enable_firefox: false
 
+enable_remotedesktop: false
+
 # Monitoring
 
 enable_grafana: false

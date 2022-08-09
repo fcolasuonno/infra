@@ -253,6 +253,12 @@
           - containers
         when: enable_firefox | default(False)
 
+      - role: containers/services/rdesktop
+        tags:
+          - rdesktop
+          - containers
+        when: enable_remotedesktop | default(False)
+
       #
       # Home automation
       #
