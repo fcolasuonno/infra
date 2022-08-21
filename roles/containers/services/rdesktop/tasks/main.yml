@@ -26,7 +26,8 @@
       "TZ": "{{ timezone }}"
     shm_size: "2GB"
     volumes:
-      - "{{ docker_dir }}/{{ container_name }}:/config"
+      - "{{ docker_dir }}/{{ container_name }}/config:/config"
+      - "{{ docker_dir }}/{{ container_name }}/home:/home"
       - "{{ mergerfs_root }}/Media:/media"
       - "{{ mergerfs_root }}/Downloads:/downloads"
     restart_policy: unless-stopped

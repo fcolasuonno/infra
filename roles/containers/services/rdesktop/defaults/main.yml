@@ -9,4 +9,4 @@ dashboard_category: services
 
 dashboard_name: Remote desktop
 
-enabled: "{{ enable_remotedesktop }}"
+enabled: "{{ enable_rdesktop }}"

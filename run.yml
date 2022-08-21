@@ -247,17 +247,12 @@
       #
       # Services
       #
-      - role: containers/services/firefox
-        tags:
-          - firefox
-          - containers
-        when: enable_firefox | default(False)
 
       - role: containers/services/rdesktop
         tags:
           - rdesktop
           - containers
-        when: enable_remotedesktop | default(False)
+        when: enable_rdesktop | default(False)
 
       #
       # Home automation

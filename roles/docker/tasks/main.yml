@@ -79,6 +79,22 @@
   pip:
     name: docker
 
+- name: Create docker storage dir
+  become: yes
+  file:
+    path: "{{ docker_storage }}"
+    state: directory
+    mode: u=rwx,g=x,o=
+    owner: root
+    group: root
+
+- name: Change docker storage
+  become: yes
+  ansible.builtin.replace:
+    path: /lib/systemd/system/docker.service
+    regexp: '(.+)dockerd -H(.+)$'
+    replace: '\1dockerd -g {{ docker_storage }} -H\2'
+
 - name: Make sure Docker is running and enabled
   service:
     name: docker
@@ -117,6 +133,7 @@
     when: "enable_nas_stuff | default(False)"
 
   - name: Check if the persistent data folder is empty
+    become: yes
     shell: "ls */* -lA"
     args:
       chdir: "{{ docker_dir }}/"

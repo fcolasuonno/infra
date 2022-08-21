@@ -18,12 +18,12 @@
 - name: Run wiregen script
   ansible.builtin.script: "wiregen.py -u {{ surfshark_user }} -p {{ surfshark_pass }}"
   args:
-    chdir: "{{ docker_dir }}/{{ container_name }}/config"
-    creates: "{{ docker_dir }}/{{ container_name }}/config/Wireguard-Data/config"
+    chdir: "{{ docker_dir }}/{{ container_name }}"
+    creates: "{{ docker_dir }}/{{ container_name }}/Wireguard-Data/config"
 
 - name: Copy correct config
   synchronize:
-    src: "{{ docker_dir }}/{{ container_name }}/config/Wireguard-Data/config/{{ surfshark_location }}.conf"
+    src: "{{ docker_dir }}/{{ container_name }}/Wireguard-Data/config/{{ surfshark_location }}.conf"
     dest: "{{ docker_dir }}/{{ container_name }}/config/wg0.conf"
   delegate_to: "{{ inventory_hostname }}"
 

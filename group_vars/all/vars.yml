@@ -68,7 +68,11 @@ guid: '1000'
 
 shell: /bin/bash
 
-docker_dir: SOMEWHERE_IN_THE_DISKS_BUT_NOT_IN_MERGERFS_DIR
+docker_home: SOMEWHERE_IN_THE_DISKS_BUT_NOT_IN_MERGERFS_DIR
+
+docker_storage: "{{ docker_home}}/storage"
+
+docker_dir: "{{ docker_home}}/data"
 
 docker_backup_dir: "{{ mergerfs_root_slow }}/docker_backup"
 
@@ -108,7 +112,7 @@ email_login: '{{ email }}'
 
 email_smtp_host: SENDINBLUE_HOST
 
-email_smtp_port: 465
+email_smtp_port: 587
 
 email_smtp_port_startls: 587
 
@@ -213,9 +217,7 @@ enable_dashy: false
 
 # Services:
 
-enable_firefox: false
-
-enable_remotedesktop: false
+enable_rdesktop: false
 
 # Monitoring
 
@@ -350,7 +352,7 @@ snapraid_runner_command: 'python3 {{ snapraid_runner_bin }} -c {{ snapraid_runne
 # Stopping the containers is necessary – backing up the data folder with the containers running will result in corrputed database files and no files can be changed during the Snapraid sync
 snapraid_runner_cron_jobs:
     - {
-          job: 'docker stop $(docker ps -q); rsync -avz --delete --exclude cache {{ docker_dir }} {{ docker_backup_dir }}; docker start $(docker ps -a -q) && {{ snapraid_runner_command }} ',
+          job: 'docker stop $(docker ps -q); rsync -avz --delete --exclude cache {{ docker_dir }} {{ docker_backup_dir }}; docker start $(docker ps -a -q); {{ snapraid_runner_command }} ',
           name: 'snapraid_runner',
           weekday: '0,2,4',
           hour: '1',
@@ -358,9 +360,9 @@ snapraid_runner_cron_jobs:
 
 snapraid_runner_delete_threshold: 999999
 
-snapraid_runner_email_sendon: 'error'
+snapraid_runner_email_sendon: 'error,success'
 
-snapraid_runner_use_ssl: true
+snapraid_runner_use_ssl: false
 
 snapraid_content_files:
     - /var/snapraid.content
@@ -388,6 +390,8 @@ enable_iptables: false
 # Powersaving (powertop, cpufreq)
 
 enable_powersaving: false
+
+poweroff: false
 
 #SECRETS (NOT STORED HERE)
 #password: USER_PASSWORD
