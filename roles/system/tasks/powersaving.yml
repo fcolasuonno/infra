@@ -35,3 +35,4 @@
     hour: "1"
     weekday: "1,3,5"
     job: "poweroff"
+  when: poweroff
