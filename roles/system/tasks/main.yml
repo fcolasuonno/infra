@@ -6,8 +6,5 @@
 - include_tasks: powersaving.yml
   when: enable_powersaving | default(False)
 
-- include_tasks: monitoring.yml
-  when: enable_node_exporter | default(False)
-
 - include_tasks: netplan.yml
   when: netplan_config is defined

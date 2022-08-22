@@ -219,32 +219,6 @@
         when: enable_openbooks | default(False)
 
       #
-      # Monitoring
-      #
-      - role: containers/monitoring/grafana
-        become: no
-        tags:
-            - grafana
-            - monitoring
-            - containers
-        when: enable_grafana | default(False)
-
-      - role: containers/monitoring/prometheus
-        become: no
-        tags:
-            - prometheus
-            - monitoring
-            - containers
-        when: enable_prometheus | default(False)
-
-      - role: geerlingguy.node_exporter
-        tags:
-            - node_exporter
-            - monitoring
-            - containers
-        when: enable_node_exporter | default(False)
-
-      #
       # Services
       #
 
@@ -253,6 +227,16 @@
           - rdesktop
           - containers
         when: enable_rdesktop | default(False)
+
+      #
+      # System
+      #
+
+      - role: containers/system/portainer
+        tags:
+          - portainer
+          - containers
+        when: enable_portainer | default(False)
 
       #
       # Home automation

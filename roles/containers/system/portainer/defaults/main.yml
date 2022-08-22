@@ -1,0 +1,12 @@
+container_name: portainer
+
+url: "remotedesktop.{{ host_local }}"
+
+ip_address: "{{ swag_network | ansible.utils.nthhost(6) }}"
+
+dashboard_category: system
+
+dashboard_name: Portainer
+
+enabled: "{{ enable_portainer }}"
+

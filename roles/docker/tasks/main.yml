@@ -176,3 +176,11 @@
     group: "users"
     recurse: yes
   when: contents["stdout_lines"] | length < 20 or not persistent_data.stat.exists
+
+- name: configure crontab to remove unnused docker containers/images
+  cron:
+    name: "running docker system prune"
+    minute: "0"
+    hour: "4"
+    weekday: "0"
+    job: "docker system prune -af"

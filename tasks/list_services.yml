@@ -9,7 +9,6 @@
       - "roles/containers/services"
       - "roles/containers/media"
       - "roles/containers/homeautomation"
-      - "roles/containers/monitoring"
       - "roles/containers/system"
     file_type: directory
     recurse: no
@@ -30,7 +29,7 @@
 
 - name: Populate the dictionary of all containers
   set_fact:
-    application_info: "{{ application_info | default([]) + q('vars', item) }}"
+    application_info: "{{ application_info | default([]) + q('vars', item)|unique }}"
   loop: "{{ containers.files | map(attribute='path') | map('basename') }}"
 
 - name: Create web_applications dictionary

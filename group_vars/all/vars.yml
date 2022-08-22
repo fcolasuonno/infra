@@ -219,13 +219,9 @@ enable_dashy: false
 
 enable_rdesktop: false
 
-# Monitoring
+# System:
 
-enable_grafana: false
-
-enable_prometheus: false
-
-enable_node_exporter: false
+enable_portainer: false
 
 # Misc
 
