@@ -1,4 +1,4 @@
-FROM lsiobase/rdesktop-web:jammy
+FROM lsiobase/rdesktop-web:alpine
 
 # set version label
 ARG BUILD_DATE
@@ -9,10 +9,8 @@ ENV SIDE_LOAD_DIR=/usr/share/mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e
 
 RUN \
   echo "**** install packages ****" && \
-  add-apt-repository -y 'deb https://ppa.launchpadcontent.net/mediaelch/mediaelch-stable/ubuntu/ bionic main' && \
   add-apt-repository -y ppa:mozillateam/ppa && \
   apt update && apt install -y \
-    mediaelch \
     firefox-esr && \
   mkdir -p '/etc/firefox/' && \
   mkdir -p '/usr/lib/firefox-esr/distribution/' && \

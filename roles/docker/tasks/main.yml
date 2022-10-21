@@ -93,7 +93,7 @@
   ansible.builtin.replace:
     path: /lib/systemd/system/docker.service
     regexp: '(.+)dockerd -H(.+)$'
-    replace: '\1dockerd -g {{ docker_storage }} -H\2'
+    replace: '\1dockerd --data-root {{ docker_storage }} -H\2'
 
 - name: Make sure Docker is running and enabled
   service:

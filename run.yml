@@ -73,13 +73,6 @@
             - swag
             - containers
 
-      - role: network/bunkerized-nginx
-        become: no
-        tags:
-            - bunkerized-nginx
-            - containers
-        when: enable_bunkerized_nginx | default(False)
-
       - role: network/wireguard
         become: no
         tags:
@@ -169,12 +162,12 @@
       #
       # Media
       #
-      - role: containers/media/deluge
+      - role: containers/media/torrent
         become: no
         tags:
-            - deluge
+            - torrent
             - containers
-        when: enable_deluge | default(False)
+        when: enable_torrent | default(False)
 
       - role: containers/media/sonarr
         become: no
@@ -218,6 +211,13 @@
             - containers
         when: enable_openbooks | default(False)
 
+      - role: containers/media/tinymediamanager
+        become: no
+        tags:
+          - tinymediamanager
+          - containers
+        when: enable_tinymediamanager | default(False)
+
       #
       # Services
       #
@@ -241,28 +241,28 @@
       #
       # Home automation
       #
-      - role: containers/homeautomation/deconz
-        tags:
-            - deconz
-            - smarthome
-            - containers
-        when: enable_deconz | default(False)
-
-      - role: containers/homeautomation/homeassistant
-        become: no
-        tags:
-            - homeassistant
-            - smarthome
-            - containers
-        when: enable_homeassistant | default(False)
-
-      - role: containers/homeautomation/mqtt
-        become: no
-        tags:
-            - mqtt
-            - smarthome
-            - containers
-        when: enable_homeassistant | default(False)
+#      - role: containers/homeautomation/deconz
+#        tags:
+#            - deconz
+#            - smarthome
+#            - containers
+#        when: enable_deconz | default(False)
+#
+#      - role: containers/homeautomation/homeassistant
+#        become: no
+#        tags:
+#            - homeassistant
+#            - smarthome
+#            - containers
+#        when: enable_homeassistant | default(False)
+#
+#      - role: containers/homeautomation/mqtt
+#        become: no
+#        tags:
+#            - mqtt
+#            - smarthome
+#            - containers
+#        when: enable_homeassistant | default(False)
 
       #
       # Samba

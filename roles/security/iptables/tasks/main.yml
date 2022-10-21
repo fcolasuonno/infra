@@ -50,16 +50,14 @@
     jump: ACCEPT
     comment: Ansible managed
 
-- name: Allow HTTP and HTTPS
+- name: Allow HTTPS
   ansible.builtin.iptables:
     chain: INPUT
     protocol: tcp
-    destination_ports:
-      - "80"
-      - "443"
+    destination_port: 443
     jump: ACCEPT
     comment: Ansible managed
-  when: (enable_bunkerized_nginx | default(False)) or (enable_swag | default(False))
+  when: enable_swag | default(False)
 
 - name: Allow Wireguard
   iptables:
@@ -69,6 +67,16 @@
     jump: ACCEPT
     comment: Ansible managed
   when: enable_wireguard | default(False)
+
+- name: Allow samba
+  iptables:
+    chain: INPUT
+    destination_ports:
+      - "445"
+      - "137:139"
+    jump: ACCEPT
+    comment: Ansible managed
+  when: enable_samba | default(False)
 
 - name: Set the policy for the INPUT chain to DROP
   ansible.builtin.iptables:

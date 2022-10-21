@@ -34,7 +34,6 @@ The playbook is mostly being developed for personal use, so stuff is going to be
 #### Misc
 * [Watchtower](https://hub.docker.com/r/containrrr/watchtower) (An automated updater for Docker images)
 * [SWAG](https://hub.docker.com/r/linuxserver/swag) (A reverse proxy with built-in support for dynamic DNS, Certbot)
-* [bunkerized-nginx](https://github.com/bunkerity/bunkerized-nginx) (A NGINX-based web server focused on security)
 
 #### Home Automation
 * [Home Assistant](https://hub.docker.com/r/homeassistant/home-assistant) (A FOSS smart home hub)

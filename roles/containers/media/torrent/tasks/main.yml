@@ -1,0 +1,43 @@
+---
+- name: Make sure the torrent container is created and running
+  docker_container:
+    name: "{{ container_name }}"
+    image: "haugene/transmission-openvpn:latest"
+    pull: yes
+    networks:
+      - name: swag_macvlan
+        ipv4_address: "{{ ip_address }}"
+    privileged: yes
+    sysctls:
+      "net.ipv4.conf.all.src_valid_mark": "1"
+    capabilities: 
+      - net_admin
+    devices:
+      - /dev/net/tun
+    state: 'started'
+    env:
+      TRANSMISSION_HOME: "/config"
+      TRANSMISSION_DOWNLOAD_DIR: "/downloads"
+      TRANSMISSION_INCOMPLETE_DIR: "/downloads/.incomplete"
+      TRANSMISSION_WATCH_DIR: "/watch"
+      TRANSMISSION_RATIO_LIMIT: "{{ transmission_openvpn_ratio_limit }}"
+      TRANSMISSION_RATIO_LIMIT_ENABLED: "{{ transmission_openvpn_ratio_limit_enabled | string }}"
+      OPENVPN_PROVIDER: "{{ openvpn_provider }}"
+      OPENVPN_USERNAME: "{{ openvpn_username }}"
+      OPENVPN_PASSWORD: "{{ openvpn_password }}"
+      OPENVPN_CONFIG: "{{ openvpn_config }}"
+      WEBPROXY_ENABLED: "true"
+      WEBPROXY_PORT: "3128"
+      LOCAL_NETWORK: "172.20.0.0/16, {{ lan_network }}"
+      ENABLE_UFW: "false"
+      "DEBUG": "true"
+      "UMASK": "000"
+      "PUID": "{{ guid }}"
+      "PGID": "{{ guid }}"
+      "TZ": "{{ timezone }}"
+    volumes:
+      - "{{ docker_dir }}/{{ container_name }}/config:/config"
+      - "{{ mergerfs_root }}/Downloads:/downloads:rw"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    restart_policy: unless-stopped

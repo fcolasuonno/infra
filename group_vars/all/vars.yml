@@ -170,9 +170,7 @@ enable_booksonic: false
 
 # Yo-ho-ho
 
-enable_deluge: false
-
-enable_qbittorrent: false
+enable_torrent: false
 
 enable_sonarr: false
 
@@ -184,8 +182,9 @@ enable_jackett: false
 
 enable_swag: false # most services depend on this
 
-enable_bunkerized_nginx: false
+transmission_openvpn_ratio_limit: "5"
 
+transmission_openvpn_ratio_limit_enabled: true
 # DDNS
 
 cloudflare_zone: CLOUDFLARE_ZONE_ID # from cloudflare home page, bottom left

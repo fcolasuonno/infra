@@ -1,10 +1,10 @@
 ---
-container_name: deluge
+container_name: torrent
 
-url: "deluge.{{ host_local }}"
+url: "torrent.{{ host_local }}"
 
 ip_address: "{{ swag_network | ansible.utils.nthhost(10) }}"
 
 dashboard_category: media
 
-enabled: "{{ enable_deluge }}"
+enabled: "{{ enable_torrent }}"
