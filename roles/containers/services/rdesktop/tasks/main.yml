@@ -25,3 +25,11 @@
       - "{{ mergerfs_root }}/Media:/media"
       - "{{ mergerfs_root }}/Downloads:/downloads"
     restart_policy: unless-stopped
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.remotedesktop.rule: "Host(`remotedesktop.{{ host_local }}`)"
+      traefik.http.routers.remotedesktop.tls.certresolver: "letsencrypt"
+      traefik.http.routers.remotedesktop.tls.domains[0].main: "{{ host_local }}"
+      traefik.http.routers.remotedesktop.tls.domains[0].sans: "*.{{ host_local }}"
+      traefik.http.services.remotedesktop.loadbalancer.server.port: "3000"
+

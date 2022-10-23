@@ -45,3 +45,10 @@
       - "{{ mergerfs_root }}/Media/Audiobook:/data/Audiobook"
       - "/etc/localtime:/etc/localtime:ro"
     restart_policy: unless-stopped
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.jellyfin.rule: "Host(`jellyfin.{{ host_local }}`)"
+      traefik.http.routers.jellyfin.tls.certresolver: "letsencrypt"
+      traefik.http.routers.jellyfin.tls.domains[0].main: "{{ host_local }}"
+      traefik.http.routers.jellyfin.tls.domains[0].sans: "*.{{ host_local }}"
+      traefik.http.services.jellyfin.loadbalancer.server.port: "8096"

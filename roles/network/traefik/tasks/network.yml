@@ -1,0 +1,13 @@
+---
+- name: Create an macvlan network
+  docker_network:
+    name: swag_macvlan
+    driver: macvlan
+    driver_options:
+      parent: '{{ swag_interface }}'
+    ipam_config:
+      - subnet: '{{ lan_network }}'
+        gateway: '{{ lan_gateway }}'
+        iprange: '{{ swag_network }}'
+        aux_addresses:
+          host1: '{{ swag_network | ansible.utils.nthhost(2) }}'

@@ -3,7 +3,7 @@ container_name: jellyfin
 
 url: "jellyfin.{{ host_local }}"
 
-ip_address: "{{ swag_network | ansible.utils.nthhost(5) }}"
+ip_address: "{{ swag_network | ansible.utils.nthhost(22) }}"
 
 dashboard_category: media
 

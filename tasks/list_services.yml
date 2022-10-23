@@ -1,4 +1,4 @@
-# Gets variables from all web applications recursively (for Homer and SWAG)
+# Gets variables from all web applications recursively (for dashy)
 #
 ---
 - name: Get a list of containers

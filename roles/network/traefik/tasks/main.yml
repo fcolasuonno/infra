@@ -1,0 +1,51 @@
+---
+- name: Create Traefik Directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ traefik_data_directory }}"
+    - "{{ traefik_data_directory }}/letsencrypt"
+
+- name: Traefik Docker Container
+  docker_container:
+    name: traefik
+    image: "{{ traefik_docker_image }}"
+    pull: true
+    command:
+      - "--log.level={{ traefik_log_level }}"
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
+      - "--providers.docker"
+      - "--providers.providersthrottleduration=2s"
+      - "--entrypoints.web.address=:{{ traefik_port_http }}"
+      - "--entrypoints.web-secure.address=:{{ traefik_port_https }}"
+      - "--entrypoints.traefik.address=:{{ traefik_port_ui }}"
+      - "--entrypoints.web-secure.http.tls.certresolver=letsencrypt"
+      - "--entrypoints.web-secure.http.tls.domains[0].main={{ host_local }}"
+      - "--entrypoints.web-secure.http.tls.domains[0].sans=*.{{ host_local }}"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider={{ traefik_dns_provider }}"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.delaybeforecheck=10"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.resolvers=1.1.1.1:53"
+      - "--certificatesresolvers.letsencrypt.acme.caserver={{ traefik_acme_server }}"
+      - "--certificatesresolvers.letsencrypt.acme.email={{ email }}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+    networks:
+        - name: swag_macvlan
+          ipv4_address: '{{ swag_network | ansible.utils.nthhost(20) }}'
+    volumes:
+      - "{{ traefik_data_directory }}/letsencrypt:/letsencrypt:rw"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    env: "{{ traefik_environment_variables }}"
+    restart_policy: unless-stopped
+    memory: "{{ traefik_memory }}"
+
+- name: Update the Traefik DNS record to Cloudflare
+  uri:
+    url: "https://api.cloudflare.com/client/v4/zones/{{ cloudflare_zone }}/dns_records/{{ cloudflare_dns_record }}"
+    body: '{"type":"A","name":"{{ host_local }}","content":"{{ swag_network | ansible.utils.nthhost(20) }}","ttl":3600,"priority":10,"proxied":false}'
+    body_format: json
+    method: PUT
+    headers:
+      "Authorization": "Bearer {{ cloudflare_dns_token }}"

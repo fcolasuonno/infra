@@ -30,3 +30,10 @@
           - '{{ docker_dir }}/{{ container_name }}/data/conf.yml:/app/public/conf.yml'
           - '{{ docker_dir }}/{{ container_name }}/data/icons:/app/public/item-icons/'
       restart_policy: always
+      labels:
+        traefik.enable: "true"
+        traefik.http.routers.dashy.rule: "Host(`{{ host_local }}`)"
+        traefik.http.routers.dashy.tls.certresolver: "letsencrypt"
+        traefik.http.routers.dashy.tls.domains[0].main: "{{ host_local }}"
+        traefik.http.routers.dashy.tls.domains[0].sans: "*.{{ host_local }}"
+        traefik.http.services.dashy.loadbalancer.server.port: "80"

@@ -23,3 +23,10 @@
       - "{{ mergerfs_root }}/Media/Movies_ITA:/movies_ita"
       - "{{ mergerfs_root }}/Media/Music:/music"
     restart_policy: unless-stopped
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.plex.rule: "Host(`plex.{{ host_local }}`)"
+      traefik.http.routers.plex.tls.certresolver: "letsencrypt"
+      traefik.http.routers.plex.tls.domains[0].main: "{{ host_local }}"
+      traefik.http.routers.plex.tls.domains[0].sans: "*.{{ host_local }}"
+      traefik.http.services.plex.loadbalancer.server.port: "32400"

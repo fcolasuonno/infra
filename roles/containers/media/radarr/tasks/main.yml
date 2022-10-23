@@ -18,3 +18,10 @@
       - "{{ mergerfs_root }}/Media/Movies:/movies"
       - "{{ mergerfs_root }}/Downloads:/downloads"
     restart_policy: unless-stopped
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.radarr.rule: "Host(`radarr.{{ host_local }}`)"
+      traefik.http.routers.radarr.tls.certresolver: "letsencrypt"
+      traefik.http.routers.radarr.tls.domains[0].main: "{{ host_local }}"
+      traefik.http.routers.radarr.tls.domains[0].sans: "*.{{ host_local }}"
+      traefik.http.services.radarr.loadbalancer.server.port: "7878"

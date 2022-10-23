@@ -152,6 +152,8 @@ security_autoupdate_mail_on_error: false
 #
 enable_nas_stuff: false
 
+enable_samba: false
+
 # Home automation
 
 enable_deconz: false

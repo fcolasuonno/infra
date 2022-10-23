@@ -67,11 +67,11 @@
       #
       # Network
       #
-      - role: network/swag
+      - role: network/traefik
         become: no
         tags:
-            - swag
-            - containers
+          - traefik
+          - containers
 
       - role: network/wireguard
         become: no

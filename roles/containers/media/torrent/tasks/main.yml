@@ -41,3 +41,11 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
     restart_policy: unless-stopped
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.torrent.rule: "Host(`torrent.{{ host_local }}`)"
+      traefik.http.routers.torrent.tls.certresolver: "letsencrypt"
+      traefik.http.routers.torrent.tls.domains[0].main: "{{ host_local }}"
+      traefik.http.routers.torrent.tls.domains[0].sans: "*.{{ host_local }}"
+      traefik.http.services.torrent.loadbalancer.server.port: "9091"
+
