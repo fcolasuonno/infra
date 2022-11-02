@@ -1,0 +1,18 @@
+#!/usr/bin/with-contenv bash
+
+# default file copies first run
+if [[ ! -f /config/.config/openbox/menu.xml ]]; then
+    mkdir -p /config/.config/openbox && \
+    cp /defaults/menu.xml /config/.config/openbox/menu.xml && \
+    chown -R abc:abc /config/.config
+fi
+
+mkdir -p /config/logs
+
+if [ ! -f /config/tmm.jar ]; then
+    mkdir -p /config/tmm
+    cd /config/tmm
+    tar xf /defaults/tmm.tar.gz
+    chown -R abc:abc /config/tmm
+fi
+

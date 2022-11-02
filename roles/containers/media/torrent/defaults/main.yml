@@ -3,8 +3,6 @@ container_name: torrent
 
 url: "torrent.{{ host_local }}"
 
-ip_address: "{{ swag_network | ansible.utils.nthhost(10) }}"
-
 dashboard_category: media
 
 enabled: "{{ enable_torrent }}"

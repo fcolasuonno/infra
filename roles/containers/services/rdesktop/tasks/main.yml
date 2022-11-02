@@ -1,35 +1,42 @@
 ---
+- name: upload the site directory to the docker host
+  synchronize:
+    src: "site"
+    dest: "/tmp/rdesktop-build"
+
+- name: build the image
+  docker_image:
+    build:
+      path: "/tmp/rdesktop-build/site"
+    force_source: yes
+    name: "rdesktop"
+    source: build
+    state: present
+  register: image_build
+
 - name: Make sure the {{ container_name }} container is created and running
   docker_container:
     name: "{{ container_name }}"
-    image: "ghcr.io/linuxserver/webtop:amd64-alpine-openbox"
-    networks:
-      - name: swag_macvlan
-        ipv4_address: "{{ ip_address }}"
-    pull: yes
-    privileged: yes
-    devices:
-      - "/dev/dri:/dev/dri"
+    image: "rdesktop"
+    network_mode: "container:torrent"
+    purge_networks: yes
     state: 'started'
+    recreate: '{{ True if image_build.changed else omit }}'
     env:
-      "DOCKER_MODS": "linuxserver/mods:jellyfin-opencl-intel"
       "PUID": "{{ guid }}"
       "PGID": "{{ guid }}"
       "TZ": "{{ timezone }}"
-      "VERSION": "latest"
-      "KEYBOARD": "en-gb-qwerty"
     shm_size: "2GB"
     volumes:
-      - "{{ docker_dir }}/{{ container_name }}/config:/config"
-      - "{{ docker_dir }}/{{ container_name }}/home:/home"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "{{ docker_dir }}/{{ container_name }}:/config"
       - "{{ mergerfs_root }}/Media:/media"
       - "{{ mergerfs_root }}/Downloads:/downloads"
     restart_policy: unless-stopped
     labels:
       traefik.enable: "true"
-      traefik.http.routers.remotedesktop.rule: "Host(`remotedesktop.{{ host_local }}`)"
-      traefik.http.routers.remotedesktop.tls.certresolver: "letsencrypt"
-      traefik.http.routers.remotedesktop.tls.domains[0].main: "{{ host_local }}"
-      traefik.http.routers.remotedesktop.tls.domains[0].sans: "*.{{ host_local }}"
-      traefik.http.services.remotedesktop.loadbalancer.server.port: "3000"
-
+      traefik.http.routers.rdesktop.rule: "Host(`rdesktop.{{ host_local }}`)"
+      traefik.http.routers.rdesktop.tls.certresolver: "letsencrypt"
+      traefik.http.routers.rdesktop.tls.domains[0].main: "{{ host_local }}"
+      traefik.http.routers.rdesktop.tls.domains[0].sans: "*.{{ host_local }}"
+      traefik.http.services.rdesktop.loadbalancer.server.port: "3000"

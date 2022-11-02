@@ -1,12 +1,7 @@
----
 container_name: rdesktop
 
-url: "remotedesktop.{{ host_local }}"
-
-ip_address: "{{swag_network | ansible.utils.nthhost(surfshark_client_ip if enable_surfshark else 7) }}"
+url: "rdesktop.{{ host_local }}"
 
 dashboard_category: services
 
-dashboard_name: Remote desktop
-
-enabled: "{{ enable_rdesktop }}"
+enabled: true

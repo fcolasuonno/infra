@@ -3,8 +3,6 @@ container_name: jackett
 
 url: "jackett.{{ host_local }}"
 
-ip_address: "{{ swag_network | ansible.utils.nthhost(8) }}"
-
 dashboard_category: media
 
 dashboard_name: Jackett

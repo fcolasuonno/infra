@@ -12,8 +12,7 @@
     name: '{{ container_name }}'
     image: portainer/portainer-ce:latest
     networks:
-      - name: swag_macvlan
-        ipv4_address: '{{ ip_address }}'
+      - name: my_macvlan
     pull: yes
     state: 'started'
     volumes:

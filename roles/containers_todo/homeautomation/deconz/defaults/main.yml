@@ -3,8 +3,6 @@ container_name: deconz
 
 url: "deconz.{{ host_local }}"
 
-ip_address: "{{ swag_network | ansible.utils.nthhost(25) }}"
-
 dashboard_category: smarthome
 
 dashboard_name: "deCONZ"

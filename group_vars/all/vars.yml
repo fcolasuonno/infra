@@ -189,10 +189,6 @@ transmission_openvpn_ratio_limit: "5"
 transmission_openvpn_ratio_limit_enabled: true
 # DDNS
 
-cloudflare_zone: CLOUDFLARE_ZONE_ID # from cloudflare home page, bottom left
-
-cloudflare_dns_record: CLOUDFLARE_DNS_RECORD_ID # curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$CLOUDFLARE_ZONE_ID/dns_records?type=A&name=$HOST_LOCAL"  -H "X-Auth-Email: $cloudflare_auth_email" -H "X-Auth-Key: $cloudflare_auth_key"  -H "Content-Type: application/json" | jq -r '{"result"}[] | .[0] | .id')
-
 enable_cloudflare_ddns: false
 
 # VPN
@@ -227,8 +223,6 @@ enable_portainer: false
 # Misc
 
 enable_authelia: false
-
-enable_adguard: false
 
 enable_watchtower: false
 

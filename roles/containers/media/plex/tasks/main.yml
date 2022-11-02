@@ -5,8 +5,7 @@
     image: "lscr.io/linuxserver/plex"
     pull: yes
     networks:
-      - name: swag_macvlan
-        ipv4_address: "{{ ip_address }}"
+      - name: my_macvlan
     devices:
       - "/dev/dri:/dev/dri"
     state: 'started'

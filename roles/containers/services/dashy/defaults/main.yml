@@ -1,5 +1,3 @@
 container_name: dashy
 
 url: "{{ host_local }}"
-
-ip_address: "{{ swag_network | ansible.utils.nthhost(21) }}"

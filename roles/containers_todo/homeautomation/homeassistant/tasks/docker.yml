@@ -4,8 +4,7 @@
       name: '{{ container_name }}'
       image: 'homeassistant/home-assistant:stable'
       networks:
-          - name: swag_macvlan
-            ipv4_address: '{{ ip_address }}'
+          - name: my_macvlan
       pull: yes
       state: 'started'
       env:

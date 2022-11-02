@@ -3,8 +3,6 @@ container_name: radarr
 
 url: "radarr.{{ host_local }}"
 
-ip_address: "{{ swag_network | ansible.utils.nthhost(15) }}"
-
 dashboard_category: media
 
 enabled: "{{ enable_radarr }}"

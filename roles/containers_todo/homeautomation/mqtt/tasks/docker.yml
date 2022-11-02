@@ -5,8 +5,7 @@
     image: "eclipse-mosquitto"
     pull: yes
     networks:
-      - name: swag_macvlan
-        ipv4_address: "{{ ip_address }}"
+      - name: my_macvlan
     state: 'started'
     volumes:
       - "{{ docker_dir }}/{{ container_name }}/config:/mosquitto/config"

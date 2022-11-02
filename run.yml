@@ -29,11 +29,6 @@
         tags:
             - docker
 
-      - role: network/avahi
-        tags:
-            - avahi
-        when: enable_avahi | default(False)
-
       - role: chriswayg.msmtp-mailer
         tags:
             - msmtp
@@ -87,19 +82,6 @@
             - containers
         when: enable_cloudflare_ddns | default(False)
 
-      - role: network/adguard
-        become: no
-        tags:
-            - adguard
-            - containers
-        when: enable_adguard | default(False)
-
-      - role: network/surfshark
-        become: no
-        tags:
-          - surfshark
-          - containers
-        when: enable_surfshark | default(False)
       #
       # Filesystems
       #
@@ -143,6 +125,12 @@
           - containers
         when: enable_dashy | default(False)
 
+      - role: containers/services/rdesktop
+        become: no
+        tags:
+          - rdesktop
+          - containers
+
       #
       # System
       #
@@ -183,13 +171,6 @@
             - containers
         when: enable_radarr | default(False)
 
-      - role: containers/media/booksonic
-        become: no
-        tags:
-            - booksonic
-            - containers
-        when: enable_booksonic | default(False)
-
       - role: containers/media/plex
         become: no
         tags:
@@ -203,30 +184,6 @@
             - jellyfin
             - containers
         when: enable_jellyfin | default(False)
-
-      - role: containers/media/openbooks
-        become: no
-        tags:
-            - openbooks
-            - containers
-        when: enable_openbooks | default(False)
-
-      - role: containers/media/tinymediamanager
-        become: no
-        tags:
-          - tinymediamanager
-          - containers
-        when: enable_tinymediamanager | default(False)
-
-      #
-      # Services
-      #
-
-      - role: containers/services/rdesktop
-        tags:
-          - rdesktop
-          - containers
-        when: enable_rdesktop | default(False)
 
       #
       # System

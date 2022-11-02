@@ -3,8 +3,6 @@ container_name: plex
 
 url: "plex.{{ host_local }}"
 
-ip_address: "{{ swag_network | ansible.utils.nthhost(11) }}"
-
 dashboard_category: media
 
 dashboard_name: Plex

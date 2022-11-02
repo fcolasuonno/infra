@@ -1,4 +1,41 @@
 ---
+- name: Get infos on the containers
+  docker_container_info:
+    name: traefik
+  register: traefik_docker_status
+
+- name: Does container exist?
+  set_fact:
+    traefik_exists: yes
+  when: traefik_docker_status.exists
+
+- name: Is container running?
+  set_fact:
+    traefik_running: yes
+  when: traefik_exists is defined and traefik_docker_status.container['State']['Running']
+
+- name: Create an macvlan network
+  docker_network:
+    name: my_macvlan
+    driver: macvlan
+    driver_options:
+      parent: '{{ swag_interface }}'
+    ipam_config:
+      - subnet: '{{ lan_network }}'
+        gateway: '{{ lan_gateway }}'
+        iprange: '{{ swag_network }}'
+        aux_addresses:
+          host1: '{{ swag_network | ansible.utils.nthhost(2) }}'
+  notify:
+    - restart Traefik
+
+- name: restart Traefik
+  docker_container:
+    name: traefik
+    state: started
+    restart: yes
+  when: traefik_exists is defined and traefik_running is defined
+
 - name: Create Traefik Directories
   file:
     path: "{{ item }}"
@@ -17,6 +54,7 @@
       - "--api.dashboard=true"
       - "--api.insecure=true"
       - "--providers.docker"
+      - "--providers.docker.exposedbydefault=false"
       - "--providers.providersthrottleduration=2s"
       - "--entrypoints.web.address=:{{ traefik_port_http }}"
       - "--entrypoints.web-secure.address=:{{ traefik_port_https }}"
@@ -32,20 +70,52 @@
       - "--certificatesresolvers.letsencrypt.acme.email={{ email }}"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
     networks:
-        - name: swag_macvlan
-          ipv4_address: '{{ swag_network | ansible.utils.nthhost(20) }}'
+        - name: my_macvlan
     volumes:
       - "{{ traefik_data_directory }}/letsencrypt:/letsencrypt:rw"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     env: "{{ traefik_environment_variables }}"
     restart_policy: unless-stopped
     memory: "{{ traefik_memory }}"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.traefik.rule: "Host(`traefik.{{ host_local }}`)"
+      traefik.http.routers.traefik.tls.certresolver: "letsencrypt"
+      traefik.http.routers.traefik.tls.domains[0].main: "{{ host_local }}"
+      traefik.http.routers.traefik.tls.domains[0].sans: "*.{{ host_local }}"
+      traefik.http.services.traefik.loadbalancer.server.port: "{{ traefik_port_ui }}"
+  register: result
 
 - name: Update the Traefik DNS record to Cloudflare
-  uri:
-    url: "https://api.cloudflare.com/client/v4/zones/{{ cloudflare_zone }}/dns_records/{{ cloudflare_dns_record }}"
-    body: '{"type":"A","name":"{{ host_local }}","content":"{{ swag_network | ansible.utils.nthhost(20) }}","ttl":3600,"priority":10,"proxied":false}'
-    body_format: json
-    method: PUT
-    headers:
-      "Authorization": "Bearer {{ cloudflare_dns_token }}"
+  docker_container:
+    name: "traefik_update"
+    image: "oznu/cloudflare-ddns:latest"
+    detach: no
+    cleanup: yes
+    command: "ls"
+    env:
+      "PUID": "{{ guid }}"
+      "PGID": "{{ guid }}"
+      "TZ": "{{ timezone }}"
+      "API_KEY": "{{ cloudflare_dns_token }}"
+      "ZONE": "{{ domain }}"
+      "PROXIED": "false"
+      "SUBDOMAIN": "{{ host_subdomain }}"
+      "CUSTOM_LOOKUP_CMD": "echo '{{ result.container.NetworkSettings.Networks.my_macvlan.IPAddress }}'"
+
+- name: Update the wildcard Traefik DNS record to Cloudflare
+  docker_container:
+    name: "traefik_update"
+    image: "oznu/cloudflare-ddns:latest"
+    detach: no
+    cleanup: yes
+    command: "ls"
+    env:
+      "PUID": "{{ guid }}"
+      "PGID": "{{ guid }}"
+      "TZ": "{{ timezone }}"
+      "API_KEY": "{{ cloudflare_dns_token }}"
+      "ZONE": "{{ domain }}"
+      "PROXIED": "false"
+      "SUBDOMAIN": "*.{{ host_subdomain }}"
+      "CUSTOM_LOOKUP_CMD": "echo '{{ result.container.NetworkSettings.Networks.my_macvlan.IPAddress }}'"
