@@ -18,17 +18,10 @@ The playbook is mostly being developed for personal use, so stuff is going to be
 #### Media
 * [Plex](https://hub.docker.com/r/linuxserver/plex) (A media server)
 * [Jellyfin](https://hub.docker.com/r/linuxserver/jellyfin) (Yet another media server)
-* [Radarr](https://hub.docker.com/r/linuxserver/radarr) (A movie tracker/downloader)
-* [Jackett](https://hub.docker.com/r/linuxserver/jackett) (A torrent/NZB indexer)
-* [Booksonic](https://hub.docker.com/r/linuxserver/booksonic) (An audiobook server)
-* [Sonarr](https://hub.docker.com/r/linuxserver/sonarr) (A TV show tracker/downloader)
-* [arch-delugevpn](https://hub.docker.com/r/binhex/arch-delugevpn) (An Arch Linux container running Deluge and an Wireguard/OpenVPN client with a kill switch)
 
 #### Services
 * [Authelia](https://hub.docker.com/r/authelia/authelia) (An authentication provider)
 * [cloudflare-ddns](https://hub.docker.com/r/oznu/cloudflare-ddns) (A dynamic DNS updater for Cloudflare)
-* [Dashy](https://github.com/Lissy93/dashy) (A static home page)
-* [PiHole + Unbound](https://github.com/chriscrowe/docker-pihole-unbound) (An all-in-one DNS solution with built-in ad-blocking)
 * [Wireguard](https://hub.docker.com/r/linuxserver/wireguard) (A VPN server)
 
 #### Misc
@@ -121,5 +114,5 @@ ansible-playbook run.yml --tags="port,containers"
 
 List used host
 ```
-grep ip_address * -r | grep swag_network | grep -o 'nthhost.*)' | egrep -o '[0-9]+' | sort -nu
+grep ip_address * -r | grep macvlan_network | grep -o 'nthhost.*)' | egrep -o '[0-9]+' | sort -nu
 ```

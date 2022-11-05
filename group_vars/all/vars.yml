@@ -11,7 +11,7 @@ lan_network: 'x.x.x.0/24'
 lan_gateway: "{{ lan_network | ansible.utils.nthhost(GATEWAY_IP_LAST) }}" # GATEWAY_IP_LAST = 1
 vpn_network: '10.x.x.0/24'
 swag_interface: eth0 # main eth interface
-swag_network: 'x.x.x.192/27'
+macvlan_network: 'x.x.x.192/27'
 dns_nameservers: ['1.1.1.1', '1.0.0.1']
 
 netplan_dispatch: "#! /bin/bash\nip link add vlan_shim link {{ swag_interface }} type macvlan mode bridge"
@@ -31,9 +31,9 @@ netplan_config:
             via: "{{ lan_gateway }}"
       vlan_shim:
         addresses:
-          - "{{ swag_network | ansible.utils.ipaddr('HOST_IP_LAST') | ansible.utils.ipsubnet }}"
+          - "{{ macvlan_network | ansible.utils.ipaddr('HOST_IP_LAST') | ansible.utils.ipsubnet }}"
         routes:
-          - to: "{{ swag_network }}"
+          - to: "{{ macvlan_network }}"
             via: "{{ lan_network | ansible.utils.ipaddr('HOST_IP_LAST') }}"
             metric: 100
 
@@ -168,21 +168,11 @@ enable_plex: false
 
 enable_jellyfin: false
 
-enable_booksonic: false
+enable_ubooquity: false
 
 # Yo-ho-ho
 
 enable_torrent: false
-
-enable_sonarr: false
-
-enable_radarr: false
-
-enable_openbooks: false
-
-enable_jackett: false
-
-enable_swag: false # most services depend on this
 
 transmission_openvpn_ratio_limit: "5"
 
@@ -199,18 +189,6 @@ wireguard_peers:
   - peer1
   - peer2_etc
 
-enable_ikev2: false
-
-enable_surfshark: false
-
-surfshark_user: some@email.com
-
-surfshark_location: SOMEWHERE
-
-surfshark_client_ip: 4
-# Homepages
-
-enable_dashy: false
 
 # Services:
 
@@ -219,6 +197,8 @@ enable_rdesktop: false
 # System:
 
 enable_portainer: false
+
+enable_cloudcmd: true
 
 # Misc
 

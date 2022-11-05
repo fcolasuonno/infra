@@ -1,7 +1,3 @@
 container_name: rdesktop
 
-url: "rdesktop.{{ host_local }}"
-
-dashboard_category: services
-
-enabled: true
+service_port: 3000

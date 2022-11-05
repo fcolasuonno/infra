@@ -1,8 +1,4 @@
 ---
 container_name: jellyfin
 
-url: "jellyfin.{{ host_local }}"
-
-dashboard_category: media
-
-enabled: "{{ enable_jellyfin }}"
+service_port: 8096

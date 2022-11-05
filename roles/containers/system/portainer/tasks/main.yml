@@ -15,15 +15,21 @@
       - name: my_macvlan
     pull: yes
     state: 'started'
+    env:
+      PUID: "{{ guid }}"
+      PGID: "{{ guid }}"
+      TZ: "{{ timezone }}"
+    restart_policy: unless-stopped
+    labels: "{{
+       {
+        'traefik.enable': 'true',
+        'traefik.http.routers.'+ container_name +'.rule': 'Host(`'+  container_name + '.' + host_local + '`)',
+        'traefik.http.routers.'+ container_name +'.tls.certresolver': 'letsencrypt',
+        'traefik.http.routers.'+ container_name +'.tls.domains[0].main': host_local,
+        'traefik.http.routers.'+ container_name +'.tls.domains[0].sans': '*.' + host_local,
+        'traefik.http.services.'+ container_name +'.loadbalancer.server.port': service_port | string
+       }
+     }}"
     volumes:
       - '{{ docker_dir }}/{{ container_name }}/data:/data'
       - '/var/run/docker.sock:/var/run/docker.sock'
-    restart_policy: always
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.portainer.rule: "Host(`portainer.{{ host_local }}`)"
-      traefik.http.routers.portainer.tls.certresolver: "letsencrypt"
-      traefik.http.routers.portainer.tls.domains[0].main: "{{ host_local }}"
-      traefik.http.routers.portainer.tls.domains[0].sans: "*.{{ host_local }}"
-      traefik.http.services.portainer.loadbalancer.server.port: "9000"
-

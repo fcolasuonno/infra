@@ -1,10 +1,2 @@
 ---
 container_name: homeassistant
-
-url: 'homeassistant.{{ host_local }}'
-
-dashboard_category: smarthome
-
-dashboard_name: 'Home Assistant'
-
-enabled: "{{ enable_homeassistant }}"

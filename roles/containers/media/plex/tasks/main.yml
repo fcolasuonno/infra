@@ -2,7 +2,7 @@
 - name: Make sure the Plex container is created and running
   docker_container:
     name: "{{ container_name }}"
-    image: "lscr.io/linuxserver/plex"
+    image: "lscr.io/linuxserver/plex:latest"
     pull: yes
     networks:
       - name: my_macvlan
@@ -10,22 +10,25 @@
       - "/dev/dri:/dev/dri"
     state: 'started'
     env:
-      "PUID": "{{ guid }}"
-      "PGID": "{{ guid }}"
-      "TZ": "{{ timezone }}"
-      "VERSION": "latest"
-      "PLEX_CLAIM": "{{ plex_claim }}"
+      DOCKER_MODS: "linuxserver/mods:jellyfin-opencl-intel"
+      PUID: "{{ guid }}"
+      PGID: "{{ guid }}"
+      TZ: "{{ timezone }}"
+      PLEX_CLAIM: "{{ plex_claim }}"
+    restart_policy: unless-stopped
+    labels: "{{
+      {
+       'traefik.enable': 'true',
+       'traefik.http.routers.'+ container_name +'.rule': 'Host(`'+  container_name + '.' + host_local + '`)',
+       'traefik.http.routers.'+ container_name +'.tls.certresolver': 'letsencrypt',
+       'traefik.http.routers.'+ container_name +'.tls.domains[0].main': host_local,
+       'traefik.http.routers.'+ container_name +'.tls.domains[0].sans': '*.' + host_local,
+       'traefik.http.services.'+ container_name +'.loadbalancer.server.port': service_port | string
+      }
+    }}"
     volumes:
       - "{{ docker_dir }}/{{ container_name }}:/config"
       - "{{ mergerfs_root }}/Media/TV:/tv"
       - "{{ mergerfs_root }}/Media/Movies:/movies"
       - "{{ mergerfs_root }}/Media/Movies_ITA:/movies_ita"
       - "{{ mergerfs_root }}/Media/Music:/music"
-    restart_policy: unless-stopped
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.plex.rule: "Host(`plex.{{ host_local }}`)"
-      traefik.http.routers.plex.tls.certresolver: "letsencrypt"
-      traefik.http.routers.plex.tls.domains[0].main: "{{ host_local }}"
-      traefik.http.routers.plex.tls.domains[0].sans: "*.{{ host_local }}"
-      traefik.http.services.plex.loadbalancer.server.port: "32400"

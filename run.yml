@@ -116,31 +116,24 @@
         when: enable_nas_stuff | default(False)
 
       #
-      # dashy
+      # Services
       #
-      - role: containers/services/dashy
+      - role: containers/services/heimdall
         become: no
         tags:
-          - dashy
+          - heimdall
           - containers
-        when: enable_dashy | default(False)
 
       - role: containers/services/rdesktop
         become: no
         tags:
           - rdesktop
           - containers
+        when: enable_rdesktop | default(False)
 
       #
       # System
       #
-      - role: containers/media/jackett
-        become: no
-        tags:
-            - jackett
-            - containers
-        when: enable_jackett | default(False)
-
       - role: containers/system/watchtower
         become: no
         tags:
@@ -157,37 +150,30 @@
             - containers
         when: enable_torrent | default(False)
 
-      - role: containers/media/sonarr
-        become: no
-        tags:
-            - sonarr
-            - containers
-        when: enable_sonarr | default(False)
-
-      - role: containers/media/radarr
-        become: no
-        tags:
-            - radarr
-            - containers
-        when: enable_radarr | default(False)
-
       - role: containers/media/plex
         become: no
         tags:
-            - plex
-            - containers
+          - plex
+          - containers
         when: enable_plex | default(False)
 
       - role: containers/media/jellyfin
         become: no
         tags:
-            - jellyfin
-            - containers
+          - jellyfin
+          - containers
         when: enable_jellyfin | default(False)
 
-      #
-      # System
-      #
+      - role: containers/media/ubooquity
+        become: no
+        tags:
+          - ubooquity
+          - containers
+        when: enable_ubooquity | default(False)
+
+    #
+    # System
+    #
 
       - role: containers/system/portainer
         tags:
@@ -195,15 +181,21 @@
           - containers
         when: enable_portainer | default(False)
 
-      #
-      # Home automation
-      #
-#      - role: containers/homeautomation/deconz
-#        tags:
-#            - deconz
-#            - smarthome
-#            - containers
-#        when: enable_deconz | default(False)
+      - role: containers/system/cloudcmd
+        tags:
+          - cloudcmd
+          - containers
+        when: enable_cloudcmd | default(False)
+
+    #
+    # Home automation
+    #
+    #      - role: containers/homeautomation/deconz
+    #        tags:
+    #            - deconz
+    #            - smarthome
+    #            - containers
+    #        when: enable_deconz | default(False)
 #
 #      - role: containers/homeautomation/homeassistant
 #        become: no

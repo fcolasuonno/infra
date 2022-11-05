@@ -1,0 +1,4 @@
+---
+container_name: ubooquity
+
+service_port: 2202

@@ -1,8 +1,4 @@
 container_name: portainer
 
-url: "portainer.{{ host_local }}"
-
-dashboard_category: system
-
-enabled: "{{ enable_portainer }}"
+service_port: 9000
 

@@ -23,11 +23,10 @@
     ipam_config:
       - subnet: '{{ lan_network }}'
         gateway: '{{ lan_gateway }}'
-        iprange: '{{ swag_network }}'
+        iprange: '{{ macvlan_network }}'
         aux_addresses:
-          host1: '{{ swag_network | ansible.utils.nthhost(2) }}'
-  notify:
-    - restart Traefik
+          host1: '{{ macvlan_network | ansible.utils.nthhost(0) }}'
+          host2: '{{ macvlan_network | ansible.utils.nthhost(2) }}'
 
 - name: restart Traefik
   docker_container:
@@ -71,6 +70,7 @@
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
     networks:
         - name: my_macvlan
+          ipv4_address: '{{ macvlan_network | ansible.utils.nthhost(1) }}'
     volumes:
       - "{{ traefik_data_directory }}/letsencrypt:/letsencrypt:rw"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"

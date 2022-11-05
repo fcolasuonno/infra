@@ -1,8 +1,0 @@
----
-container_name: radarr
-
-url: "radarr.{{ host_local }}"
-
-dashboard_category: media
-
-enabled: "{{ enable_radarr }}"

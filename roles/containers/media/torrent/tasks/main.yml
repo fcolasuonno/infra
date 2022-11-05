@@ -29,22 +29,24 @@
       WEBPROXY_PORT: "3128"
       LOCAL_NETWORK: "172.20.0.0/16, {{ lan_network }}"
       ENABLE_UFW: "false"
-      "DEBUG": "true"
-      "UMASK": "000"
-      "PUID": "{{ guid }}"
-      "PGID": "{{ guid }}"
-      "TZ": "{{ timezone }}"
+      UMASK: "000"
+      PUID: "{{ guid }}"
+      PGID: "{{ guid }}"
+      TZ: "{{ timezone }}"
+    restart_policy: unless-stopped
+    labels: "{{
+      {
+       'traefik.enable': 'true',
+       'traefik.http.routers.'+ container_name +'.rule': 'Host(`'+  container_name + '.' + host_local + '`)',
+       'traefik.http.routers.'+ container_name +'.tls.certresolver': 'letsencrypt',
+       'traefik.http.routers.'+ container_name +'.tls.domains[0].main': host_local,
+       'traefik.http.routers.'+ container_name +'.tls.domains[0].sans': '*.' + host_local,
+       'traefik.http.services.'+ container_name +'.loadbalancer.server.port': service_port | string
+      }
+    }}"
     volumes:
       - "{{ docker_dir }}/{{ container_name }}/config:/config"
       - "{{ mergerfs_root }}/Downloads:/downloads:rw"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
-    restart_policy: unless-stopped
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.torrent.rule: "Host(`torrent.{{ host_local }}`)"
-      traefik.http.routers.torrent.tls.certresolver: "letsencrypt"
-      traefik.http.routers.torrent.tls.domains[0].main: "{{ host_local }}"
-      traefik.http.routers.torrent.tls.domains[0].sans: "*.{{ host_local }}"
-      traefik.http.services.torrent.loadbalancer.server.port: "9091"
 

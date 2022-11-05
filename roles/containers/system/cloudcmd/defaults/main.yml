@@ -1,0 +1,3 @@
+container_name: cloudcmd
+
+service_port: 8000
