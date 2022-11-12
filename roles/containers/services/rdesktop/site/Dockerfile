@@ -34,7 +34,8 @@ RUN \
         libmediainfo \
         ttf-dejavu \
         bash \
-        sakura
+        sakura \
+        transmission
 
 # Add files
 COPY root/ /

@@ -24,9 +24,6 @@
       - subnet: '{{ lan_network }}'
         gateway: '{{ lan_gateway }}'
         iprange: '{{ macvlan_network }}'
-        aux_addresses:
-          host1: '{{ macvlan_network | ansible.utils.nthhost(0) }}'
-          host2: '{{ macvlan_network | ansible.utils.nthhost(2) }}'
 
 - name: restart Traefik
   docker_container:
@@ -70,7 +67,7 @@
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
     networks:
         - name: my_macvlan
-          ipv4_address: '{{ macvlan_network | ansible.utils.nthhost(1) }}'
+          ipv4_address: '{{ macvlan_network | ansible.utils.nthhost(0) | ansible.utils.ipmath(-1) }}'
     volumes:
       - "{{ traefik_data_directory }}/letsencrypt:/letsencrypt:rw"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
@@ -78,6 +75,7 @@
     restart_policy: unless-stopped
     memory: "{{ traefik_memory }}"
     labels:
+      priority: "highest"
       traefik.enable: "true"
       traefik.http.routers.traefik.rule: "Host(`traefik.{{ host_local }}`)"
       traefik.http.routers.traefik.tls.certresolver: "letsencrypt"

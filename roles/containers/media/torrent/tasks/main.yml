@@ -36,6 +36,7 @@
     restart_policy: unless-stopped
     labels: "{{
       {
+       'priority': 'high',
        'traefik.enable': 'true',
        'traefik.http.routers.'+ container_name +'.rule': 'Host(`'+  container_name + '.' + host_local + '`)',
        'traefik.http.routers.'+ container_name +'.tls.certresolver': 'letsencrypt',

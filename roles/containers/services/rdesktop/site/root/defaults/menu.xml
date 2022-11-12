@@ -2,8 +2,17 @@
 <openbox_menu xmlns="http://openbox.org/3.4/menu">
 <menu id="root-menu" label="MENU">
 <item label="Terminal" icon="/usr/share/pixmaps/xterm-color_48x48.xpm"><action name="Execute"><command>/usr/bin/sakura</command></action></item>
-<item label="FireFox" icon="/usr/share/icons/hicolor/48x48/apps/firefox.png"><action name="Execute"><command>/usr/bin/firefox</command></action></item>
+<item label="FireFox" icon="/usr/share/icons/hicolor/48x48/apps/firefox.png">
+    <action name="Execute">
+        <command>/usr/bin/firefox --private</command>
+    </action>
+</item>
 <item label="Tmm" icon="/usr/share/icons/hicolor/48x48/apps/tmm.png"><action name="Execute"><command>/config/tmm/tinyMediaManager.sh</command></action></item>
+    <item label="Transmission" icon="/usr/share/icons/hicolor/scalable/apps/transmission.svg">
+        <action name="Execute">
+            <command>/usr/bin/transmission-gtk</command>
+        </action>
+    </item>
 <item label="Reload OB"><action name="Reconfigure"/></item>
 </menu>
 </openbox_menu>
