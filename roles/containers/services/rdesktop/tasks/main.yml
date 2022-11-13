@@ -18,7 +18,7 @@
   docker_container:
     name: "{{ container_name }}"
     image: "rdesktop"
-    network_mode: "container:torrent"
+    network_mode: "container:surfshark"
     purge_networks: yes
     state: 'started'
     recreate: '{{ True if image_build.changed else omit }}'

@@ -71,19 +71,26 @@
       - role: network/wireguard
         become: no
         tags:
-            - wireguard
-            - containers
+          - wireguard
+          - containers
         when: enable_wireguard | default(False)
+
+      - role: network/surfshark
+        become: no
+        tags:
+          - surfshark
+          - containers
+        when: enable_surfshark | default(False)
 
       - role: network/cloudflare-ddns
         become: no
         tags:
-            - cloudflare-ddns
-            - containers
+          - cloudflare-ddns
+          - containers
         when: enable_cloudflare_ddns | default(False)
 
-      #
-      # Filesystems
+    #
+    # Filesystems
       #
       - role: filesystems/mergerfs
         become: yes
@@ -143,12 +150,6 @@
       #
       # Media
       #
-      - role: containers/media/torrent
-        become: no
-        tags:
-            - torrent
-            - containers
-        when: enable_torrent | default(False)
 
       - role: containers/media/plex
         become: no

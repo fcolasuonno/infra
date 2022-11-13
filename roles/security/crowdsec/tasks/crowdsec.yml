@@ -9,13 +9,12 @@
     repo: "deb [arch={{ repo_arch }}] https://packagecloud.io/crowdsec/crowdsec/{{ ansible_facts['distribution'] | lower }} {{ ansible_lsb['codename'] }} main"
     state: present
     
-- name: Update apt and install Crowdsec and Prometheus
-  apt: 
-    update_cache: yes 
+- name: Update apt and install Crowdsec
+  apt:
+    update_cache: yes
     name:
       - crowdsec
       - crowdsec-firewall-bouncer-iptables
-      - prometheus
     state: latest
 
 - name: cscli hub update
@@ -34,16 +33,6 @@
   register: collections_install_result
   changed_when: "'overwrite' not in collections_install_result.stderr"
 
-- name: Enable the Prometheus endpoint
-  lineinfile:
-    path: "/etc/crowdsec/config.yaml"
-    line: "  enabled: true"
-    search_string: "enabled: false"
-    insertafter: "^prometeus:.*$"
-  notify:
-    - Restart prometheus
-    - Restart crowdsec
-
 - name: Increase ban time
   replace:
     path: "/etc/crowdsec/profiles.yaml"
@@ -60,4 +49,3 @@
   loop:
       - crowdsec
       - crowdsec-firewall-bouncer
-      - prometheus

@@ -10,11 +10,11 @@
 lan_network: 'x.x.x.0/24'
 lan_gateway: "{{ lan_network | ansible.utils.nthhost(GATEWAY_IP_LAST) }}" # GATEWAY_IP_LAST = 1
 vpn_network: '10.x.x.0/24'
-swag_interface: eth0 # main eth interface
+macvlan_interface: eth0 # main eth interface
 macvlan_network: 'x.x.x.192/27'
-dns_nameservers: ['1.1.1.1', '1.0.0.1']
+dns_nameservers: [ '1.1.1.1', '1.0.0.1' ]
 
-netplan_dispatch: "#! /bin/bash\nip link add vlan_shim link {{ swag_interface }} type macvlan mode bridge"
+netplan_dispatch: "#! /bin/bash\nip link add vlan_shim link {{ macvlan_interface }} type macvlan mode bridge"
 
 netplan_config:
   network:
@@ -170,13 +170,6 @@ enable_jellyfin: false
 
 enable_ubooquity: false
 
-# Yo-ho-ho
-
-enable_torrent: false
-
-transmission_openvpn_ratio_limit: "5"
-
-transmission_openvpn_ratio_limit_enabled: true
 # DDNS
 
 enable_cloudflare_ddns: false
@@ -189,6 +182,11 @@ wireguard_peers:
   - peer1
   - peer2_etc
 
+enable_surfshark: false
+
+surfshark_user: some@email.com
+
+surfshark_location: SOMEWHERE
 
 # Services:
 
