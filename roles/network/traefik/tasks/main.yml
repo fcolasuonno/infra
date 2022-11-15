@@ -24,6 +24,8 @@
       - subnet: '{{ lan_network }}'
         gateway: '{{ lan_gateway }}'
         iprange: '{{ macvlan_network }}'
+        aux_addresses:
+          host1: '{{ macvlan_shim_host }}'
 
 - name: restart Traefik
   docker_container:
@@ -65,9 +67,10 @@
       - "--certificatesresolvers.letsencrypt.acme.caserver={{ traefik_acme_server }}"
       - "--certificatesresolvers.letsencrypt.acme.email={{ email }}"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      - "--accesslog=true"
     networks:
         - name: my_macvlan
-          ipv4_address: '{{ macvlan_network | ansible.utils.nthhost(0) | ansible.utils.ipmath(-1) }}'
+          ipv4_address: '{{ macvlan_traefik_host }}'
     volumes:
       - "{{ traefik_data_directory }}/letsencrypt:/letsencrypt:rw"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"

@@ -57,7 +57,7 @@
     destination_port: 443
     jump: ACCEPT
     comment: Ansible managed
-  when: enable_macvlan | default(False)
+  when: true
 
 - name: Allow Wireguard
   iptables:

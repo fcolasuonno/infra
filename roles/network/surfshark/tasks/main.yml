@@ -64,3 +64,21 @@
     volumes:
       - "/docker/surfshark/Wireguard-Data/config:/config"
       - "/lib/modules:/lib/modules"
+  register: result
+
+- name: Update the DNS record to Cloudflare
+  docker_container:
+    name: "surfshark_update"
+    image: "oznu/cloudflare-ddns:latest"
+    detach: no
+    cleanup: yes
+    command: "ls"
+    env:
+      "PUID": "{{ guid }}"
+      "PGID": "{{ guid }}"
+      "TZ": "{{ timezone }}"
+      "API_KEY": "{{ cloudflare_dns_token }}"
+      "ZONE": "{{ domain }}"
+      "PROXIED": "false"
+      "SUBDOMAIN": "rem.{{ host_subdomain }}"
+      "CUSTOM_LOOKUP_CMD": "echo '{{ result.container.NetworkSettings.Networks.my_macvlan.IPAddress }}'"

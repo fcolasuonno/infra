@@ -35,7 +35,8 @@ RUN \
         ttf-dejavu \
         bash \
         sakura \
-        transmission
+        transmission \
+        xrdp
 
 # Add files
 COPY root/ /
