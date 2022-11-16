@@ -1,0 +1,4 @@
+---
+container_name: calibre-web
+
+service_port: 8083

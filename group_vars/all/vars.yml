@@ -9,9 +9,12 @@
 #
 lan_network: 'x.x.x.0/24'
 lan_gateway: "{{ lan_network | ansible.utils.nthhost(GATEWAY_IP_LAST) }}" # GATEWAY_IP_LAST = 1
+lan_host: "{{ lan_network | ansible.utils.ipaddr(HOST_IP) }}"
 vpn_network: '10.x.x.0/24'
 macvlan_interface: eth0 # main eth interface
 macvlan_network: 'x.x.x.192/27'
+macvlan_shim_host: "{{ macvlan_network | ansible.utils.nthhost(0) }}"
+macvlan_traefik_host: "{{ macvlan_network | ansible.utils.nthhost(0) | ansible.utils.ipmath(-1) }}"
 dns_nameservers: [ '1.1.1.1', '1.0.0.1' ]
 
 netplan_dispatch: "#! /bin/bash\nip link add vlan_shim link {{ macvlan_interface }} type macvlan mode bridge"
@@ -22,7 +25,7 @@ netplan_config:
     ethernets:
       eno1:
         addresses:
-          - "{{ lan_network | ansible.utils.ipaddr('HOST_IP_LAST') }}" # HOST_IP_LAST = 10
+          - "{{ lan_host }}"
         nameservers:
           search: ["{{ host_local }}"]
           addresses: "{{ dns_nameservers }}"
@@ -31,10 +34,13 @@ netplan_config:
             via: "{{ lan_gateway }}"
       vlan_shim:
         addresses:
-          - "{{ macvlan_network | ansible.utils.ipaddr('HOST_IP_LAST') | ansible.utils.ipsubnet }}"
+          - "{{ macvlan_shim_host | ansible.utils.ipsubnet }}"
         routes:
           - to: "{{ macvlan_network }}"
-            via: "{{ lan_network | ansible.utils.ipaddr('HOST_IP_LAST') }}"
+            via: "{{ lan_host }}"
+            metric: 100
+          - to: "{{ macvlan_traefik_host | ansible.utils.ipsubnet }}"
+            via: "{{ lan_host }}"
             metric: 100
 
 domain: "example.com" #registered zone in cloudflare
@@ -170,6 +176,8 @@ enable_jellyfin: false
 
 enable_ubooquity: false
 
+enable_calibre_web: false
+
 # DDNS
 
 enable_cloudflare_ddns: false
@@ -196,11 +204,9 @@ enable_rdesktop: false
 
 enable_portainer: false
 
-enable_cloudcmd: true
+enable_cloudcmd: false
 
 # Misc
-
-enable_authelia: false
 
 enable_watchtower: false
 

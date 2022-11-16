@@ -172,6 +172,13 @@
           - containers
         when: enable_ubooquity | default(False)
 
+      - role: containers/media/calibre-web
+        become: no
+        tags:
+          - calibre-web
+          - containers
+        when: enable_calibre_web | default(False)
+
     #
     # System
     #
