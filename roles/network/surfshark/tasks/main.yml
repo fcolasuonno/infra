@@ -62,7 +62,7 @@
         }
       }}"
     volumes:
-      - "/docker/surfshark/Wireguard-Data/config:/config"
+      - "{{ docker_dir }}/{{ container_name }}/config:/config"
       - "/lib/modules:/lib/modules"
   register: result
 
