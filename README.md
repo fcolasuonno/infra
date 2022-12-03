@@ -43,7 +43,7 @@ brew install ansible
 ```
 Install Ansible (Linux):
 ```
-sudo apt get install ansible \
+sudo apt-get install ansible \
     libsecret-tools &&  \ #for storing/accesing credentials 
     python3 -m pip install --upgrade --user ansible
 

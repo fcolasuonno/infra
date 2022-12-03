@@ -75,13 +75,6 @@
           - containers
         when: enable_wireguard | default(False)
 
-      - role: network/surfshark
-        become: no
-        tags:
-          - surfshark
-          - containers
-        when: enable_surfshark | default(False)
-
       - role: network/cloudflare-ddns
         become: no
         tags:

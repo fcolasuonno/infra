@@ -2,23 +2,72 @@
 - name: upload the site directory to the docker host
   synchronize:
     src: "site"
-    dest: "/tmp/rdesktop-build"
+    dest: "{{ docker_dir }}/{{ container_name }}-build"
 
 - name: build the image
   docker_image:
     build:
-      path: "/tmp/rdesktop-build/site"
+      path: "{{ docker_dir }}/{{ container_name }}-build/site"
     force_source: yes
     name: "rdesktop"
     source: build
     state: present
   register: image_build
 
+- name: Make sure that wireguard packages are installed
+  become: yes
+  package:
+    name:
+      - wireguard-tools
+    state: present
+
+- name: Ensure directory exists
+  become: yes
+  file:
+    path: "{{ docker_dir }}/{{ container_name }}/config"
+    state: directory
+    mode: 0755
+    owner: 1000
+    group: 1000
+
+- name: Run wiregen script
+  ansible.builtin.script: "wiregen.py -u {{ surfshark_user }} -p {{ surfshark_pass }}"
+  args:
+    chdir: "{{ docker_dir }}/{{ container_name }}"
+    creates: "{{ docker_dir }}/{{ container_name }}/Wireguard-Data/config"
+
+- name: Change ownership
+  become: yes
+  file:
+    path: "{{ docker_dir }}/{{ container_name }}/Wireguard-Data"
+    mode: 0755
+    owner: 1000
+    group: 1000
+    recurse: yes
+
+- name: Copy correct config
+  synchronize:
+    src: "{{ docker_dir }}/{{ container_name }}/Wireguard-Data/config/{{ surfshark_location }}.conf"
+    dest: "{{ docker_dir }}/{{ container_name }}/config/wg0.conf"
+  delegate_to: "{{ inventory_hostname }}"
+
+- name: Install the docker_compose configuration file
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ docker_dir }}/{{ container_name }}-build/docker-compose.yml"
+
 - name: Make sure the {{ container_name }} container is created and running
   docker_container:
     name: "{{ container_name }}"
     image: "rdesktop"
-    network_mode: "container:surfshark"
+    networks:
+      - name: my_macvlan
+    privileged: yes
+    sysctls:
+      "net.ipv4.conf.all.src_valid_mark": "1"
+    capabilities:
+      - net_admin
+      - sys_module
     purge_networks: yes
     state: 'started'
     recreate: '{{ True if image_build.changed else omit }}'
@@ -27,6 +76,7 @@
       PUID: "{{ guid }}"
       PGID: "{{ guid }}"
       TZ: "{{ timezone }}"
+      "ALLOWEDIPS": "0.0.0.0/0, {{ macvlan_network }}, {{ iot_network }}"
     restart_policy: unless-stopped
     labels: "{{
       {
@@ -39,7 +89,8 @@
       }
     }}"
     volumes:
+      - "{{ docker_dir }}/{{ container_name }}/config:/config"
+      - "/lib/modules:/lib/modules"
       - "/etc/localtime:/etc/localtime:ro"
-      - "{{ docker_dir }}/{{ container_name }}:/config"
       - "{{ mergerfs_root }}/Media:/media"
       - "{{ mergerfs_root }}/Downloads:/downloads"
