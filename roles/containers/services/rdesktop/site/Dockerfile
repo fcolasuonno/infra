@@ -36,7 +36,8 @@ RUN \
         bash \
         sakura \
         transmission \
-        xrdp
+        xrdp \
+        thunar
 
 RUN \
   echo "**** install dependencies ****" && \
