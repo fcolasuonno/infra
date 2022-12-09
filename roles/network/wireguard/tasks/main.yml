@@ -7,10 +7,13 @@
     privileged: yes
     sysctls:
       "net.ipv4.conf.all.src_valid_mark": "1"
-    capabilities: 
+    capabilities:
       - net_admin
       - sys_module
     state: 'started'
+    networks:
+      - name: my_macvlan
+      - name: bridge
     env:
       "SERVERURL": "{{ ddns_subdomain }}.{{ domain }}"
       "PEERS": "{{ ', '.join(wireguard_peers) }}"
