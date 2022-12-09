@@ -1,0 +1,63 @@
+---
+- name: Make sure the configuration directory exists
+  file:
+    path: "{{ docker_dir }}/{{ container_name }}/config/"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755
+
+- name: Make sure the configuration directory exists
+  file:
+    path: "{{ docker_dir }}/{{ container_name }}/data/"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755
+
+- name: Make sure the configuration directory exists
+  file:
+    path: "{{ docker_dir }}/{{ container_name }}/log/"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755
+
+- name: Copy mosquitto.conf
+  copy:
+    src: files/mosquitto.conf
+    dest: "{{ docker_dir }}/{{ container_name }}/config/mosquitto.conf"
+    mode: 0644
+
+- name: Create mosquitto.passwd
+  file:
+    path: "{{ docker_dir }}/{{ container_name }}/config/mosquitto.passwd"
+    state: touch
+    access_time: preserve
+    modification_time: preserve
+    mode: 0644
+
+- name: Check if mosquitto.passwd is populated
+  lineinfile:
+    path: "{{ docker_dir }}/{{ container_name }}/config/mosquitto.passwd"
+    regexp: "^mosquitto.*$"
+    state: absent
+  register: mosquitto_passwd_present
+  changed_when: not mosquitto_passwd_present.changed
+  check_mode: yes
+  notify:
+    - Generate the password
+
+- name: Make sure the {{ container_name }} container is created and running
+  docker_container:
+    name: "{{ container_name }}"
+    image: "eclipse-mosquitto"
+    pull: yes
+    networks:
+      - name: my_macvlan
+    state: 'started'
+    volumes:
+      - "{{ docker_dir }}/{{ container_name }}/config:/mosquitto/config"
+      - "{{ docker_dir }}/{{ container_name }}/data:/mosquitto/data"
+      - "{{ docker_dir }}/{{ container_name }}/log:/mosquitto/log"
+    restart_policy: unless-stopped

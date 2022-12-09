@@ -10,16 +10,16 @@
 - name: Make sure the {{ container_name }} container is created and running
   docker_container:
     name: '{{ container_name }}'
-    image: linuxserver/ubooquity:latest
+    image: "homeassistant/home-assistant:stable"
     networks:
       - name: my_macvlan
     pull: yes
+    privileged: yes
     state: 'started'
     env:
       PUID: "{{ guid }}"
       PGID: "{{ guid }}"
       TZ: "{{ timezone }}"
-      MAXMEM: "1024"
     restart_policy: unless-stopped
     labels: "{{
       {
@@ -33,6 +33,3 @@
     }}"
     volumes:
       - '{{ docker_dir }}/{{ container_name }}/config:/config'
-      - '{{ docker_dir }}/{{ container_name }}/files:/files'
-      - "{{ mergerfs_root }}/Media/Comics:/comics"
-      - "{{ mergerfs_root }}/Media/Books:/books"

@@ -1,7 +1,7 @@
 ---
 - name: Make sure the configuration directory exists
   file:
-    path: "{{ docker_dir }}/{{ container_name }}/data/"
+    path: "{{ docker_dir }}/{{ container_name }}/config/"
     state: directory
     owner: "{{ username }}"
     group: "{{ username }}"
@@ -31,5 +31,5 @@
        }
      }}"
     volumes:
-      - '{{ docker_dir }}/{{ container_name }}/data:/data'
+      - '{{ docker_dir }}/{{ container_name }}/config:/data'
       - '/var/run/docker.sock:/var/run/docker.sock'

@@ -162,11 +162,11 @@ enable_samba: false
 
 # Home automation
 
-enable_deconz: false
-
 enable_homeassistant: false
 
 enable_mqtt: false
+
+enable_zigbee2mqtt: false
 
 # Media
 
@@ -374,3 +374,4 @@ poweroff: false
 #cloudflare_dns_token: TOKEN_TO_UPDATE_CLOUDFLARE
 #plex_claim: PLEX_CLAIM
 #surfshark_pass: SOME_PASSWORD
+#mqtt_password: PASSWORD_FOR_MOSQUITTO

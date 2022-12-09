@@ -7,19 +7,27 @@
     group: "{{ username }}"
     mode: 0755
 
+- name: Install the configuration
+  template:
+    src: configuration.j2
+    dest: "{{ docker_dir }}/{{ container_name }}/config/configuration.yaml"
+    mode: 0775
+
 - name: Make sure the {{ container_name }} container is created and running
   docker_container:
     name: '{{ container_name }}'
-    image: linuxserver/ubooquity:latest
+    image: "koenkk/zigbee2mqtt"
     networks:
       - name: my_macvlan
     pull: yes
+    privileged: yes
+    devices:
+      - "/dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_dce56fd39c29ec11b9e16c7840c9ce8d-if00-port0:/dev/ttyACM0"
     state: 'started'
     env:
       PUID: "{{ guid }}"
       PGID: "{{ guid }}"
       TZ: "{{ timezone }}"
-      MAXMEM: "1024"
     restart_policy: unless-stopped
     labels: "{{
       {
@@ -32,7 +40,5 @@
       }
     }}"
     volumes:
-      - '{{ docker_dir }}/{{ container_name }}/config:/config'
-      - '{{ docker_dir }}/{{ container_name }}/files:/files'
-      - "{{ mergerfs_root }}/Media/Comics:/comics"
-      - "{{ mergerfs_root }}/Media/Books:/books"
+      - '/run/udev:/run/udev:ro'
+      - '{{ docker_dir }}/{{ container_name }}/config:/app/data'

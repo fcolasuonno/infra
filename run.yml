@@ -188,37 +188,35 @@
           - containers
         when: enable_cloudcmd | default(False)
 
-    #
-    # Home automation
-    #
-    #      - role: containers/homeautomation/deconz
-    #        tags:
-    #            - deconz
-    #            - smarthome
-    #            - containers
-    #        when: enable_deconz | default(False)
-#
-#      - role: containers/homeautomation/homeassistant
-#        become: no
-#        tags:
-#            - homeassistant
-#            - smarthome
-#            - containers
-#        when: enable_homeassistant | default(False)
-#
-#      - role: containers/homeautomation/mqtt
-#        become: no
-#        tags:
-#            - mqtt
-#            - smarthome
-#            - containers
-#        when: enable_homeassistant | default(False)
+      - role: containers/homeautomation/homeassistant
+        become: no
+        tags:
+          - homeassistant
+          - smarthome
+          - containers
+        when: enable_homeassistant | default(False)
 
-      #
-      # Samba
-      #
+      - role: containers/homeautomation/mqtt
+        become: no
+        tags:
+          - mqtt
+          - smarthome
+          - containers
+        when: enable_mqtt | default(False)
+
+      - role: containers/homeautomation/zigbee2mqtt
+        become: no
+        tags:
+          - z2mqtt
+          - smarthome
+          - containers
+        when: enable_zigbee2mqtt | default(False)
+
+    #
+    # Samba
+    #
       - role: bertvv.samba
         become: yes
         tags:
-            - samba
+          - samba
         when: enable_nas_stuff | default(False)

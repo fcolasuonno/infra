@@ -1,0 +1,4 @@
+---
+container_name: zigbee2mqtt
+
+service_port: 8080

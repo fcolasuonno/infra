@@ -1,2 +1,4 @@
 ---
 container_name: homeassistant
+
+service_port: 8123
