@@ -188,6 +188,16 @@
           - containers
         when: enable_cloudcmd | default(False)
 
+      - role: containers/system/cloudflared
+        tags:
+          - cloudflared
+          - containers
+        when: enable_cloudflared | default(False)
+
+    #
+    # Home automation
+    #
+
       - role: containers/homeautomation/homeassistant
         become: no
         tags:

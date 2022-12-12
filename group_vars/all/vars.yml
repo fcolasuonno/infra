@@ -204,6 +204,7 @@ enable_portainer: false
 
 enable_cloudcmd: false
 
+enable_cloudflared: false
 # Misc
 
 enable_watchtower: false
@@ -375,3 +376,4 @@ poweroff: false
 #plex_claim: PLEX_CLAIM
 #surfshark_pass: SOME_PASSWORD
 #mqtt_password: PASSWORD_FOR_MOSQUITTO
+#cloudflared_token: cloudflared_tokem
