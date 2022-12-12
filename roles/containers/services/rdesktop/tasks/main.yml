@@ -51,11 +51,6 @@
     dest: "{{ docker_dir }}/{{ container_name }}/config/wg0.conf"
   delegate_to: "{{ inventory_hostname }}"
 
-- name: Install the docker_compose configuration file
-  template:
-    src: docker-compose.yml.j2
-    dest: "{{ docker_dir }}/{{ container_name }}-build/docker-compose.yml"
-
 - name: Make sure the {{ container_name }} container is created and running
   docker_container:
     name: "{{ container_name }}"
