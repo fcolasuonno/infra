@@ -168,6 +168,8 @@ enable_mqtt: false
 
 enable_zigbee2mqtt: false
 
+enable_valetudomapper: false
+
 # Media
 
 enable_plex: false

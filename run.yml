@@ -222,6 +222,13 @@
           - containers
         when: enable_zigbee2mqtt | default(False)
 
+      - role: containers/homeautomation/valetudomapper
+        become: no
+        tags:
+          - valetudomapper
+          - containers
+        when: enable_valetudomapper | default(False)
+
     #
     # Samba
     #

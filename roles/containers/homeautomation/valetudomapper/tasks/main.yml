@@ -1,0 +1,39 @@
+---
+- name: Make sure the configuration directory exists
+  file:
+    path: "{{ docker_dir }}/{{ container_name }}/config/"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755
+
+- name: Install the configuration
+  template:
+    src: config.j2
+    dest: "{{ docker_dir }}/{{ container_name }}/config/config.json"
+    mode: 0775
+
+- name: Make sure the {{ container_name }} container is created and running
+  docker_container:
+    name: '{{ container_name }}'
+    image: "rand256/valetudo-mapper:latest"
+    networks:
+      - name: my_macvlan
+    pull: yes
+    env:
+      PUID: "{{ guid }}"
+      PGID: "{{ guid }}"
+      TZ: "{{ timezone }}"
+    restart_policy: unless-stopped
+    labels: "{{
+      {
+       'traefik.enable': 'true',
+       'traefik.http.routers.'+ container_name +'.rule': 'Host(`'+  container_name + '.' + host_local + '`)',
+       'traefik.http.routers.'+ container_name +'.tls.certresolver': 'letsencrypt',
+       'traefik.http.routers.'+ container_name +'.tls.domains[0].main': host_local,
+       'traefik.http.routers.'+ container_name +'.tls.domains[0].sans': '*.' + host_local,
+       'traefik.http.services.'+ container_name +'.loadbalancer.server.port': service_port | string
+      }
+    }}"
+    volumes:
+      - '{{ docker_dir }}/{{ container_name }}/config/config.json:/app/config.json'
