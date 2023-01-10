@@ -15,7 +15,7 @@
 </item>
 <item label="Thunar" icon="/usr/share/icons/hicolor/scalable/apps/org.xfce.thunar.svg">
     <action name="Execute">
-        <command>/usr/bin/transmission-gtk</command>
+        <command>/usr/bin/thunar</command>
     </action>
 </item>
 <item label="Reload OB"><action name="Reconfigure"/></item>

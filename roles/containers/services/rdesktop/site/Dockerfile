@@ -14,7 +14,6 @@ ARG MEGATOOL_URL=https://megatools.megous.com/builds/builds/megatools-1.11.0.202
 WORKDIR /tmp
 
 # Download Megatool
-
 RUN \
     wget ${MEGATOOL_URL} -O - | tar -xz && \
     cp mega*/megatools /usr/bin
@@ -37,7 +36,8 @@ RUN \
         sakura \
         transmission \
         xrdp \
-        thunar
+        thunar \
+        adwaita-icon-theme
 
 RUN \
   echo "**** install dependencies ****" && \
@@ -60,6 +60,7 @@ RUN \
     libqrencode \
     net-tools \
     openresolv \
+    python3 py3-requests \
     perl && \
   echo "wireguard" >> /etc/modules && \
   echo "**** install wireguard-tools ****" && \
@@ -87,6 +88,8 @@ COPY root/ /
 VOLUME /config
 VOLUME /media
 VOLUME /downloads
+
+ENV PS1 "\u@\h:\w\$"
 
 # Metadata.
 LABEL \

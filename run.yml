@@ -6,9 +6,13 @@
   gather_facts: no
 
   pre_tasks:
-      - import_tasks: tasks/ssh_juggle_port.yml
-        tags:
-            - port
+    - import_tasks: tasks/ssh_juggle_port.yml
+      tags:
+        - port
+    - import_tasks: tasks/dir_copy.yml
+      tags:
+        - backup
+      when: enable_backup | default(False)
 
 - hosts: fleet
   become: yes

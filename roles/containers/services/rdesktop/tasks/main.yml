@@ -14,13 +14,6 @@
     state: present
   register: image_build
 
-- name: Make sure that wireguard packages are installed
-  become: yes
-  package:
-    name:
-      - wireguard-tools
-    state: present
-
 - name: Ensure directory exists
   become: yes
   file:
@@ -29,27 +22,6 @@
     mode: 0755
     owner: 1000
     group: 1000
-
-- name: Run wiregen script
-  ansible.builtin.script: "wiregen.py -u {{ surfshark_user }} -p {{ surfshark_pass }}"
-  args:
-    chdir: "{{ docker_dir }}/{{ container_name }}"
-    creates: "{{ docker_dir }}/{{ container_name }}/Wireguard-Data/config"
-
-- name: Change ownership
-  become: yes
-  file:
-    path: "{{ docker_dir }}/{{ container_name }}/Wireguard-Data"
-    mode: 0755
-    owner: 1000
-    group: 1000
-    recurse: yes
-
-- name: Copy correct config
-  synchronize:
-    src: "{{ docker_dir }}/{{ container_name }}/Wireguard-Data/config/{{ surfshark_location }}.conf"
-    dest: "{{ docker_dir }}/{{ container_name }}/config/wg0.conf"
-  delegate_to: "{{ inventory_hostname }}"
 
 - name: Make sure the {{ container_name }} container is created and running
   docker_container:
@@ -72,6 +44,9 @@
       PGID: "{{ guid }}"
       TZ: "{{ timezone }}"
       "ALLOWEDIPS": "0.0.0.0/0, {{ macvlan_network }}, {{ iot_network }}"
+      SURFSHARK_USER: "{{ surfshark_user }}"
+      SURFSHARK_PASSWORD: "{{ surfshark_pass }}"
+      SURFSHARK_LOCATION: "{{ surfshark_location }}"
     restart_policy: unless-stopped
     labels: "{{
       {

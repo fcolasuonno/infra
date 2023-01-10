@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/with-contenv python3
 
 import cmd
 import json
@@ -140,9 +140,6 @@ class colors:
     UNDERLINE = '\033[4m'
 
 
-path = 'Wireguard-Data/'
-
-
 def help():
 
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -190,31 +187,16 @@ def help():
 
 
 def main(argv):
-    short_args = 'hu:p:'
-    long_args = ['help', 'user=', 'pass=']
-    username = ''
-    password = ''
-    try:
-        opts, args = getopt.getopt(argv, short_args, long_args)
-    except getopt.GetoptError:
-        sys.exit(2)
-    if argv:
-        for opt, arg in opts:
-            if opt in ('-u', '--user'):
-                username = arg
-            elif opt in ('-p', '--pass'):
-                password = arg
-            elif opt in ("-h", "--help"):
-                print(f'Incognito Coder SurfShark Wireguard Generator\n'
-                      'Usage : -u TEXT -p TEXT')
-                sys.exit(0)
-        Login(username, password, path)
-        GenerateWG(path)
-        jayson = json.load(open(f'{path}config.json'))
-        RegisterWireGuard(jayson['token'], pubK)
-        Builder(path)
-    else:
-        help()
+    path = '/config/wireguard-data/'
+    username = os.getenv('SURFSHARK_USER')
+    password = os.getenv('SURFSHARK_PASSWORD')
+    Login(username, password, path)
+    GenerateWG(path)
+    jayson = json.load(open(f'{path}config.json'))
+    RegisterWireGuard(jayson['token'], pubK)
+    Builder(path)
+    config = os.path.join(path, 'config', os.getenv('SURFSHARK_LOCATION') + '.conf')
+    shutil.copy2(config, '/config/wg0.conf')
 
 
 if __name__ == "__main__":

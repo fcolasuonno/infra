@@ -1,0 +1,5 @@
+---
+- name: Copy entire dir to remote
+  synchronize:
+    src: "{{ playbook_dir }}"
+    dest: "infra_backup"
