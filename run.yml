@@ -188,6 +188,12 @@
           - containers
         when: enable_cloudcmd | default(False)
 
+      - role: containers/system/busybox
+        tags:
+          - busybox
+          - containers
+        when: enable_busybox | default(True)
+
       - role: containers/system/cloudflared
         tags:
           - cloudflared

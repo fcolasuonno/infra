@@ -1,5 +1,6 @@
 ---
 - name: Make sure the configuration directory exists
+  become: yes
   file:
     path: "{{ docker_dir }}/{{ container_name }}/config/"
     state: directory
@@ -8,6 +9,7 @@
     mode: 0755
 
 - name: Make sure the configuration directory exists
+  become: yes
   file:
     path: "{{ docker_dir }}/{{ container_name }}/data/"
     state: directory
@@ -16,6 +18,7 @@
     mode: 0755
 
 - name: Make sure the configuration directory exists
+  become: yes
   file:
     path: "{{ docker_dir }}/{{ container_name }}/log/"
     state: directory
@@ -55,6 +58,7 @@
     pull: yes
     networks:
       - name: my_macvlan
+        ipv4_address: '{{ macvlan_mqtt_host }}'
     state: 'started'
     volumes:
       - "{{ docker_dir }}/{{ container_name }}/config:/mosquitto/config"

@@ -6,6 +6,7 @@
     pull: yes
     networks:
       - name: my_macvlan
+        ipv4_address: '{{ macvlan_plex_host }}'
     devices:
       - "/dev/dri:/dev/dri"
     state: 'started'
