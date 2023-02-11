@@ -88,6 +88,7 @@ enable_hwe_kernel: false
 
 spindown_time: 600 # in seconds
 
+enable_backup: true
 #
 # Packages
 #
