@@ -39,7 +39,8 @@ RUN \
         transmission \
         xrdp \
         thunar \
-        adwaita-icon-theme
+        adwaita-icon-theme \
+        openresolv
 
 RUN \
   echo "**** install dependencies ****" && \
@@ -78,6 +79,7 @@ RUN \
   make -C src -j$(nproc) && \
   make -C src install && \
   sed -i '/\[\[ $proto == -4 \]\] && cmd sysctl -q net\.ipv4\.conf\.all\.src_valid_mark=1/d' /usr/bin/wg-quick && \
+  ln -s /usr/sbin/resolvconf /usr/bin/resolvconf && \
   echo "**** clean up ****" && \
   apk del --no-network build-dependencies && \
   rm -rf \
