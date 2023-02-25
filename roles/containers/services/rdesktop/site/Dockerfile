@@ -5,7 +5,7 @@ FROM lscr.io/linuxserver/firefox:latest
 
 # Define software versions.
 ARG JAVAJRE_VERSION=8.302.08.1
-ARG TMM_VERSION=3.1.17
+ARG TMM_VERSION=3.1.18
 
 # Define software download URLs.
 ARG TMM_URL=https://release.tinymediamanager.org/v3/dist/tmm_${TMM_VERSION}_linux.tar.gz
