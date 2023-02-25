@@ -6,16 +6,18 @@ FROM lscr.io/linuxserver/firefox:latest
 # Define software versions.
 ARG JAVAJRE_VERSION=8.302.08.1
 ARG TMM_VERSION=3.1.18
+ARG MEGATOOL_VERSION_URL=https://megatools.megous.com/builds/LATEST
 
 # Define software download URLs.
 ARG TMM_URL=https://release.tinymediamanager.org/v3/dist/tmm_${TMM_VERSION}_linux.tar.gz
-ARG MEGATOOL_URL=https://megatools.megous.com/builds/builds/megatools-1.11.0.20220519-linux-x86_64.tar.gz
+ARG MEGATOOL_URL=https://megatools.megous.com/builds/builds/
 # Define working directory.
 WORKDIR /tmp
 
 # Download Megatool
 RUN \
-    wget ${MEGATOOL_URL} -O - | tar -xz && \
+    MEGATOOL_VERSION="$(curl -s $MEGATOOL_VERSION_URL)" && \
+    wget ${MEGATOOL_URL}${MEGATOOL_VERSION}-linux-x86_64.tar.gz -O - | tar -xz && \
     cp mega*/megatools /usr/bin
 
 # Download TinyMediaManager
