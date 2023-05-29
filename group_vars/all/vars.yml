@@ -47,7 +47,6 @@ netplan_config:
 
 domain: "example.com" #registered zone in cloudflare
 host_local: "SOMETHING.{{ domain }}"  #registered in cloudflare too
-ddns_subdomain: "DDNS_SUBDOMAIN"
 
 dmz_network: "{{ '.'.join(lan_gateway.split('.')[0:2]) }}.44.0/24"
 dmz_gateway: "{{ '.'.join(dmz_network.split('.')[0:3]) }}.1"
@@ -183,17 +182,7 @@ enable_ubooquity: false
 
 enable_calibre_web: false
 
-# DDNS
-
-enable_cloudflare_ddns: false
-
 # VPN
-
-enable_wireguard: false
-
-wireguard_peers:
-  - peer1
-  - peer2_etc
 
 surfshark_user: some@email.com
 

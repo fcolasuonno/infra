@@ -19,11 +19,6 @@ The playbook is mostly being developed for personal use, so stuff is going to be
 * [Plex](https://hub.docker.com/r/linuxserver/plex) (A media server)
 * [Jellyfin](https://hub.docker.com/r/linuxserver/jellyfin) (Yet another media server)
 
-#### Services
-* [Authelia](https://hub.docker.com/r/authelia/authelia) (An authentication provider)
-* [cloudflare-ddns](https://hub.docker.com/r/oznu/cloudflare-ddns) (A dynamic DNS updater for Cloudflare)
-* [Wireguard](https://hub.docker.com/r/linuxserver/wireguard) (A VPN server)
-
 #### Misc
 * [Watchtower](https://hub.docker.com/r/containrrr/watchtower) (An automated updater for Docker images)
 
