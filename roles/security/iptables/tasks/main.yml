@@ -39,7 +39,6 @@
     ctstate: NEW
     comment: Ansible managed
     jump: LOG
-  when: enable_crowdsec | default(False)
 
 - name: Allow SSH
   iptables:
@@ -66,7 +65,6 @@
     destination_port: 445
     jump: ACCEPT
     comment: Ansible managed
-  when: enable_samba | default(False)
 
 - name: Allow samba 2
   iptables:
@@ -75,7 +73,6 @@
     destination_port: "137:138"
     jump: ACCEPT
     comment: Ansible managed
-  when: enable_samba | default(False)
 
 - name: Allow samba 3
   iptables:
@@ -84,7 +81,6 @@
     destination_port: 139
     jump: ACCEPT
     comment: Ansible managed
-  when: enable_samba | default(False)
 
 - name: Allow samba 4
   iptables:
@@ -93,7 +89,6 @@
     destination_port: 3702
     jump: ACCEPT
     comment: Ansible managed
-  when: enable_samba | default(False)
 
 - name: Allow samba 5
   iptables:
@@ -102,7 +97,6 @@
     destination_port: 5357
     jump: ACCEPT
     comment: Ansible managed
-  when: enable_samba | default(False)
 
 - name: Set the policy for the INPUT chain to DROP
   ansible.builtin.iptables:

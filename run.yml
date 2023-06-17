@@ -12,7 +12,6 @@
     - import_tasks: tasks/dir_copy.yml
       tags:
         - backup
-      when: enable_backup | default(False)
 
 - hosts: fleet
   become: yes
@@ -45,23 +44,16 @@
         tags:
             - ntp
 
-      - role: linux-system-roles.cockpit
-        tags:
-            - cockpit
-        when: enable_cockpit | default(False)
-
       #
       # Security
       #
       - role: security/iptables
         tags:
             - iptables
-        when: enable_iptables | default(False)
 
       - role: security/crowdsec
         tags:
             - crowdsec
-        when: enable_crowdsec | default(False)
 
       #
       # Network
@@ -79,31 +71,26 @@
         become: yes
         tags:
             - mergerfs
-        when: enable_nas_stuff | default(False)
 
       - role: filesystems/mounts
         become: yes
         tags:
             - mounts
-        when: enable_nas_stuff | default(False)
 
       - role: filesystems/hd-idle
         become: yes
         tags:
             - hd-idle
-        when: enable_nas_stuff | default(False)
 
       - role: stuvusit.smartd
         become: yes
         tags:
             - smartd
-        when: enable_nas_stuff | default(False)
 
       - role: ironicbadger.snapraid
         become: yes
         tags:
             - snapraid
-        when: enable_nas_stuff | default(False)
 
       #
       # Services
@@ -119,7 +106,6 @@
         tags:
           - rdesktop
           - containers
-        when: enable_rdesktop | default(False)
 
       #
       # System
@@ -139,28 +125,24 @@
         tags:
           - plex
           - containers
-        when: enable_plex | default(False)
 
       - role: containers/media/jellyfin
         become: no
         tags:
           - jellyfin
           - containers
-        when: enable_jellyfin | default(False)
 
       - role: containers/media/ubooquity
         become: no
         tags:
           - ubooquity
           - containers
-        when: enable_ubooquity | default(False)
 
       - role: containers/media/calibre-web
         become: no
         tags:
           - calibre-web
           - containers
-        when: enable_calibre_web | default(False)
 
     #
     # System
@@ -170,25 +152,21 @@
         tags:
           - portainer
           - containers
-        when: enable_portainer | default(False)
 
       - role: containers/system/cloudcmd
         tags:
           - cloudcmd
           - containers
-        when: enable_cloudcmd | default(False)
 
       - role: containers/system/busybox
         tags:
           - busybox
           - containers
-        when: enable_busybox | default(True)
 
       - role: containers/system/cloudflared
         tags:
           - cloudflared
           - containers
-        when: enable_cloudflared | default(False)
 
     #
     # Home automation
@@ -200,7 +178,6 @@
           - homeassistant
           - smarthome
           - containers
-        when: enable_homeassistant | default(False)
 
       - role: containers/homeautomation/mqtt
         become: no
@@ -208,7 +185,6 @@
           - mqtt
           - smarthome
           - containers
-        when: enable_mqtt | default(False)
 
       - role: containers/homeautomation/zigbee2mqtt
         become: no
@@ -216,14 +192,12 @@
           - z2mqtt
           - smarthome
           - containers
-        when: enable_zigbee2mqtt | default(False)
 
       - role: containers/homeautomation/valetudomapper
         become: no
         tags:
           - valetudomapper
           - containers
-        when: enable_valetudomapper | default(False)
 
     #
     # Samba
@@ -232,4 +206,3 @@
         become: yes
         tags:
           - samba
-        when: enable_nas_stuff | default(False)

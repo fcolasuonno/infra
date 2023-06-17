@@ -83,11 +83,8 @@ docker_dir: "{{ docker_home}}/data"
 
 docker_backup_dir: "{{ mergerfs_root_slow }}/docker_backup"
 
-enable_hwe_kernel: false
-
 spindown_time: 600 # in seconds
 
-enable_backup: true
 #
 # Packages
 #
@@ -155,53 +152,11 @@ security_autoupdate_reboot_time: '23:00'
 
 security_autoupdate_mail_on_error: false
 
-#
-# Enable/disable functionality
-#
-enable_nas_stuff: false
-
-enable_samba: false
-
-# Home automation
-
-enable_homeassistant: false
-
-enable_mqtt: false
-
-enable_zigbee2mqtt: false
-
-enable_valetudomapper: false
-
-# Media
-
-enable_plex: false
-
-enable_jellyfin: false
-
-enable_ubooquity: false
-
-enable_calibre_web: false
-
 # VPN
 
 surfshark_user: some@email.com
 
 surfshark_location: SOMEWHERE
-
-# Services:
-
-enable_rdesktop: false
-
-# System:
-
-enable_portainer: false
-
-enable_cloudcmd: false
-
-enable_cloudflared: false
-# Misc
-
-enable_watchtower: false
 
 #
 # Samba
@@ -284,8 +239,6 @@ mergerfs_root_slow: "{{ mergerfs_root }}_slow"
 
 cache_root: /mnt/storage_cache
 
-enable_mergerfs: false
-
 disks:
   - { path: /mnt/data1, src: /dev/disk/by-label/Data1, content: true }
   - { path: /mnt/data2, src: /dev/disk/by-label/Data2, content: true }
@@ -349,17 +302,6 @@ snapraid_config_excludes:
 # SMART error reporting
 #
 smartd_default_mail_recipients: ['{{ email }}']
-
-#
-# Security
-#
-enable_crowdsec: false
-
-enable_iptables: false
-
-# Powersaving (powertop, cpufreq)
-
-enable_powersaving: false
 
 poweroff: false
 
