@@ -9,3 +9,9 @@ secret.yml
 !/host_vars/.gitkeep
 !/group_vars/all/vars.yml
 mountsraspi
+/.idea/infra.iml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml
+/.idea/.gitignore
+/.idea/workspace.xml

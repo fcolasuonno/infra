@@ -59,15 +59,6 @@
     comment: Ansible managed
   when: true
 
-- name: Allow Wireguard
-  iptables:
-    chain: INPUT
-    protocol: udp
-    destination_port: 51820
-    jump: ACCEPT
-    comment: Ansible managed
-  when: enable_wireguard | default(False)
-
 - name: Allow samba 1
   iptables:
     chain: INPUT
