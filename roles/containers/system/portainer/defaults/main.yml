@@ -1,4 +1,0 @@
-container_name: portainer
-
-service_port: 9000
-

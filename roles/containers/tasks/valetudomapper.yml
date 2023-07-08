@@ -1,0 +1,14 @@
+---
+- name: Make sure the configuration directory exists
+  file:
+    path: "{{ docker_dir }}/valetudomapper/config/"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755
+
+- name: Install the configuration
+  template:
+    src: valetudomapper/config.j2
+    dest: "{{ docker_dir }}/valetudomapper/config/config.json"
+    mode: 0775

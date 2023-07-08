@@ -28,43 +28,55 @@
         tags:
             - security
 
-      - role: docker
-        tags:
-            - docker
-
       - role: chriswayg.msmtp-mailer
         tags:
-            - msmtp
+          - msmtp
 
       - role: oefenweb.dns
         tags:
-            - dns
+          - dns
 
       - role: geerlingguy.ntp
         tags:
-            - ntp
+          - ntp
 
-      #
-      # Security
-      #
+    #
+    # Containers
+    #
+      - role: geerlingguy.docker
+        tags:
+          - docker
+
+      - role: containers/services/rdesktop
+        become: no
+        tags:
+          - rdesktop
+          - containers
+
+      - role: containers/homeautomation/mqtt
+        become: no
+        tags:
+          - mqtt
+          - smarthome
+          - containers
+
+      - name: containers
+        tags:
+          - containers
+          - compose
+
+    #
+    # Security
+    #
       - role: security/iptables
         tags:
-            - iptables
+          - iptables
 
       - role: security/crowdsec
         tags:
             - crowdsec
 
       #
-      # Network
-      #
-      - role: network/traefik
-        become: no
-        tags:
-          - traefik
-          - containers
-
-    #
     # Filesystems
       #
       - role: filesystems/mergerfs
@@ -85,119 +97,12 @@
       - role: stuvusit.smartd
         become: yes
         tags:
-            - smartd
+          - smartd
 
       - role: ironicbadger.snapraid
         become: yes
         tags:
-            - snapraid
-
-      #
-      # Services
-      #
-      - role: containers/services/heimdall
-        become: no
-        tags:
-          - heimdall
-          - containers
-
-      - role: containers/services/rdesktop
-        become: no
-        tags:
-          - rdesktop
-          - containers
-
-      #
-      # System
-      #
-      - role: containers/system/watchtower
-        become: no
-        tags:
-            - watchtower
-            - containers
-
-      #
-      # Media
-      #
-
-      - role: containers/media/plex
-        become: no
-        tags:
-          - plex
-          - containers
-
-      - role: containers/media/jellyfin
-        become: no
-        tags:
-          - jellyfin
-          - containers
-
-      - role: containers/media/ubooquity
-        become: no
-        tags:
-          - ubooquity
-          - containers
-
-      - role: containers/media/calibre-web
-        become: no
-        tags:
-          - calibre-web
-          - containers
-
-    #
-    # System
-    #
-
-      - role: containers/system/portainer
-        tags:
-          - portainer
-          - containers
-
-      - role: containers/system/cloudcmd
-        tags:
-          - cloudcmd
-          - containers
-
-      - role: containers/system/busybox
-        tags:
-          - busybox
-          - containers
-
-      - role: containers/system/cloudflared
-        tags:
-          - cloudflared
-          - containers
-
-    #
-    # Home automation
-    #
-
-      - role: containers/homeautomation/homeassistant
-        become: no
-        tags:
-          - homeassistant
-          - smarthome
-          - containers
-
-      - role: containers/homeautomation/mqtt
-        become: no
-        tags:
-          - mqtt
-          - smarthome
-          - containers
-
-      - role: containers/homeautomation/zigbee2mqtt
-        become: no
-        tags:
-          - z2mqtt
-          - smarthome
-          - containers
-
-      - role: containers/homeautomation/valetudomapper
-        become: no
-        tags:
-          - valetudomapper
-          - containers
+          - snapraid
 
     #
     # Samba

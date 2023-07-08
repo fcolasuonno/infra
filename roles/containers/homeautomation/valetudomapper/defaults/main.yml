@@ -1,4 +1,0 @@
----
-container_name: valetudomapper
-
-service_port: 3001

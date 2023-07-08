@@ -1,4 +1,0 @@
----
-container_name: jellyfin
-
-service_port: 8096

@@ -81,6 +81,13 @@ docker_storage: "{{ docker_home}}/storage"
 
 docker_dir: "{{ docker_home}}/data"
 
+docker_install_compose_plugin: true
+
+docker_daemon_options:
+  data-root: "{{ docker_storage }}"
+
+docker_compose_dir: "{{ docker_home}}/compose"
+
 docker_backup_dir: "{{ mergerfs_root_slow }}/docker_backup"
 
 spindown_time: 600 # in seconds
@@ -89,7 +96,7 @@ spindown_time: 600 # in seconds
 # Packages
 #
 extra_packages:
-    - iperf3
+  - iperf3
     - speedtest-cli
     - htop
     - stow

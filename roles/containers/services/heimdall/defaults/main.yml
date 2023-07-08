@@ -1,3 +1,0 @@
-container_name: heimdall
-
-service_port: 80
