@@ -1,0 +1,9 @@
+---
+- name: Copy the compose file
+  template:
+    src: templates/compose.yaml
+    dest: "{{ docker_compose_dir }}/compose.yaml"
+
+- name: Docker-compose up
+  community.docker.docker_compose:
+    project_src: "{{ docker_compose_dir }}"

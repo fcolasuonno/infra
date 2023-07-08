@@ -64,6 +64,7 @@
         tags:
           - containers
           - compose
+          - recompose
 
     #
     # Security

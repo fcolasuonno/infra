@@ -2,12 +2,12 @@ networks:
   apps:
     driver: macvlan
     driver_opts:
-      parent: { { macvlan_interface } }
+      parent: "{{ macvlan_interface }}"
     ipam:
       config:
-        - subnet: { { lan_network } }
-          gateway: { { lan_gateway } }
-          ip_range: { { macvlan_network } }
+        - subnet: "{{ lan_network }}"
+          gateway: "{{ lan_gateway }}"
+          ip_range: "{{ macvlan_network }}"
           aux_addresses:
             host1: '{{ macvlan_shim_host }}'
 
@@ -23,7 +23,7 @@ services:
     image: jc21/nginx-proxy-manager:latest
     networks:
       apps:
-        ipv4_address: { { macvlan_network | ansible.utils.next_nth_usable(1) } }
+        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(1) }}"
     ports:
       - "80:80"
       - "81:81"
@@ -38,7 +38,7 @@ services:
     image: linuxserver/heimdall:latest
     networks:
       apps:
-        ipv4_address: { { macvlan_network | ansible.utils.next_nth_usable(2) } }
+        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(2) }}"
     restart: always
     volumes:
       - '{{ docker_dir }}/heimdall/config:/config'
@@ -53,7 +53,7 @@ services:
     image: portainer/portainer-ce:latest
     networks:
       apps:
-        ipv4_address: { { macvlan_network | ansible.utils.next_nth_usable(3) } }
+        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(3) }}"
     restart: always
     volumes:
       - '{{ docker_dir }}/portainer/config:/data'
@@ -67,7 +67,7 @@ services:
     command: "tunnel run"
     networks:
       apps:
-        ipv4_address: { { macvlan_network | ansible.utils.next_nth_usable(4) } }
+        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(4) }}"
     restart: always
     volumes:
       - '{{ docker_dir }}/cloudflared/config:/home/nonroot/.cloudflared/'
@@ -80,7 +80,7 @@ services:
     image: coderaiser/cloudcmd
     networks:
       apps:
-        ipv4_address: { { macvlan_network | ansible.utils.next_nth_usable(5) } }
+        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(5) }}"
     restart: always
     volumes:
       - '{{ docker_dir }}/cloudcmd/config:/config'
@@ -95,7 +95,7 @@ services:
     image: eclipse-mosquitto
     networks:
       apps:
-        ipv4_address: { { macvlan_mqtt_host } }
+        ipv4_address: "{{ macvlan_mqtt_host }}"
     restart: always
     volumes:
       - "{{ docker_dir }}/mqtt/config:/mosquitto/config"
@@ -111,7 +111,7 @@ services:
     image: "koenkk/zigbee2mqtt"
     networks:
       apps:
-        ipv4_address: { { macvlan_network | ansible.utils.next_nth_usable(6) } }
+        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(6) }}"
     privileged: true
     devices:
       - "/dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_dce56fd39c29ec11b9e16c7840c9ce8d-if00-port0:/dev/ttyACM0"
@@ -128,7 +128,7 @@ services:
     image: "rand256/valetudo-mapper:latest"
     networks:
       apps:
-        ipv4_address: { { macvlan_network | ansible.utils.next_nth_usable(7) } }
+        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(7) }}"
     volumes:
       - '{{ docker_dir }}/valetudomapper/config/config.json:/app/config.json'
     environment:
@@ -141,7 +141,7 @@ services:
     image: "homeassistant/home-assistant:stable"
     networks:
       apps:
-        ipv4_address: { { macvlan_network | ansible.utils.next_nth_usable(8) } }
+        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(8) }}"
     volumes:
       - '{{ docker_dir }}/homeassistant/config:/config'
     environment:
@@ -154,7 +154,7 @@ services:
     image: "ghcr.io/linuxserver/jellyfin:latest"
     networks:
       apps:
-        ipv4_address: { { macvlan_network | ansible.utils.next_nth_usable(9) } }
+        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(9) }}"
     privileged: true
     devices:
       - "/dev/dri:/dev/dri"
@@ -180,7 +180,7 @@ services:
     image: "lscr.io/linuxserver/plex:latest"
     networks:
       apps:
-        ipv4_address: { { macvlan_plex_host } }
+        ipv4_address: "{{ macvlan_plex_host }}"
     privileged: true
     devices:
       - "/dev/dri:/dev/dri"
@@ -202,7 +202,7 @@ services:
     image: "lscr.io/linuxserver/calibre-web:latest"
     networks:
       apps:
-        ipv4_address: { { macvlan_network | ansible.utils.next_nth_usable(10) } }
+        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(10) }}"
     volumes:
       - '{{ docker_dir }}/calibre-web/config:/config'
       - "{{ mergerfs_root }}/Media/Books:/books"
@@ -216,7 +216,7 @@ services:
     image: "linuxserver/ubooquity:latest"
     networks:
       apps:
-        ipv4_address: { { macvlan_network | ansible.utils.next_nth_usable(11) } }
+        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(11) }}"
     volumes:
       - '{{ docker_dir }}/ubooquity/config:/config'
       - '{{ docker_dir }}/ubooquity/files:/files'
@@ -232,7 +232,7 @@ services:
     image: "rdesktop"
     networks:
       apps:
-        ipv4_address: { { macvlan_network | ansible.utils.next_nth_usable(12) } }
+        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(12) }}"
     privileged: true
     sysctls:
       "net.ipv4.conf.all.src_valid_mark": "1"
