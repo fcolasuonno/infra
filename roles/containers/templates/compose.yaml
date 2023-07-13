@@ -255,15 +255,15 @@ services:
       - SURFSHARK_PASSWORD={{ surfshark_pass }}
       - SURFSHARK_LOCATION={{ surfshark_location }}
 
-  orcaslicer:
-    container_name: orcaslicer
-    image: "mikeah/orcaslicer-novnc"
+  creativity:
+    container_name: creativity
+    image: "creativity"
     networks:
       apps:
         ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(13) }}"
     volumes:
-      - "{{ docker_dir }}/orcaslicer/config:/configs"
-      - "{{ docker_dir }}/orcaslicer/prints:/prints"
+      - "{{ docker_dir }}/creativity/config:/config"
+      - "{{ mergerfs_root }}/Downloads:/downloads"
     environment:
       - TZ={{ timezone }}
       - PUID={{ guid }}

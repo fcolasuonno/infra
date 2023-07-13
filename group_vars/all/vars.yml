@@ -97,15 +97,15 @@ spindown_time: 600 # in seconds
 #
 extra_packages:
   - iperf3
-    - speedtest-cli
-    - htop
-    - stow
-    - git
-    - mosh
-    - rsync
-    - lm-sensors
-    - iotop
-    - ncdu
+  - speedtest-cli
+  - htop
+  - stow
+  - git
+  - mosh
+  - rsync
+  - lm-sensors
+  - iotop
+  - ncdu
 
 #
 # Apt mirrors

@@ -1,0 +1,25 @@
+---
+- name: upload the site directory to the docker host
+  synchronize:
+    src: "site"
+    dest: "{{ docker_dir }}/creativity-build"
+
+- name: build the image
+  docker_image:
+    build:
+      path: "{{ docker_dir }}/creativity-build/site"
+    force_source: yes
+    name: "creativity"
+    source: build
+    state: present
+  register: image_build
+
+- name: Ensure directory exists
+  become: yes
+  file:
+    path: "{{ docker_dir }}/creativity/config"
+    state: directory
+    mode: 0755
+    owner: 1000
+    group: 1000
+

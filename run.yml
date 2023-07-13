@@ -53,6 +53,12 @@
           - rdesktop
           - containers
 
+      - role: containers/services/creativity
+        become: no
+        tags:
+          - creativity
+          - containers
+
       - role: containers/homeautomation/mqtt
         become: no
         tags:

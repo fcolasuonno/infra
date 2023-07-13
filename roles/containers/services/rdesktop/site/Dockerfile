@@ -4,7 +4,6 @@
 FROM lscr.io/linuxserver/firefox:latest
 
 # Define software versions.
-ARG JAVAJRE_VERSION=8.302.08.1
 ARG TMM_VERSION=3.1.18
 ARG MEGATOOL_VERSION_URL=https://megatools.megous.com/builds/LATEST
 
@@ -28,7 +27,7 @@ RUN \
 # Download and install Oracle JRE.
 # NOTE: This is needed only for the 7-Zip-JBinding workaround.
 
-# Install dependencies
+# Install packages
 RUN \
     apk add \
         openjdk17-jre \
@@ -40,50 +39,13 @@ RUN \
         xrdp \
         thunar \
         adwaita-icon-theme \
-        openresolv
+        openresolv \
+        wireguard-tools \
+        python3 py3-requests
 
 RUN \
-  echo "**** install dependencies ****" && \
-  apk add --no-cache --virtual=build-dependencies \
-    bc \
-    build-base \
-    coredns \
-    elfutils-dev \
-    gcc \
-    git \
-    linux-headers && \
-  apk add --no-cache \
-    bc \
-    coredns \
-    gnupg \
-    iproute2 \
-    iptables \
-    ip6tables \
-    iputils \
-    libqrencode \
-    net-tools \
-    openresolv \
-    python3 py3-requests \
-    perl && \
   echo "wireguard" >> /etc/modules && \
-  echo "**** install wireguard-tools ****" && \
-  if [ -z ${WIREGUARD_RELEASE+x} ]; then \
-    WIREGUARD_RELEASE=$(curl -sX GET "https://api.github.com/repos/WireGuard/wireguard-tools/tags" \
-    | jq -r .[0].name); \
-  fi && \
-  cd /app && \
-  git clone https://git.zx2c4.com/wireguard-linux-compat && \
-  git clone https://git.zx2c4.com/wireguard-tools && \
-  cd wireguard-tools && \
-  git checkout "${WIREGUARD_RELEASE}" && \
-  make -C src -j$(nproc) && \
-  make -C src install && \
-  sed -i '/\[\[ $proto == -4 \]\] && cmd sysctl -q net\.ipv4\.conf\.all\.src_valid_mark=1/d' /usr/bin/wg-quick && \
-  ln -s /usr/sbin/resolvconf /usr/bin/resolvconf && \
-  echo "**** clean up ****" && \
-  apk del --no-network build-dependencies && \
-  rm -rf \
-    /tmp/*
+  ln -s /usr/sbin/resolvconf /usr/bin/resolvconf
 
 # Add files
 COPY root/ /
