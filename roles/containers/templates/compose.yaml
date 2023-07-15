@@ -60,6 +60,7 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock'
     environment:
       - TZ={{ timezone }}
+      - START_DOCKER=false
 
   cloudflared:
     container_name: cloudflared
@@ -122,6 +123,7 @@ services:
       - TZ={{ timezone }}
       - PUID={{ guid }}
       - PGID={{ guid }}
+      - START_DOCKER=false
 
   valetudomapper:
     container_name: valetudomapper
@@ -174,6 +176,8 @@ services:
       - TZ={{ timezone }}
       - PUID={{ guid }}
       - PGID={{ guid }}
+      - START_DOCKER=false
+      - DRINODE=/dev/dri/renderD128
 
   plex:
     container_name: plex
@@ -196,6 +200,8 @@ services:
       - PUID={{ guid }}
       - PGID={{ guid }}
       - PLEX_CLAIM={{ plex_claim }}
+      - START_DOCKER=false
+      - DRINODE=/dev/dri/renderD128
 
   calibre-web:
     container_name: calibre-web
@@ -234,6 +240,8 @@ services:
       apps:
         ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(12) }}"
     privileged: true
+    devices:
+      - "/dev/dri:/dev/dri"
     sysctls:
       "net.ipv4.conf.all.src_valid_mark": "1"
     cap_add:
@@ -254,10 +262,14 @@ services:
       - SURFSHARK_USER={{ surfshark_user }}
       - SURFSHARK_PASSWORD={{ surfshark_pass }}
       - SURFSHARK_LOCATION={{ surfshark_location }}
+      - START_DOCKER=false
+      - DRINODE=/dev/dri/renderD128
 
   creativity:
     container_name: creativity
     image: "creativity"
+    devices:
+      - "/dev/dri:/dev/dri"
     networks:
       apps:
         ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(13) }}"
@@ -269,3 +281,4 @@ services:
       - PUID={{ guid }}
       - PGID={{ guid }}
       - SSL_CERT_FILE="/etc/ssl/certs/ca-certificates.crt"
+      - DRINODE=/dev/dri/renderD128
