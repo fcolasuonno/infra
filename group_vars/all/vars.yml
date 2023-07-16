@@ -308,10 +308,13 @@ snapraid_config_excludes:
 #
 # SMART error reporting
 #
-smartd_default_mail_recipients: ['{{ email }}']
+smartd_default_mail_recipients: [ '{{ email }}' ]
 
 poweroff: false
 
+#zigbee_devices:
+#  '0xHEX':
+#    friendly_name: FRIENDLY_NAME
 #SECRETS (NOT STORED HERE)
 #password: USER_PASSWORD
 #ansible_become_pass: PASSWORD_FOR_SUDO
