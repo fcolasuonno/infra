@@ -308,7 +308,7 @@ snapraid_config_excludes:
 #
 # SMART error reporting
 #
-smartd_default_mail_recipients: [ '{{ email }}' ]
+smartd_default_mail_recipients: ['{{ email }}']
 
 poweroff: false
 
