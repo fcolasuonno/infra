@@ -110,6 +110,7 @@ services:
   zigbee2mqtt:
     container_name: zigbee2mqtt
     image: "koenkk/zigbee2mqtt"
+    restart: always
     networks:
       apps:
         ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(6) }}"
