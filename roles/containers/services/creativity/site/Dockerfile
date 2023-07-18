@@ -1,7 +1,9 @@
 FROM ghcr.io/linuxserver/webtop:ubuntu-openbox
 RUN \
     apt update && \
-    apt install -y libwebkit2gtk-4.0-37 inkscape wget nano xdg-utils tar xzip gzip bzip2 zip unzip
+    apt install -y libwebkit2gtk-4.0-37 inkscape \
+      wget nano xdg-utils tar xzip gzip bzip2 zip unzip \
+      gstreamer1.0-plugins-bad gstreamer1.0-libav
 
 WORKDIR /orcaslicer
 ADD get_release_info.sh /orcaslicer
