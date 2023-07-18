@@ -283,3 +283,14 @@ services:
       - PGID={{ guid }}
       - SSL_CERT_FILE="/etc/ssl/certs/ca-certificates.crt"
       - DRINODE=/dev/dri/renderD128
+
+  mqttx:
+    container_name: mqttx
+    image: "emqx/mqttx-web"
+    networks:
+      apps:
+        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(14) }}"
+    environment:
+      - TZ={{ timezone }}
+      - PUID={{ guid }}
+      - PGID={{ guid }}
