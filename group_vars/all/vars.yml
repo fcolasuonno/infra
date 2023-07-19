@@ -304,6 +304,7 @@ snapraid_config_excludes:
   - '/docker/'
   - 'bus_*.0'
   - 'openbox.log'
+  - logs/
 
 #
 # SMART error reporting
