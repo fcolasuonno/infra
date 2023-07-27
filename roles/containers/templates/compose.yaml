@@ -33,19 +33,18 @@ services:
       - "{{ docker_dir }}/nginxproxymanager/data:/data"
       - "{{ docker_dir }}/nginxproxymanager/letsencrypt:/etc/letsencrypt"
 
-  heimdall:
-    container_name: heimdall
-    image: linuxserver/heimdall:latest
+  homarr:
+    container_name: homarr
+    image: ghcr.io/ajnart/homarr:latest
     networks:
       apps:
         ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(2) }}"
     restart: always
     volumes:
-      - '{{ docker_dir }}/heimdall/config:/config'
+      - "{{ docker_dir }}/homarr/configs:/app/data/configs"
+      - "{{ docker_dir }}/homarr/icons:/app/public/icons"
     environment:
       - TZ={{ timezone }}
-      - PUID={{ guid }}
-      - PGID={{ guid }}
 
   portainer:
     container_name: portainer
@@ -87,6 +86,7 @@ services:
       - '{{ docker_dir }}/cloudcmd/config:/config'
       - "/:/mnt/fs"
     environment:
+      - CLOUDCMD_ROOT=/mnt/fs
       - TZ={{ timezone }}
       - PUID={{ guid }}
       - PGID={{ guid }}
@@ -294,3 +294,26 @@ services:
       - TZ={{ timezone }}
       - PUID={{ guid }}
       - PGID={{ guid }}
+
+  kopia:
+    container_name: kopia
+    image: kopia/kopia:latest
+    networks:
+      apps:
+        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(15) }}"
+    entrypoint: [ "/bin/sh","-c" ]
+    command:
+      - |
+        test ! -e /app/config/repository.config && \
+          kopia repository connect from-config --token {{ kopia_token }} --override-hostname={{ domain }} --enable-actions && \
+          kopia snapshot create /app/backup
+        printf "#!/bin/sh\nset -e\ncurl -S -s -o /dev/null {{ kopia_healtcheck_url }}" > /app/post_snapshot.sh && \
+          chmod +x /app/post_snapshot.sh && \
+          kopia policy set /app/backup --after-snapshot-root-action /app/post_snapshot.sh --snapshot-time 05:30
+        kopia server start --insecure --refresh-interval=12h --address=http://kopia:51515 --server-password={{ kopia_web_password }}
+    environment:
+      - KOPIA_PASSWORD={{ kopia_password }}
+      - TZ
+    volumes:
+      - "{{ docker_dir }}/kopia/config:/app/config"
+      - "{{ mergerfs_root }}/Backup:/app/backup:ro"
