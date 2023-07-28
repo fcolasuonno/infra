@@ -309,11 +309,12 @@ services:
           kopia snapshot create /app/backup
         printf "#!/bin/sh\nset -e\ncurl -S -s -o /dev/null {{ kopia_healtcheck_url }}" > /app/post_snapshot.sh && \
           chmod +x /app/post_snapshot.sh && \
-          kopia policy set /app/backup --after-snapshot-root-action /app/post_snapshot.sh --snapshot-time 05:30
+          kopia policy set /app/backup --after-snapshot-root-action /app/post_snapshot.sh --snapshot-time 05:30 \
+           --add-ignore data/plex --add-ignore data/jellyfin  --add-ignore .cache  --add-ignore logs/
         kopia server start --insecure --refresh-interval=12h --address=http://kopia:51515 --server-password={{ kopia_web_password }}
     environment:
       - KOPIA_PASSWORD={{ kopia_password }}
       - TZ
     volumes:
       - "{{ docker_dir }}/kopia/config:/app/config"
-      - "{{ mergerfs_root }}/Backup:/app/backup:ro"
+      - "{{ docker_backup_dir }}:/app/backup:ro"
