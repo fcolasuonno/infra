@@ -34,7 +34,7 @@ RUN \
         libmediainfo \
         ttf-dejavu \
         bash \
-        sakura \
+        lxterminal \
         transmission \
         xrdp \
         thunar \
