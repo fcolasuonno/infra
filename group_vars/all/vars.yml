@@ -160,9 +160,6 @@ security_autoupdate_reboot_time: '23:00'
 security_autoupdate_mail_on_error: false
 
 # VPN
-
-surfshark_user: some@email.com
-
 surfshark_location: SOMEWHERE
 
 #
@@ -324,7 +321,8 @@ poweroff: false
 #samba_guest_password: PASSWORD_FOR_SMB_GUEST
 #cloudflare_dns_token: TOKEN_TO_UPDATE_CLOUDFLARE
 #plex_claim: PLEX_CLAIM
-#surfshark_pass: SOME_PASSWORD
+#surfshark_public_key: public key from https://my.surfshark.com/vpn/manual-setup/main/wireguard/keys
+#surfshark_private_key: private key from https://my.surfshark.com/vpn/manual-setup/main/wireguard/keys
 #mqtt_password: PASSWORD_FOR_MOSQUITTO
 #cloudflared_token: cloudflared_tokem
 #kopia_password: PASSWORD_FOR_KOPIA

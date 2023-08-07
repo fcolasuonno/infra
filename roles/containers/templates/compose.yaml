@@ -260,8 +260,8 @@ services:
       - PUID={{ guid }}
       - PGID={{ guid }}
       - ALLOWEDIPS=0.0.0.0/0, {{ macvlan_network }}, {{ iot_network }}
-      - SURFSHARK_USER={{ surfshark_user }}
-      - SURFSHARK_PASSWORD={{ surfshark_pass }}
+      - SURFSHARK_PUBLIC_KEY={{ surfshark_public_key }}
+      - SURFSHARK_PRIVATE_KEY={{ surfshark_private_key }}
       - SURFSHARK_LOCATION={{ surfshark_location }}
       - START_DOCKER=false
       - DRINODE=/dev/dri/renderD128
