@@ -305,11 +305,11 @@ services:
     command:
       - |
         test ! -e /app/config/repository.config && \
-          kopia repository connect from-config --token {{ kopia_token }} --override-hostname={{ domain }} --enable-actions && \
-          kopia snapshot create /app/backup
+          kopia repository connect from-config --token {{ kopia_token }} --override-hostname={{ host_local }} --enable-actions && \
+          kopia snapshot create /app/backup/{{ host_local }}
         printf "#!/bin/sh\nset -e\ncurl -S -s -o /dev/null {{ kopia_healtcheck_url }}" > /app/post_snapshot.sh && \
           chmod +x /app/post_snapshot.sh && \
-          kopia policy set /app/backup --after-snapshot-root-action /app/post_snapshot.sh --snapshot-time 05:30 \
+          kopia policy set /app/backup/{{ host_local }} --after-snapshot-root-action /app/post_snapshot.sh --snapshot-time 05:30 \
            --add-ignore data/plex --add-ignore data/jellyfin  --add-ignore .cache  --add-ignore logs/
         kopia server start --insecure --refresh-interval=12h --address=http://kopia:51515 --server-password={{ kopia_web_password }}
     environment:
@@ -317,4 +317,4 @@ services:
       - TZ
     volumes:
       - "{{ docker_dir }}/kopia/config:/app/config"
-      - "{{ docker_backup_dir }}:/app/backup:ro"
+      - "{{ docker_backup_dir }}:/app/backup/{{ host_local }}:ro"
