@@ -303,6 +303,7 @@ snapraid_config_excludes:
   - 'openbox.log'
   - 'access.log'
   - logs/
+  - .cache/
 
 #
 # SMART error reporting
