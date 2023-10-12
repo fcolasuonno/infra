@@ -7,26 +7,6 @@ RUN \
       lxterminal python3-urllib3 python3-requests python3-gi gobject-introspection gir1.2-gtk-3.0 \
       imagemagick lxterminal font-manager
 
-WORKDIR /orcaslicer
-ADD get_release_info.sh /orcaslicer
-
-RUN mkdir -p /orcaslicer/orcaslicer-dist
-RUN chmod +x /orcaslicer/get_release_info.sh
-
-# Retrieve and unzip all of the OrcaSlicer bits using variable.
-RUN latestOrcaslicer=$(/orcaslicer/get_release_info.sh url) \
-&& echo ${latestOrcaslicer} \
-&& orcaslicerReleaseName=$(/orcaslicer/get_release_info.sh name) \
-&& curl -sSL ${latestOrcaslicer} > ${orcaslicerReleaseName} \
-&& rm -f /orcaslicer/releaseInfo.json \
-&& mkdir -p /orcaslicer/orcaslicer-dist \
-&& unzip ${orcaslicerReleaseName} -d /orcaslicer/orcaslicer-dist \
-&& chmod 775 /orcaslicer/orcaslicer-dist/OrcaSlicer_ubu64.AppImage \
-&& /orcaslicer/orcaslicer-dist/OrcaSlicer_ubu64.AppImage --appimage-extract \
-&& rm -f /orcaslicer/${orcaslicerReleaseName}
-
-RUN chmod -R 777 /orcaslicer/
-RUN mkdir -p /orcaslicer
 RUN mkdir -p /configs
 
 COPY menu.xml /etc/xdg/openbox/
