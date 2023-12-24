@@ -304,6 +304,7 @@ snapraid_config_excludes:
   - 'access.log'
   - logs/
   - .cache/
+  - '*.sqlite-wal'
 
 #
 # SMART error reporting
