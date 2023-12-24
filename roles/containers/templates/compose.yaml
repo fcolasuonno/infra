@@ -42,6 +42,7 @@ services:
     restart: always
     volumes:
       - "{{ docker_dir }}/homarr/configs:/app/data/configs"
+      - "{{ docker_dir }}/homarr/data:/data"
       - "{{ docker_dir }}/homarr/icons:/app/public/icons"
     environment:
       - TZ={{ timezone }}
@@ -310,7 +311,7 @@ services:
         printf "#!/bin/sh\nset -e\ncurl -S -s -o /dev/null {{ kopia_healtcheck_url }}" > /app/post_snapshot.sh && \
           chmod +x /app/post_snapshot.sh && \
           kopia policy set /app/backup/{{ host_local }} --after-snapshot-root-action /app/post_snapshot.sh --snapshot-time 05:30 \
-           --add-ignore data/plex --add-ignore data/jellyfin  --add-ignore .cache  --add-ignore logs/
+           --add-ignore data/plex --add-ignore data/jellyfin  --add-ignore .cache  --add-ignore logs/  --add-ignore creativity
         kopia server start --insecure --refresh-interval=12h --address=http://kopia:51515 --server-password={{ kopia_web_password }}
     environment:
       - KOPIA_PASSWORD={{ kopia_password }}
