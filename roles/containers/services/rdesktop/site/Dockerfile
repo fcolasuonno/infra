@@ -15,8 +15,8 @@ WORKDIR /tmp
 
 # Download Megatool
 RUN \
-    MEGATOOL_VERSION="$(curl -s $MEGATOOL_VERSION_URL)" && \
-    wget ${MEGATOOL_URL}${MEGATOOL_VERSION}-linux-x86_64.tar.gz -O - | tar -xz && \
+    MEGATOOL_VERSION="$(curl -k -s $MEGATOOL_VERSION_URL)" && \
+    wget --no-check-certificate ${MEGATOOL_URL}${MEGATOOL_VERSION}-linux-x86_64.tar.gz -O - | tar -xz && \
     cp mega*/megatools /usr/bin
 
 # Download TinyMediaManager
