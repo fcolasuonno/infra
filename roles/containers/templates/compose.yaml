@@ -33,34 +33,45 @@ services:
       - "{{ docker_dir }}/nginxproxymanager/data:/data"
       - "{{ docker_dir }}/nginxproxymanager/letsencrypt:/etc/letsencrypt"
 
-  homarr:
-    container_name: homarr
-    image: ghcr.io/ajnart/homarr:latest
+  plex:
+    container_name: plex
+    image: "lscr.io/linuxserver/plex:latest"
     networks:
       apps:
-        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(2) }}"
-    restart: always
-    volumes:
-      - "{{ docker_dir }}/homarr/configs:/app/data/configs"
-      - "{{ docker_dir }}/homarr/data:/data"
-      - "{{ docker_dir }}/homarr/icons:/app/public/icons"
-    environment:
-      - TZ={{ timezone }}
-
-  portainer:
-    container_name: portainer
+        ipv4_address: "{{ macvlan_plex_host }}"
     privileged: true
-    image: portainer/portainer-ce:latest
+    devices:
+      - "/dev/dri:/dev/dri"
+    volumes:
+      - "{{ docker_dir }}/plex:/config"
+      - "{{ mergerfs_root }}/Media/TV:/tv"
+      - "{{ mergerfs_root }}/Media/Movies:/movies"
+      - "{{ mergerfs_root }}/Media/Movies_ITA:/movies_ita"
+      - "{{ mergerfs_root }}/Media/Music:/music"
+    environment:
+      - DOCKER_MODS="linuxserver/mods:jellyfin-opencl-intel"
+      - TZ={{ timezone }}
+      - PUID={{ guid }}
+      - PGID={{ guid }}
+      - PLEX_CLAIM={{ plex_claim }}
+      - START_DOCKER=false
+      - DRINODE=/dev/dri/renderD128
+
+  mqtt:
+    container_name: mqtt
+    image: eclipse-mosquitto
     networks:
       apps:
-        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(3) }}"
+        ipv4_address: "{{ macvlan_mqtt_host }}"
     restart: always
     volumes:
-      - '{{ docker_dir }}/portainer/config:/data'
-      - '/var/run/docker.sock:/var/run/docker.sock'
+      - "{{ docker_dir }}/mqtt/config:/mosquitto/config"
+      - "{{ docker_dir }}/mqtt/data:/mosquitto/data"
+      - "{{ docker_dir }}/mqtt/log:/mosquitto/log"
     environment:
       - TZ={{ timezone }}
-      - START_DOCKER=false
+      - PUID={{ guid }}
+      - PGID={{ guid }}
 
   cloudflared:
     container_name: cloudflared
@@ -88,22 +99,6 @@ services:
       - "/:/mnt/fs"
     environment:
       - CLOUDCMD_ROOT=/mnt/fs
-      - TZ={{ timezone }}
-      - PUID={{ guid }}
-      - PGID={{ guid }}
-
-  mqtt:
-    container_name: mqtt
-    image: eclipse-mosquitto
-    networks:
-      apps:
-        ipv4_address: "{{ macvlan_mqtt_host }}"
-    restart: always
-    volumes:
-      - "{{ docker_dir }}/mqtt/config:/mosquitto/config"
-      - "{{ docker_dir }}/mqtt/data:/mosquitto/data"
-      - "{{ docker_dir }}/mqtt/log:/mosquitto/log"
-    environment:
       - TZ={{ timezone }}
       - PUID={{ guid }}
       - PGID={{ guid }}
@@ -179,30 +174,6 @@ services:
       - TZ={{ timezone }}
       - PUID={{ guid }}
       - PGID={{ guid }}
-      - START_DOCKER=false
-      - DRINODE=/dev/dri/renderD128
-
-  plex:
-    container_name: plex
-    image: "lscr.io/linuxserver/plex:latest"
-    networks:
-      apps:
-        ipv4_address: "{{ macvlan_plex_host }}"
-    privileged: true
-    devices:
-      - "/dev/dri:/dev/dri"
-    volumes:
-      - "{{ docker_dir }}/plex:/config"
-      - "{{ mergerfs_root }}/Media/TV:/tv"
-      - "{{ mergerfs_root }}/Media/Movies:/movies"
-      - "{{ mergerfs_root }}/Media/Movies_ITA:/movies_ita"
-      - "{{ mergerfs_root }}/Media/Music:/music"
-    environment:
-      - DOCKER_MODS="linuxserver/mods:jellyfin-opencl-intel"
-      - TZ={{ timezone }}
-      - PUID={{ guid }}
-      - PGID={{ guid }}
-      - PLEX_CLAIM={{ plex_claim }}
       - START_DOCKER=false
       - DRINODE=/dev/dri/renderD128
 
@@ -328,11 +299,38 @@ services:
     networks:
       apps:
         ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(16) }}"
-    ports:
-      - 8554:8554                      # Enable RTSP port for external media player access
     volumes:
-      - '{{ docker_dir }}/ringmqtt:/data'           # Mapping of local folder to provide persistent storage
-    logging: #limit logs to 10m and 3 files
+      - '{{ docker_dir }}/ringmqtt:/data'
+    logging:
       options:
         max-size: 10m
         max-file: "3"
+
+  homarr:
+    container_name: homarr
+    image: ghcr.io/ajnart/homarr:latest
+    networks:
+      apps:
+        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(17) }}"
+    restart: always
+    volumes:
+      - "{{ docker_dir }}/homarr/configs:/app/data/configs"
+      - "{{ docker_dir }}/homarr/data:/data"
+      - "{{ docker_dir }}/homarr/icons:/app/public/icons"
+    environment:
+      - TZ={{ timezone }}
+
+  portainer:
+    container_name: portainer
+    privileged: true
+    image: portainer/portainer-ce:latest
+    networks:
+      apps:
+        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(18) }}"
+    restart: always
+    volumes:
+      - '{{ docker_dir }}/portainer/config:/data'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    environment:
+      - TZ={{ timezone }}
+      - START_DOCKER=false
