@@ -4,6 +4,7 @@
 - include_tasks: user.yml
 
 - include_tasks: powersaving.yml
+- include_tasks: ups.yml
 
 - include_tasks: netplan.yml
   when: netplan_config is defined

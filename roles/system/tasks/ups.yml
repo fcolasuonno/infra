@@ -1,0 +1,28 @@
+---
+- name: Install the apcupsd package
+  package:
+    name:
+      - apcupsd
+    state: latest
+
+- name: Install the configuration2
+  become: yes
+  template:
+    src: templates/apcupsd.conf
+    dest: "/etc/apcupsd/apcupsd.conf"
+    mode: 0644
+
+- name: Enable deamon
+  copy:
+    content: 'ISCONFIGURED=yes'
+    dest: '/etc/default/apcupsd'
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Make sure that apcupsd is started and enabled on boot
+  systemd:
+    name: apcupsd
+    state: started
+    enabled: yes
+    masked: no
