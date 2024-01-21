@@ -30,7 +30,7 @@
     dest: '/etc/netplan/00-ansible-managed.yaml'
     owner: root
     group: root
-    mode: 0644
+    mode: 0600
   notify: netplan apply
 
 - name: Delete the irrelevant configs

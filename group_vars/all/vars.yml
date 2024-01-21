@@ -36,7 +36,7 @@ netplan_config:
             via: "{{ lan_gateway }}"
       vlan_shim:
         addresses:
-          - "{{ macvlan_shim_host }}"
+          - "{{ macvlan_shim_host | ansible.utils.ipsubnet }}"
         routes:
           - to: "{{ macvlan_network }}"
             metric: 101
