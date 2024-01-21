@@ -15,8 +15,8 @@ macvlan_interface: eth0 # main eth interface
 macvlan_network: 'x.x.x.192/27'
 macvlan_shim_host: "{{ macvlan_network | ansible.utils.nthhost(0) }}"
 macvlan_traefik_host: "{{ macvlan_network | ansible.utils.nthhost(0) | ansible.utils.ipmath(-1) }}"
-macvlan_plex_host: "{{ macvlan_network | ansible.utils.nthhost(0) | ansible.utils.ipmath(-2) }}"
-macvlan_mqtt_host: "{{ macvlan_network | ansible.utils.nthhost(0) | ansible.utils.ipmath(-3) }}"
+macvlan_plex_host: "{{ macvlan_network | ansible.utils.next_nth_usable(2) }}"
+macvlan_mqtt_host: "{{ macvlan_network | ansible.utils.next_nth_usable(3) }}"
 dns_nameservers: [ '1.1.1.1', '1.0.0.1' ]
 
 netplan_dispatch: "#! /bin/bash\nip link add vlan_shim link {{ macvlan_interface }} type macvlan mode bridge"
@@ -36,11 +36,11 @@ netplan_config:
             via: "{{ lan_gateway }}"
       vlan_shim:
         addresses:
-          - "{{ macvlan_shim_host | ansible.utils.ipsubnet }}"
+          - "{{ macvlan_shim_host }}"
         routes:
           - to: "{{ macvlan_network }}"
-            via: "{{ lan_host }}"
-            metric: 100
+            metric: 101
+            scope: "link"
           - to: "{{ macvlan_traefik_host | ansible.utils.ipsubnet }}"
             via: "{{ lan_host }}"
             metric: 100
