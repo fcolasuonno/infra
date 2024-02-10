@@ -24,6 +24,10 @@
         tags:
             - system
 
+      - role: hifis.unattended_upgrades
+        tags:
+          - unattended_upgrades
+
       - role: geerlingguy.security
         tags:
             - security

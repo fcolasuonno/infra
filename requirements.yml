@@ -9,3 +9,4 @@ roles:
     - name: notthebee.ubuntu_autoinstall
     - name: ironicbadger.snapraid
     - name: linux-system-roles.cockpit
+    - name: hifis.unattended_upgrades
