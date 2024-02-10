@@ -7,10 +7,6 @@
     name: ubuntu
     state: absent
 
-- name: install and update nvim plugins
-  command:
-    cmd: "nvim +PlugInstall! +qall"
-
 - name: powersaving systemd reload
   systemd:
     daemon_reload: true
