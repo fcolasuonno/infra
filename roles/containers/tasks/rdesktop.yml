@@ -1,0 +1,41 @@
+---
+- name: Ensure directory exists
+  become: yes
+  file:
+    path: "{{ docker_dir }}/rdesktop/config"
+    state: directory
+    mode: 0755
+    owner: 1000
+    group: 1000
+
+- name: Ensure directory exists
+  become: yes
+  file:
+    path: "{{ docker_dir }}/rdesktop/custom-cont-init.d"
+    state: directory
+    mode: 0755
+    owner: 1000
+    group: 1000
+
+- name: Custom init
+  become: yes
+  copy:
+    dest: "{{ docker_dir }}/rdesktop/custom-cont-init.d/init"
+    mode: 0755
+    owner: root
+    group: root
+    content: |
+      apk add megatools --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/ && \
+      apk add \
+        openjdk17-jre \
+        libmediainfo \
+        ttf-dejavu \
+        bash \
+        lxterminal \
+        transmission \
+        xrdp \
+        thunar \
+        adwaita-icon-theme \
+        openresolv \
+        wireguard-tools \
+        python3 py3-requests

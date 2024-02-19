@@ -51,18 +51,6 @@
         tags:
           - docker
 
-      - role: containers/services/rdesktop
-        become: no
-        tags:
-          - rdesktop
-          - containers
-
-      - role: containers/services/creativity
-        become: no
-        tags:
-          - creativity
-          - containers
-
       - role: containers/homeautomation/mqtt
         become: no
         tags:

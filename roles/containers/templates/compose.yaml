@@ -214,43 +214,50 @@ services:
       - PUID={{ guid }}
       - PGID={{ guid }}
 
-  rdesktop:
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
     restart: always
-    container_name: rdesktop
-    image: "rdesktop"
+    cap_add:
+      - NET_ADMIN
     networks:
       apps:
         ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(12) }}"
-    privileged: true
+    ports:
+      - 3000:3000
+      - 3001:3001
+    environment:
+      - VPN_SERVICE_PROVIDER=surfshark
+      - VPN_TYPE=wireguard
+      - WIREGUARD_PRIVATE_KEY={{ surfshark_private_key }}
+      - WIREGUARD_PUBLIC_KEY={{ surfshark_public_key }}
+      - WIREGUARD_ADDRESSES={{ surfshark_address }}
+      - SERVER_COUNTRIES={{ surfshark_countries }}
+
+  rdesktop:
+    image: "linuxserver/firefox:latest"
+    container_name: rdesktop
+    network_mode: "service:gluetun"
     devices:
       - "/dev/dri:/dev/dri"
-    sysctls:
-      "net.ipv4.conf.all.src_valid_mark": "1"
-    cap_add:
-      - net_admin
-      - sys_module
-    shm_size: "2GB"
-    volumes:
-      - "{{ docker_dir }}/rdesktop/config:/config"
-      - "/lib/modules:/lib/modules"
-      - "/etc/localtime:/etc/localtime:ro"
-      - "{{ mergerfs_root }}/Media:/media"
-      - "{{ mergerfs_root }}/Downloads:/downloads"
     environment:
       - TZ={{ timezone }}
       - PUID={{ guid }}
       - PGID={{ guid }}
-      - ALLOWEDIPS=0.0.0.0/0, {{ macvlan_network }}, {{ iot_network }}
-      - SURFSHARK_PUBLIC_KEY={{ surfshark_public_key }}
-      - SURFSHARK_PRIVATE_KEY={{ surfshark_private_key }}
-      - SURFSHARK_LOCATION={{ surfshark_location }}
       - START_DOCKER=false
       - DRINODE=/dev/dri/renderD128
+    volumes:
+      - '{{ docker_dir }}/rdesktop/config:/config'
+      - "{{ docker_dir }}/rdesktop/custom-cont-init.d:/custom-cont-init.d:ro"
+      - "{{ mergerfs_root }}/Media:/media"
+      - "{{ mergerfs_root }}/Downloads:/downloads"
+    shm_size: "1gb"
+    restart: unless-stopped
 
   creativity:
     restart: always
     container_name: creativity
-    image: "creativity"
+    image: "linuxserver/webtop:ubuntu-openbox"
     devices:
       - "/dev/dri:/dev/dri"
     networks:
@@ -258,6 +265,7 @@ services:
         ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(13) }}"
     volumes:
       - "{{ docker_dir }}/creativity/config:/config"
+      - "{{ docker_dir }}/creativity/custom-cont-init.d:/custom-cont-init.d:ro"
       - "{{ mergerfs_root }}/Downloads:/downloads"
     environment:
       - TZ={{ timezone }}
