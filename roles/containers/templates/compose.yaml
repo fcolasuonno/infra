@@ -235,6 +235,7 @@ services:
       - SERVER_COUNTRIES={{ surfshark_countries }}
 
   rdesktop:
+    restart: always
     image: "linuxserver/firefox:latest"
     container_name: rdesktop
     network_mode: "service:gluetun"
@@ -252,7 +253,6 @@ services:
       - "{{ mergerfs_root }}/Media:/media"
       - "{{ mergerfs_root }}/Downloads:/downloads"
     shm_size: "1gb"
-    restart: unless-stopped
 
   creativity:
     restart: always
