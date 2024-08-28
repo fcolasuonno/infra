@@ -335,7 +335,3 @@ unattended_automatic_reboot_time: "03:30"
 #surfshark_private_key: private key from https://my.surfshark.com/vpn/manual-setup/main/wireguard/keys
 #mqtt_password: PASSWORD_FOR_MOSQUITTO
 #cloudflared_token: cloudflared_tokem
-#kopia_password: PASSWORD_FOR_KOPIA
-#kopia_web_password: PASSWORD_FOR_KOPIA_WEB
-#kopia_token: 'docker exec kopia kopia repository status -t -s'
-#kopia_healtcheck_url: healthcheck

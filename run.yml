@@ -71,10 +71,6 @@
         tags:
           - iptables
 
-      - role: security/crowdsec
-        tags:
-            - crowdsec
-
       #
     # Filesystems
       #

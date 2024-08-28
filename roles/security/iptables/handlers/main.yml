@@ -5,8 +5,6 @@
   loop:
     - netfilter-persistent
     - docker
-    - crowdsec
-    - crowdsec-firewall-bouncer
   register: result
   until: result is succeeded
   retries: 2

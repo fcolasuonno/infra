@@ -286,30 +286,23 @@ services:
       - PUID={{ guid }}
       - PGID={{ guid }}
 
-  kopia:
-    restart: always
-    container_name: kopia
-    image: kopia/kopia:latest
+  backrest:
+    image: garethgeorge/backrest
+    container_name: backrest
     networks:
       apps:
         ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(15) }}"
-    entrypoint: [ "/bin/sh","-c" ]
-    command:
-      - |
-        test ! -e /app/config/repository.config && \
-          kopia repository connect from-config --token {{ kopia_token }} --override-hostname={{ host_local }} --enable-actions && \
-          kopia snapshot create /app/backup/{{ host_local }}
-        printf "#!/bin/sh\nset -e\ncurl -S -s -o /dev/null {{ kopia_healtcheck_url }}" > /app/post_snapshot.sh && \
-          chmod +x /app/post_snapshot.sh && \
-          kopia policy set /app/backup/{{ host_local }} --after-snapshot-root-action /app/post_snapshot.sh --snapshot-time 05:30 \
-           --add-ignore data/plex --add-ignore data/jellyfin --add-ignore data/creativity --add-ignore .cache --add-ignore logs/
-        kopia server start --insecure --refresh-interval=12h --address=http://kopia:51515 --without-password --enable-actions
-    environment:
-      - KOPIA_PASSWORD={{ kopia_password }}
-      - TZ
     volumes:
-      - "{{ docker_dir }}/kopia/config:/app/config"
-      - "{{ docker_backup_dir }}:/app/backup/{{ host_local }}:ro"
+      - "{{ docker_dir }}/backrest/data:/data"
+      - "{{ docker_dir }}//backrest/config:/config"
+      - "{{ docker_dir }}/backrest/cache:/cache"
+      - "{{ docker_backup_dir }}:/userdata"
+    environment:
+      - BACKREST_DATA=/data
+      - BACKREST_CONFIG=/config/config.json
+      - XDG_CACHE_HOME=/cache
+      - TZ
+    restart: always
 
   ring-mqtt:
     restart: always

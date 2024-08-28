@@ -29,7 +29,6 @@ The playbook is mostly being developed for personal use, so stuff is going to be
 ## Other features:
 * MergerFS with Snapraid
 * Samba
-* CrowdSec with the iptables bouncer
 
 ## Usage
 Install Ansible (macOS):

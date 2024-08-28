@@ -1,5 +1,0 @@
-- name: Restart crowdsec
-  service:
-    name: crowdsec
-    state: restarted
-
