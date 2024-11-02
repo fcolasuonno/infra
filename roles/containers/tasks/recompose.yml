@@ -5,5 +5,5 @@
     dest: "{{ docker_compose_dir }}/compose.yaml"
 
 - name: Docker-compose up
-  community.docker.docker_compose:
+  community.docker.docker_compose_v2:
     project_src: "{{ docker_compose_dir }}"

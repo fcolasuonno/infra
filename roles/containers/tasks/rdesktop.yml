@@ -25,17 +25,15 @@
     owner: root
     group: root
     content: |
-      apk add megatools --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/ && \
-      apk add \
-        openjdk17-jre \
-        libmediainfo \
-        ttf-dejavu \
+      apt install megatools \
+        openjdk-17-jre \
+        libmediainfo0v5 \
+        fonts-dejavu \
         bash \
         lxterminal \
         transmission \
         xrdp \
         thunar \
         adwaita-icon-theme \
-        openresolv \
         wireguard-tools \
-        python3 py3-requests
+        python3 python3-requests
