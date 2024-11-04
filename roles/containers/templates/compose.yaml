@@ -226,9 +226,13 @@ services:
     ports:
       - 3000:3000
       - 3001:3001
+    volumes:
+      - '{{ docker_dir }}/gluetun:/gluetun'
     environment:
       - VPN_SERVICE_PROVIDER=surfshark
       - VPN_TYPE=wireguard
+      - DOT=off
+      - DNS_ADDRESS=1.1.1.1
       - WIREGUARD_PRIVATE_KEY={{ surfshark_private_key }}
       - WIREGUARD_PUBLIC_KEY={{ surfshark_public_key }}
       - WIREGUARD_ADDRESSES={{ surfshark_address }}

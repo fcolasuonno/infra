@@ -25,7 +25,7 @@
     owner: root
     group: root
     content: |
-      apt install megatools \
+      apt install -y megatools \
         openjdk-17-jre \
         libmediainfo0v5 \
         fonts-dejavu \
