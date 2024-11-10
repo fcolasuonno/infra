@@ -318,20 +318,6 @@ services:
       - TZ
     restart: always
 
-  ring-mqtt:
-    restart: always
-    container_name: ring-mqtt
-    image: tsightler/ring-mqtt
-    networks:
-      apps:
-        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(16) }}"
-    volumes:
-      - '{{ docker_dir }}/ringmqtt:/data'
-    logging:
-      options:
-        max-size: 10m
-        max-file: "3"
-
   homarr:
     restart: always
     container_name: homarr
@@ -360,3 +346,21 @@ services:
     environment:
       - TZ={{ timezone }}
       - START_DOCKER=false
+
+  apcupsd:
+    image: gregewing/apcupsd:latest
+    container_name: apcupsd-stack
+    devices:
+      - /dev/usb/hiddev0
+    networks:
+      apps:
+        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(20) }}"
+    ports:
+      - 3551:3551
+    environment:
+      - UPSNAME=smartups750
+      - TZ=${TZ} # Default value is Europe/London
+    volumes:
+      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
+      - /etc/apcupsd
+    restart: unless-stopped
