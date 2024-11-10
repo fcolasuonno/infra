@@ -182,6 +182,16 @@ services:
       - START_DOCKER=false
       - DRINODE=/dev/dri/renderD128
 
+  watchstate:
+    image: ghcr.io/arabcoders/watchstate:latest
+    container_name: watchstate
+    restart: unless-stopped
+    networks:
+      apps:
+        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(19) }}"
+    volumes:
+      - "{{ docker_dir }}/watchstate/data:/config:rw"
+
   calibre-web:
     restart: always
     container_name: calibre-web
