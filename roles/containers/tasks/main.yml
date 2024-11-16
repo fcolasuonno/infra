@@ -2,6 +2,4 @@
 - include_tasks: zigbee2mqtt.yml
 - include_tasks: valetudomapper.yml
 - include_tasks: install.yml
-- include_tasks: creativity.yml
-- include_tasks: rdesktop.yml
 - include_tasks: recompose.yml
