@@ -388,3 +388,17 @@ services:
       - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
       - /etc/apcupsd
     restart: unless-stopped
+
+  code-server:
+    image: lscr.io/linuxserver/code-server:latest
+    container_name: code-server
+    networks:
+      apps:
+        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(21) }}"
+    environment:
+      - TZ={{ timezone }}
+      - PUID={{ guid }}
+      - PGID={{ guid }}
+    volumes:
+      - "{{ docker_dir }}/code-server/config:/config"
+    restart: unless-stopped

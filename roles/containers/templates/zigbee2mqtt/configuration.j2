@@ -20,7 +20,4 @@ serial:
   port: /dev/ttyACM0
 
 devices:
-{% for item in zigbee_devices|dict2items %}
-  '{{ item.key }}':
-    friendly_name: {{ item.value.friendly_name }}
-{% endfor %}
+{{ zigbee_devices | to_yaml | indent(2, true) }}
