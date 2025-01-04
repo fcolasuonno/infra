@@ -18,6 +18,7 @@ mqtt:
 serial:
   # Location of CC2531 USB sniffer
   port: /dev/ttyACM0
+  adapter: zstack
 
 devices:
 {{ zigbee_devices | to_yaml | indent(2, true) }}
