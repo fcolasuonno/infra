@@ -197,18 +197,17 @@ services:
       - PUID={{ guid }}
       - PGID={{ guid }}
 
-  ubooquity:
+  kavita:
     restart: always
-    container_name: ubooquity
-    image: "linuxserver/ubooquity:latest"
+    container_name: kavita
+    image: "lscr.io/linuxserver/kavita:latest"
     networks:
       apps:
         ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(11) }}"
     volumes:
-      - '{{ docker_dir }}/ubooquity/config:/config'
-      - '{{ docker_dir }}/ubooquity/files:/files'
-      - "{{ mergerfs_root }}/Media/Comics:/comics"
-      - "{{ mergerfs_root }}/Media/Books:/books"
+      - '{{ docker_dir }}/kavita/config:/config'
+      - "{{ mergerfs_root }}/Media/Comics:/data/comics"
+      - "{{ mergerfs_root }}/Media/Books:/data/books"
     environment:
       - TZ={{ timezone }}
       - PUID={{ guid }}
