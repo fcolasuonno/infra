@@ -305,6 +305,7 @@ snapraid_config_excludes:
   - logs/
   - .cache/
   - '*-wal'
+  - /Media/Transcodes/
 
 #
 # SMART error reporting
