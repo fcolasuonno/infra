@@ -277,7 +277,7 @@ snapraid_runner_command: 'python3 {{ snapraid_runner_bin }} -c {{ snapraid_runne
 # Stopping the containers is necessary – backing up the data folder with the containers running will result in corrputed database files and no files can be changed during the Snapraid sync
 snapraid_runner_cron_jobs:
     - {
-      job: 'docker stop $(docker ps -q); rsync -avz --delete --exclude cache {{ docker_dir }} {{ docker_backup_dir }}; docker start $(docker ps -a -q --filter "label=priority=highest"); sleep 50s; docker start $(docker ps -a -q --filter "label=priority=high"); sleep 50s; docker start $(docker ps -a -q); {{ snapraid_runner_command }} ',
+      job: 'docker stop $(docker ps -q --filter=label=backup=true); rsync -avz --delete --exclude cache {{ docker_dir }} {{ docker_backup_dir }}; docker start $(docker ps -a -q --filter "label=priority=highest"); sleep 50s; docker start $(docker ps -a -q --filter "label=priority=high"); sleep 50s; docker start $(docker ps -a -q --filter=label=backup=true); {{ snapraid_runner_command }} ',
       name: 'snapraid_runner',
       weekday: '0,2,4',
       hour: '1',

@@ -13,6 +13,8 @@ networks:
 
 services:
   watchtower:
+    labels:
+      backup: true
     restart: always
     container_name: watchtower
     image: "containrrr/watchtower"
@@ -35,6 +37,8 @@ services:
       - "{{ docker_dir }}/nginxproxymanager/letsencrypt:/etc/letsencrypt"
 
   plex:
+    labels:
+      backup: true
     restart: always
     container_name: plex
     image: "lscr.io/linuxserver/plex:latest"
@@ -76,6 +80,8 @@ services:
       - PGID={{ guid }}
 
   cloudflared:
+    labels:
+      backup: true
     restart: always
     container_name: cloudflared
     image: cloudflare/cloudflared:latest
@@ -90,6 +96,8 @@ services:
       - TUNNEL_TOKEN={{ cloudflared_token }}
 
   cloudcmd:
+    labels:
+      backup: true
     restart: always
     container_name: cloudcmd
     image: coderaiser/cloudcmd
@@ -125,6 +133,8 @@ services:
       - START_DOCKER=false
 
   valetudomapper:
+    labels:
+      backup: true
     restart: always
     container_name: valetudomapper
     image: "rand256/valetudo-mapper:latest"
@@ -154,6 +164,8 @@ services:
       - PGID={{ guid }}
 
   jellyfin:
+    labels:
+      backup: true
     restart: always
     container_name: jellyfin
     image: "ghcr.io/linuxserver/jellyfin:latest"
@@ -183,6 +195,8 @@ services:
       - DRINODE=/dev/dri/renderD128
 
   calibre-web:
+    labels:
+      backup: true
     restart: always
     container_name: calibre-web
     image: "lscr.io/linuxserver/calibre-web:latest"
@@ -198,6 +212,8 @@ services:
       - PGID={{ guid }}
 
   kavita:
+    labels:
+      backup: true
     restart: always
     container_name: kavita
     image: "lscr.io/linuxserver/kavita:latest"
@@ -214,6 +230,8 @@ services:
       - PGID={{ guid }}
 
   gluetun:
+    labels:
+      backup: true
     image: qmcgaw/gluetun
     container_name: gluetun
     restart: always
@@ -240,6 +258,8 @@ services:
       - SERVER_COUNTRIES={{ surfshark_countries }}
 
   rdesktop:
+    labels:
+      backup: true
     restart: unless-stopped
     image: "fcolasuonno/remote-desktop:latest"
     container_name: rdesktop
@@ -263,6 +283,8 @@ services:
     shm_size: "1gb"
 
   bambustudio:
+    labels:
+      backup: true
     image: lscr.io/linuxserver/bambustudio:latest
     container_name: bambustudio
     networks:
@@ -284,6 +306,8 @@ services:
     restart: unless-stopped
 
   mqttx:
+    labels:
+      backup: true
     restart: always
     container_name: mqttx
     image: "emqx/mqttx-web"
@@ -296,6 +320,8 @@ services:
       - PGID={{ guid }}
 
   backrest:
+    labels:
+      backup: true
     image: garethgeorge/backrest
     container_name: backrest
     networks:
@@ -314,6 +340,8 @@ services:
     restart: always
 
   orcaslicer:
+    labels:
+      backup: true
     image: lscr.io/linuxserver/orcaslicer:latest
     container_name: orcaslicer
     networks:
@@ -335,6 +363,8 @@ services:
     restart: unless-stopped
 
   homarr:
+    labels:
+      backup: true
     restart: always
     container_name: homarr
     image: ghcr.io/ajnart/homarr:latest
@@ -349,6 +379,8 @@ services:
       - TZ={{ timezone }}
 
   portainer:
+    labels:
+      backup: true
     restart: always
     container_name: portainer
     privileged: true
@@ -364,6 +396,8 @@ services:
       - START_DOCKER=false
 
   watchstate:
+    labels:
+      backup: true
     image: ghcr.io/arabcoders/watchstate:latest
     container_name: watchstate
     restart: unless-stopped
@@ -374,6 +408,8 @@ services:
       - "{{ docker_dir }}/watchstate/data:/config:rw"
 
   apcupsd:
+    labels:
+      backup: true
     image: gregewing/apcupsd:latest
     container_name: apcupsd-stack
     devices:
@@ -392,6 +428,8 @@ services:
     restart: unless-stopped
 
   code-server:
+    labels:
+      backup: true
     image: lscr.io/linuxserver/code-server:latest
     container_name: code-server
     networks:
