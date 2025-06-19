@@ -303,6 +303,8 @@ snapraid_config_excludes:
   - 'openbox.log'
   - 'access.log'
   - logs/
+  - log/
+  - '*.log'
   - .cache/
   - '*-wal'
   - /Media/Transcodes/
