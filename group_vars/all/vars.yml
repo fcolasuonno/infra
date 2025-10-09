@@ -324,9 +324,6 @@ unattended_apt_daily_randomizeddelaysec: "12h" # (default)
 unattended_apt_daily_upgrade_oncalendar: "*-*-* 3:00" # (default)
 unattended_automatic_reboot: true
 unattended_automatic_reboot_time: "03:30"
-#zigbee_devices:
-#  '0xHEX':
-#    friendly_name: FRIENDLY_NAME
 #SECRETS (NOT STORED HERE)
 #password: USER_PASSWORD
 #ansible_become_pass: PASSWORD_FOR_SUDO

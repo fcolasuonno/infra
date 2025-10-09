@@ -6,9 +6,3 @@
     owner: "{{ username }}"
     group: "{{ username }}"
     mode: 0755
-
-- name: Install the configuration2
-  template:
-    src: zigbee2mqtt/configuration.j2
-    dest: "{{ docker_dir }}/zigbee2mqtt/config/configuration.yaml"
-    mode: 0775

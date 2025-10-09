@@ -24,7 +24,6 @@ The playbook is mostly being developed for personal use, so stuff is going to be
 
 #### Home Automation
 * [Home Assistant](https://hub.docker.com/r/homeassistant/home-assistant) (A FOSS smart home hub)
-* [Phoscon-GW](https://hub.docker.com/r/marthoc/deconz) (A Zigbee gateway)
 
 ## Other features:
 * MergerFS with Snapraid
