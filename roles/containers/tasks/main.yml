@@ -1,5 +1,4 @@
 - include_tasks: check_dirs.yml
 - include_tasks: zigbee2mqtt.yml
-- include_tasks: valetudomapper.yml
 - include_tasks: install.yml
 - include_tasks: recompose.yml

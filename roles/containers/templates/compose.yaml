@@ -132,21 +132,20 @@ services:
       - PGID={{ guid }}
       - START_DOCKER=false
 
-  valetudomapper:
-    labels:
-      backup: true
-    restart: always
-    container_name: valetudomapper
-    image: "rand256/valetudo-mapper:latest"
-    networks:
-      apps:
-        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(7) }}"
+  changedetection:
+    image: "ghcr.io/dgtlmoon/changedetection.io"
+    container_name: changedetection
+    hostname: changedetection
     volumes:
-      - '{{ docker_dir }}/valetudomapper/config/config.json:/app/config.json'
+      - '{{ docker_dir }}/changedetection:/datastore'
     environment:
       - TZ={{ timezone }}
       - PUID={{ guid }}
       - PGID={{ guid }}
+    networks:
+      apps:
+        ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(22) }}"
+    restart: unless-stopped
 
   homeassistant:
     restart: always
@@ -357,7 +356,7 @@ services:
       - NO_FULL=true
       - START_DOCKER=false
       - DOCKER_MODS=linuxserver/mods:universal-package-install
-      - INSTALL_PACKAGES=inkscape|gimp|lxterminal|geany|wget|nano
+      - INSTALL_PACKAGES=inkscape|gimp|lxterminal|geany|wget|nano|python-xdg
     volumes:
       - "{{ docker_dir }}/orcaslicer/config:/config"
     restart: unless-stopped
