@@ -121,10 +121,7 @@ services:
       apps:
         ipv4_address: "{{ macvlan_network | ansible.utils.next_nth_usable(6) }}"
     privileged: true
-    devices:
-      - "/dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_dce56fd39c29ec11b9e16c7840c9ce8d-if00-port0:/dev/ttyACM0"
     volumes:
-      - '/run/udev:/run/udev:ro'
       - '{{ docker_dir }}/zigbee2mqtt/config:/app/data'
     environment:
       - TZ={{ timezone }}
