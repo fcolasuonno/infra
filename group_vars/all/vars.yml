@@ -244,7 +244,7 @@ mergerfs_root_slow: "{{ mergerfs_root }}_slow"
 cache_root: /mnt/storage_cache
 
 disks:
-  - { path: /mnt/data1, src: /dev/disk/by-label/Data1, content: true }
+  - { path: /mnt/data1, src: /dev/disk/by-label/Data1_8TB, content: true }
   - { path: /mnt/data2, src: /dev/disk/by-label/Data2, content: true }
 
 cache_disks:
