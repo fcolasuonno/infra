@@ -88,6 +88,8 @@ docker_daemon_options:
 
 docker_compose_dir: "{{ docker_home}}/compose"
 
+macvlan_network_name: "compose_apps"
+
 docker_backup_dir: "{{ mergerfs_root_slow }}/docker_backup"
 
 spindown_time: 600 # in seconds
