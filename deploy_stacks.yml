@@ -44,7 +44,7 @@
       community.general.htpasswd:
         path: "{{ docker_dir }}/mqtt/config/mosquitto.passwd"
         name: mosquitto
-        password: "{{ mqtt_password_vault }}"
+        password: "{{ mqtt_password }}"
         owner: "{{ username }}"
         group: "users"
         mode: "0644"
