@@ -1,5 +1,16 @@
-- hosts: all
-  gather_facts: true
+- hosts: fleet
+  gather_facts: no
+
+  pre_tasks:
+    - import_tasks: tasks/ssh_juggle_port.yml
+      tags:
+        - port
+    - import_tasks: tasks/dir_copy.yml
+      tags:
+        - backup
+
+- hosts: fleet
+  gather_facts: no
   become: true
   vars:
     # This should be the path on the remote server where stacks are stored
@@ -8,6 +19,12 @@
     local_stacks_dir: "{{ playbook_dir }}/stacks"
 
   tasks:
+    - name: Check if macvlan network exists
+      community.docker.docker_network_info:
+        name: "{{ macvlan_network_name | default('apps') }}"
+      register: macvlan_network_info
+      tags: always
+
     - name: Attempt to create macvlan network
       community.docker.docker_network:
         name: "{{ macvlan_network_name | default('apps') }}"
@@ -22,6 +39,7 @@
               host1: '{{ macvlan_shim_host }}'
       register: network_creation_result
       ignore_errors: true
+      when: not macvlan_network_info.networks['compose_apps'] is defined
       tags: always
 
     - name: Fail if network creation failed for a reason other than overlap
