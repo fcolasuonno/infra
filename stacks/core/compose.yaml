@@ -1,4 +1,3 @@
-version: "3.8"
 
 networks:
   apps:
@@ -6,14 +5,14 @@ networks:
     external: true
 
 services:
-  watchtower:
-    labels:
-      backup: true
-    restart: always
-    container_name: watchtower
-    image: "containrrr/watchtower"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
+#  watchtower:
+#    labels:
+#      backup: true
+#    restart: unless-stopped
+#    container_name: watchtower
+#    image: "containrrr/watchtower"
+#    volumes:
+#      - "/var/run/docker.sock:/var/run/docker.sock"
 
   nginxproxymanager:
     restart: always

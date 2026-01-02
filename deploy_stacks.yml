@@ -60,22 +60,31 @@
         mode: "0644"
       tags: home_automation
 
-    - name: Find all stack directories
+    - name: Deploy core stack first
+      include_tasks: tasks/deploy_single_stack.yml
+      vars:
+        stack_file:
+          path: "{{ local_stacks_dir }}/core"
+      tags: core
+
+    - name: Find all other stack directories
       ansible.builtin.find:
         paths: "{{ local_stacks_dir }}"
         file_type: directory
         depth: 1
-      register: stack_dirs
+        excludes: "core"
+      register: other_stack_dirs
       delegate_to: localhost
       run_once: true
       become: false
 
-    - name: Deploy each stack
+    - name: Deploy remaining stacks
       include_tasks: tasks/deploy_single_stack.yml
-      loop: "{{ stack_dirs.files }}"
+      loop: "{{ other_stack_dirs.files }}"
       loop_control:
         loop_var: stack_file
 
     - name: Include maintenance tasks
       include_tasks: tasks/maintenance.yml
       tags: always
+

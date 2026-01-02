@@ -20,10 +20,11 @@
     mode: "0644"
 
 - name: "Check if .env template exists for {{ stack_name }}"
-  stat:
+  ansible.builtin.stat:
     path: "{{ stack_file.path }}/.env.j2"
   register: env_template_stat
   delegate_to: localhost
+  become: false
 
 - name: "Template .env file for {{ stack_name }}"
   ansible.builtin.template:
