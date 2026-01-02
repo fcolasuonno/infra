@@ -1,8 +1,0 @@
----
-- name: Make sure the configuration directory exists
-  file:
-    path: "{{ docker_dir }}/zigbee2mqtt/config/data"
-    state: directory
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: 0755

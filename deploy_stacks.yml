@@ -1,0 +1,70 @@
+- hosts: all
+  gather_facts: true
+  become: true
+  vars:
+    # This should be the path on the remote server where stacks are stored
+    remote_stacks_dir: "{{ docker_home }}"
+    # This is the local path in your git repo
+    local_stacks_dir: "{{ inventory_dir }}/../stacks"
+
+  tasks:
+    - name: Ensure macvlan network exists
+      community.docker.docker_network:
+        name: "{{ macvlan_network_name | default('apps') }}"
+        driver: macvlan
+        driver_options:
+          parent: "{{ macvlan_interface }}"
+        ipam_config:
+          - subnet: "{{ lan_network }}"
+            gateway: "{{ lan_gateway }}"
+            ip_range: "{{ macvlan_network }}"
+            aux_addresses:
+              host1: '{{ macvlan_shim_host }}'
+      tags: always
+
+    - name: Create MQTT config directory
+      ansible.builtin.file:
+        path: "{{ docker_dir }}/mqtt/config"
+        state: directory
+        owner: "{{ username }}"
+        group: "users"
+        mode: "0755"
+      tags: home_automation
+
+    - name: Copy mosquitto.conf
+      ansible.builtin.copy:
+        src: "{{ local_stacks_dir }}/home_automation/mosquitto.conf"
+        dest: "{{ docker_dir }}/mqtt/config/mosquitto.conf"
+        owner: "{{ username }}"
+        group: "users"
+        mode: "0644"
+      tags: home_automation
+
+    - name: Create mosquitto password file
+      community.general.htpasswd:
+        path: "{{ docker_dir }}/mqtt/config/mosquitto.passwd"
+        name: mosquitto
+        password: "{{ mqtt_password_vault }}"
+        owner: "{{ username }}"
+        group: "users"
+        mode: "0644"
+      tags: home_automation
+
+    - name: Find all stack directories
+      find:
+        paths: "{{ local_stacks_dir }}"
+        file_type: directory
+        depth: 1
+      register: stack_dirs
+      delegate_to: localhost
+      run_once: true
+
+    - name: Deploy each stack
+      include_tasks: tasks/deploy_single_stack.yml
+      loop: "{{ stack_dirs.files }}"
+      loop_control:
+        loop_var: stack_file
+
+    - name: Include maintenance tasks
+      include_tasks: tasks/maintenance.yml
+      tags: always

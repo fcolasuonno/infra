@@ -1,0 +1,60 @@
+version: "3.8"
+
+networks:
+  apps:
+    name: ${MACVLAN_NETWORK_NAME}
+    external: true
+
+services:
+  gluetun:
+    labels:
+      backup: true
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    restart: always
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    networks:
+      apps:
+        ipv4_address: ${MACVLAN_GLUETUN_IP}
+    ports:
+      - 3000:3000
+      - 3001:3001
+    volumes:
+      - '${DOCKER_DIR}/gluetun:/gluetun'
+    environment:
+      - VPN_SERVICE_PROVIDER=surfshark
+      - VPN_TYPE=wireguard
+      - DOT=off
+      - DNS_ADDRESS=1.1.1.1
+      - WIREGUARD_PRIVATE_KEY=${SURFSHARK_PRIVATE_KEY}
+      - WIREGUARD_PUBLIC_KEY=${SURFSHARK_PUBLIC_KEY}
+      - WIREGUARD_ADDRESSES=${SURFSHARK_ADDRESS}
+      - SERVER_COUNTRIES=${SURFSHARK_COUNTRIES}
+
+  rdesktop:
+    labels:
+      backup: true
+    restart: unless-stopped
+    image: "fcolasuonno/remote-desktop:latest"
+    container_name: rdesktop
+    network_mode: "service:gluetun"
+    devices:
+      - "/dev/dri:/dev/dri"
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - DRINODE=/dev/dri/renderD128
+      - NO_FULL=true
+      - START_DOCKER=false
+      - FM_HOME=/downloads
+      - PIN=${REMOTE_DESKTOP_PIN}
+      - CODE=${REMOTE_DESKTOP_CODE}
+    volumes:
+      - '${DOCKER_DIR}/rdesktop/config:/config'
+      - "${MERGERFS_ROOT}/Media:/media"
+      - "${MERGERFS_ROOT}/Downloads:/downloads"
+    shm_size: "1gb"

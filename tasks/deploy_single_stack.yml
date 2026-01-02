@@ -1,0 +1,39 @@
+---
+- name: "Set stack name"
+  set_fact:
+    stack_name: "{{ stack_file.path | basename }}"
+
+- name: "Ensure remote stack directory exists"
+  ansible.builtin.file:
+    path: "{{ remote_stacks_dir }}/{{ stack_name }}"
+    state: directory
+    owner: "{{ username }}"
+    group: "users"
+    mode: "0755"
+
+- name: "Template compose.yaml for {{ stack_name }}"
+  ansible.builtin.template:
+    src: "{{ stack_file.path }}/compose.yaml.j2"
+    dest: "{{ remote_stacks_dir }}/{{ stack_name }}/compose.yaml"
+    owner: "{{ username }}"
+    group: "users"
+    mode: "0644"
+
+- name: "Check if .env template exists for {{ stack_name }}"
+  stat:
+    path: "{{ stack_file.path }}/.env.j2"
+  register: env_template_stat
+  delegate_to: localhost
+
+- name: "Template .env file for {{ stack_name }}"
+  ansible.builtin.template:
+    src: "{{ stack_file.path }}/.env.j2"
+    dest: "{{ remote_stacks_dir }}/{{ stack_name }}/.env"
+    owner: "{{ username }}"
+    group: "users"
+    mode: "0600"
+  when: env_template_stat.stat.exists
+
+- name: "Deploy {{ stack_name }} stack with docker-compose"
+  community.docker.docker_compose_v2:
+    project_src: "{{ remote_stacks_dir }}/{{ stack_name }}"

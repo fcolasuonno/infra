@@ -1,0 +1,53 @@
+version: "3.8"
+
+networks:
+  apps:
+    name: ${MACVLAN_NETWORK_NAME}
+    external: true
+
+services:
+  bambustudio:
+    labels:
+      backup: true
+    image: lscr.io/linuxserver/bambustudio:latest
+    container_name: bambustudio
+    networks:
+      apps:
+        ipv4_address: ${MACVLAN_BAMBUSTUDIO_IP}
+    devices:
+      - "/dev/dri:/dev/dri"
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - DRINODE=/dev/dri/renderD128
+      - NO_FULL=true
+      - START_DOCKER=false
+      - DOCKER_MODS=linuxserver/mods:universal-package-install
+      - INSTALL_PACKAGES=lxterminal|geany|wget|nano
+    volumes:
+      - "${DOCKER_DIR}/bambustudio/config:/config"
+    restart: unless-stopped
+
+  orcaslicer:
+    labels:
+      backup: true
+    image: lscr.io/linuxserver/orcaslicer:latest
+    container_name: orcaslicer
+    networks:
+      apps:
+        ipv4_address: ${MACVLAN_ORCASLICER_IP}
+    devices:
+      - "/dev/dri:/dev/dri"
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - DRINODE=/dev/dri/renderD128
+      - NO_FULL=true
+      - START_DOCKER=false
+      - DOCKER_MODS=linuxserver/mods:universal-package-install
+      - INSTALL_PACKAGES=inkscape|gimp|lxterminal|geany|wget|nano|python-xdg
+    volumes:
+      - "${DOCKER_DIR}/orcaslicer/config:/config"
+    restart: unless-stopped

@@ -1,0 +1,27 @@
+version: "3.8"
+
+networks:
+  apps:
+    name: ${MACVLAN_NETWORK_NAME}
+    external: true
+
+services:
+  backrest:
+    labels:
+      backup: true
+    image: garethgeorge/backrest
+    container_name: backrest
+    networks:
+      apps:
+        ipv4_address: ${MACVLAN_BACKREST_IP}
+    volumes:
+      - "${DOCKER_DIR}/backrest/data:/data"
+      - "${DOCKER_DIR}/backrest/config:/config"
+      - "${DOCKER_DIR}/backrest/cache:/cache"
+      - "${DOCKER_BACKUP_DIR}:/userdata"
+    environment:
+      - BACKREST_DATA=/data
+      - BACKREST_CONFIG=/config/config.json
+      - XDG_CACHE_HOME=/cache
+      - TZ=${TZ}
+    restart: always

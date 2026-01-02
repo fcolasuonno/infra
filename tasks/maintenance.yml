@@ -1,0 +1,9 @@
+---
+- name: Configure cron job to remove unused docker containers/images
+  ansible.builtin.cron:
+    user: "{{ username }}"
+    name: "Docker system prune"
+    minute: "0"
+    hour: "4"
+    weekday: "0"
+    job: "docker system prune -af"

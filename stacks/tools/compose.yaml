@@ -1,0 +1,72 @@
+version: "3.8"
+
+networks:
+  apps:
+    name: ${MACVLAN_NETWORK_NAME}
+    external: true
+
+services:
+  changedetection:
+    image: "ghcr.io/dgtlmoon/changedetection.io"
+    container_name: changedetection
+    hostname: changedetection
+    volumes:
+      - '${DOCKER_DIR}/changedetection:/datastore'
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    networks:
+      apps:
+        ipv4_address: ${MACVLAN_CHANGEDETECTION_IP}
+    restart: unless-stopped
+
+  cloudcmd:
+    labels:
+      backup: true
+    restart: always
+    container_name: cloudcmd
+    image: coderaiser/cloudcmd
+    networks:
+      apps:
+        ipv4_address: ${MACVLAN_CLOUDCMD_IP}
+    volumes:
+      - '${DOCKER_DIR}/cloudcmd/config:/config'
+      - "/:/mnt/fs"
+    environment:
+      - CLOUDCMD_ROOT=/mnt/fs
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+
+  homarr:
+    labels:
+      backup: true
+    restart: always
+    container_name: homarr
+    image: ghcr.io/ajnart/homarr:latest
+    networks:
+      apps:
+        ipv4_address: ${MACVLAN_HOMARR_IP}
+    volumes:
+      - "${DOCKER_DIR}/homarr/configs:/app/data/configs"
+      - "${DOCKER_DIR}/homarr/data:/data"
+      - "${DOCKER_DIR}/homarr/icons:/app/public/icons"
+    environment:
+      - TZ=${TZ}
+
+  code-server:
+    labels:
+      backup: true
+    image: lscr.io/linuxserver/code-server:latest
+    container_name: code-server
+    networks:
+      apps:
+        ipv4_address: ${MACVLAN_CODESERVER_IP}
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    volumes:
+      - "${DOCKER_DIR}/code-server/config:/config"
+    restart: unless-stopped
