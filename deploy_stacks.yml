@@ -17,10 +17,6 @@
     remote_stacks_dir: "{{ docker_home }}"
     # This is the local path in your git repo
     local_stacks_dir: "{{ playbook_dir }}/stacks"
-    mosquitto:
-      users:
-        - username: mosquitto
-          password: "{{ mqtt_password }}"
 
   tasks:
     - name: Check if macvlan network exists
@@ -72,13 +68,9 @@
         mode: "0644"
       tags: home_automation
 
-    - name: Generate mosquitto password file
-      ansible.builtin.template:
-        src: users.j2
-        dest: "{{ docker_dir }}/mqtt/config/mosquitto.passwd"
-        owner: "{{ username }}"
-        group: "users"
-        mode: "0644"
+    - name: Generate mosquitto password
+      ansible.builtin.shell:
+        cmd: "docker exec mqtt mosquitto_passwd -b -c /mosquitto/config/mosquitto.passwd mosquitto {{ mqtt_password }}"
       tags: home_automation
 
     - name: Deploy core stack first
