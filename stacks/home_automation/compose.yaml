@@ -77,8 +77,6 @@ services:
     networks:
       apps:
         ipv4_address: ${MACVLAN_APCUPSD_IP}
-    ports:
-      - 3551:3551
     environment:
       - UPSNAME=smartups750
       - TZ=${TZ} # Default value is Europe/London

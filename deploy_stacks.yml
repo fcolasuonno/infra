@@ -5,10 +5,10 @@
     # This should be the path on the remote server where stacks are stored
     remote_stacks_dir: "{{ docker_home }}"
     # This is the local path in your git repo
-    local_stacks_dir: "{{ inventory_dir }}/../stacks"
+    local_stacks_dir: "{{ playbook_dir }}/stacks"
 
   tasks:
-    - name: Ensure macvlan network exists
+    - name: Attempt to create macvlan network
       community.docker.docker_network:
         name: "{{ macvlan_network_name | default('apps') }}"
         driver: macvlan
@@ -17,9 +17,19 @@
         ipam_config:
           - subnet: "{{ lan_network }}"
             gateway: "{{ lan_gateway }}"
-            ip_range: "{{ macvlan_network }}"
+            iprange: "{{ macvlan_network }}"
             aux_addresses:
               host1: '{{ macvlan_shim_host }}'
+      register: network_creation_result
+      ignore_errors: true
+      tags: always
+
+    - name: Fail if network creation failed for a reason other than overlap
+      ansible.builtin.fail:
+        msg: "Failed to create network for an unexpected reason: {{ network_creation_result.msg }}"
+      when:
+        - network_creation_result.failed
+        - "'Pool overlaps' not in network_creation_result.msg"
       tags: always
 
     - name: Create MQTT config directory
@@ -51,13 +61,14 @@
       tags: home_automation
 
     - name: Find all stack directories
-      find:
+      ansible.builtin.find:
         paths: "{{ local_stacks_dir }}"
         file_type: directory
         depth: 1
       register: stack_dirs
       delegate_to: localhost
       run_once: true
+      become: false
 
     - name: Deploy each stack
       include_tasks: tasks/deploy_single_stack.yml
