@@ -23,7 +23,7 @@ services:
   cloudcmd:
     labels:
       backup: true
-    restart: always
+    restart: unless-stopped
     container_name: cloudcmd
     image: coderaiser/cloudcmd
     networks:
@@ -41,7 +41,7 @@ services:
   homarr:
     labels:
       backup: true
-    restart: always
+    restart: unless-stopped
     container_name: homarr
     image: ghcr.io/ajnart/homarr:latest
     networks:

@@ -23,4 +23,4 @@ services:
       - BACKREST_CONFIG=/config/config.json
       - XDG_CACHE_HOME=/cache
       - TZ=${TZ}
-    restart: always
+    restart: unless-stopped

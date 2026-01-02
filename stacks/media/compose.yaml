@@ -8,7 +8,7 @@ services:
   plex:
     labels:
       backup: true
-    restart: always
+    restart: unless-stopped
     container_name: plex
     image: "lscr.io/linuxserver/plex:latest"
     networks:
@@ -35,7 +35,7 @@ services:
   jellyfin:
     labels:
       backup: true
-    restart: always
+    restart: unless-stopped
     container_name: jellyfin
     image: "ghcr.io/linuxserver/jellyfin:latest"
     networks:
@@ -66,7 +66,7 @@ services:
   calibre-web:
     labels:
       backup: true
-    restart: always
+    restart: unless-stopped
     container_name: calibre-web
     image: "lscr.io/linuxserver/calibre-web:latest"
     networks:
@@ -83,7 +83,7 @@ services:
   kavita:
     labels:
       backup: true
-    restart: always
+    restart: unless-stopped
     container_name: kavita
     image: "lscr.io/linuxserver/kavita:latest"
     networks:

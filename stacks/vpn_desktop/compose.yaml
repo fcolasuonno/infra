@@ -10,7 +10,7 @@ services:
       backup: true
     image: qmcgaw/gluetun
     container_name: gluetun
-    restart: always
+    restart: unless-stopped
     cap_add:
       - NET_ADMIN
     devices:

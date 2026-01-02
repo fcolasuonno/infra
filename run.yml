@@ -51,18 +51,10 @@
         tags:
           - docker
 
-      - role: containers/homeautomation/mqtt
-        become: no
-        tags:
-          - mqtt
-          - smarthome
-          - containers
-
-      - name: containers
+      - import_playbook: deploy_stacks.yml
         tags:
           - containers
           - compose
-          - recompose
 
     #
     # Security

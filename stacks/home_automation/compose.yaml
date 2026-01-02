@@ -6,7 +6,7 @@ networks:
 
 services:
   mqtt:
-    restart: always
+    restart: unless-stopped
     container_name: mqtt
     image: eclipse-mosquitto
     networks:
@@ -22,7 +22,7 @@ services:
       - PGID=${PGID}
 
   zigbee2mqtt:
-    restart: always
+    restart: unless-stopped
     container_name: zigbee2mqtt
     image: "koenkk/zigbee2mqtt"
     networks:
@@ -38,7 +38,7 @@ services:
       - START_DOCKER=false
 
   homeassistant:
-    restart: always
+    restart: unless-stopped
     container_name: homeassistant
     image: "homeassistant/home-assistant:stable"
     networks:
@@ -55,7 +55,7 @@ services:
   mqttx:
     labels:
       backup: true
-    restart: always
+    restart: unless-stopped
     container_name: mqttx
     image: "emqx/mqttx-web"
     networks:
