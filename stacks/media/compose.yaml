@@ -10,19 +10,19 @@ services:
       backup: true
     restart: unless-stopped
     container_name: plex
-    image: "lscr.io/linuxserver/plex:latest"
+    image: lscr.io/linuxserver/plex:latest
     networks:
       apps:
         ipv4_address: ${MACVLAN_PLEX_HOST}
     privileged: true
     devices:
-      - "/dev/dri:/dev/dri"
+      - /dev/dri:/dev/dri
     volumes:
-      - "${DOCKER_DIR}/plex:/config"
-      - "${MERGERFS_ROOT}/Media/TV:/tv"
-      - "${MERGERFS_ROOT}/Media/Movies:/movies"
-      - "${MERGERFS_ROOT}/Media/Movies_ITA:/movies_ita"
-      - "${MERGERFS_ROOT}/Media/Music:/music"
+      - ${DOCKER_DIR}/plex:/config
+      - ${MERGERFS_ROOT}/Media/TV:/tv
+      - ${MERGERFS_ROOT}/Media/Movies:/movies
+      - ${MERGERFS_ROOT}/Media/Movies_ITA:/movies_ita
+      - ${MERGERFS_ROOT}/Media/Music:/music
     environment:
       - DOCKER_MODS="linuxserver/mods:jellyfin-opencl-intel"
       - TZ=${TZ}
@@ -37,24 +37,24 @@ services:
       backup: true
     restart: unless-stopped
     container_name: jellyfin
-    image: "ghcr.io/linuxserver/jellyfin:latest"
+    image: ghcr.io/linuxserver/jellyfin:latest
     networks:
       apps:
         ipv4_address: ${MACVLAN_JELLYFIN_IP}
     privileged: true
     devices:
-      - "/dev/dri:/dev/dri"
+      - /dev/dri:/dev/dri
     volumes:
-      - "${DOCKER_DIR}/jellyfin:/config"
-      - "${MERGERFS_ROOT}/Media/TV:/data/TV"
-      - "${MERGERFS_ROOT_SLOW}/Media/Transcodes:/config/data/transcodes"
-      - "${MERGERFS_ROOT}/Media/Metadata:/metadata"
-      - "${MERGERFS_ROOT}/Media/Cache:/data/Cache"
-      - "${MERGERFS_ROOT}/Media/Movies:/data/Movies"
-      - "${MERGERFS_ROOT}/Media/Movies_ITA:/data/Movies_ITA"
-      - "${MERGERFS_ROOT}/Media/Music:/data/Music"
-      - "${MERGERFS_ROOT}/Media/Audiobook:/data/Audiobook"
-      - "/etc/localtime:/etc/localtime:ro"
+      - ${DOCKER_DIR}/jellyfin:/config
+      - ${MERGERFS_ROOT}/Media/TV:/data/TV
+      - ${MERGERFS_ROOT_SLOW}/Media/Transcodes:/config/data/transcodes
+      - ${MERGERFS_ROOT}/Media/Metadata:/metadata
+      - ${MERGERFS_ROOT}/Media/Cache:/data/Cache
+      - ${MERGERFS_ROOT}/Media/Movies:/data/Movies
+      - ${MERGERFS_ROOT}/Media/Movies_ITA:/data/Movies_ITA
+      - ${MERGERFS_ROOT}/Media/Music:/data/Music
+      - ${MERGERFS_ROOT}/Media/Audiobook:/data/Audiobook
+      - /etc/localtime:/etc/localtime:ro
     environment:
       - DOCKER_MODS="linuxserver/mods:jellyfin-opencl-intel"
       - TZ=${TZ}
@@ -68,13 +68,13 @@ services:
       backup: true
     restart: unless-stopped
     container_name: calibre-web
-    image: "lscr.io/linuxserver/calibre-web:latest"
+    image: lscr.io/linuxserver/calibre-web:latest
     networks:
       apps:
         ipv4_address: ${MACVLAN_CALIBREWEB_IP}
     volumes:
-      - '${DOCKER_DIR}/calibre-web/config:/config'
-      - "${MERGERFS_ROOT}/Media/Books:/books"
+      - ${DOCKER_DIR}/calibre-web/config:/config
+      - ${MERGERFS_ROOT}/Media/Books:/books
     environment:
       - TZ=${TZ}
       - PUID=${PUID}
@@ -85,14 +85,14 @@ services:
       backup: true
     restart: unless-stopped
     container_name: kavita
-    image: "lscr.io/linuxserver/kavita:latest"
+    image: lscr.io/linuxserver/kavita:latest
     networks:
       apps:
         ipv4_address: ${MACVLAN_KAVITA_IP}
     volumes:
-      - '${DOCKER_DIR}/kavita/config:/config'
-      - "${MERGERFS_ROOT}/Media/Comics:/data/comics"
-      - "${MERGERFS_ROOT}/Media/Books:/data/books"
+      - ${DOCKER_DIR}/kavita/config:/config
+      - ${MERGERFS_ROOT}/Media/Comics:/data/comics
+      - ${MERGERFS_ROOT}/Media/Books:/data/books
     environment:
       - TZ=${TZ}
       - PUID=${PUID}
@@ -108,4 +108,4 @@ services:
       apps:
         ipv4_address: ${MACVLAN_WATCHSTATE_IP}
     volumes:
-      - "${DOCKER_DIR}/watchstate/data:/config:rw"
+      - ${DOCKER_DIR}/watchstate/data:/config:rw

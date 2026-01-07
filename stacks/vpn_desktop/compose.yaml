@@ -22,7 +22,7 @@ services:
       - 3000:3000
       - 3001:3001
     volumes:
-      - '${DOCKER_DIR}/gluetun:/gluetun'
+      - ${DOCKER_DIR}/gluetun:/gluetun
     environment:
       - VPN_SERVICE_PROVIDER=surfshark
       - VPN_TYPE=wireguard
@@ -37,11 +37,11 @@ services:
     labels:
       backup: true
     restart: unless-stopped
-    image: "fcolasuonno/remote-desktop:latest"
+    image: lscr.io/linuxserver/firefox:latest
     container_name: rdesktop
-    network_mode: "service:gluetun"
+    network_mode: service:gluetun
     devices:
-      - "/dev/dri:/dev/dri"
+      - /dev/dri:/dev/dri
     environment:
       - TZ=${TZ}
       - PUID=${PUID}
@@ -50,10 +50,10 @@ services:
       - NO_FULL=true
       - START_DOCKER=false
       - FM_HOME=/downloads
-      - PIN=${REMOTE_DESKTOP_PIN}
-      - CODE=${REMOTE_DESKTOP_CODE}
+      - DOCKER_MODS=linuxserver/mods:universal-package-install
+      - INSTALL_PACKAGES=wget|megatools|openjdk-17-jre|libmediainfo0v5|fonts-dejavu|bash|lxterminal|transmission|xrdp|thunar|adwaita-icon-theme|wireguard-tools|python3|python3-requests|pkexec|policykit-1|psmisc|python3-packaging|python3-psutil|python3-xdg
     volumes:
-      - '${DOCKER_DIR}/rdesktop/config:/config'
-      - "${MERGERFS_ROOT}/Media:/media"
-      - "${MERGERFS_ROOT}/Downloads:/downloads"
-    shm_size: "1gb"
+      - ${DOCKER_DIR}/rdesktop/config:/config
+      - ${MERGERFS_ROOT}/Media:/media
+      - ${MERGERFS_ROOT}/Downloads:/downloads
+    shm_size: 1gb

@@ -5,15 +5,6 @@ networks:
     external: true
 
 services:
-#  watchtower:
-#    labels:
-#      backup: true
-#    restart: unless-stopped
-#    container_name: watchtower
-#    image: "containrrr/watchtower"
-#    volumes:
-#      - "/var/run/docker.sock:/var/run/docker.sock"
-
   nginxproxymanager:
     restart: unless-stopped
     container_name: nginxproxymanager
@@ -22,25 +13,24 @@ services:
       apps:
         ipv4_address: ${MACVLAN_NGINXPROXYMANAGER_IP}
     ports:
-      - "80:80"
-      - "81:81"
-      - "443:443"
+      - 80:80
+      - 81:81
+      - 443:443
     volumes:
-      - "${DOCKER_DIR}/nginxproxymanager/data:/data"
-      - "${DOCKER_DIR}/nginxproxymanager/letsencrypt:/etc/letsencrypt"
-
+      - ${DOCKER_DIR}/nginxproxymanager/data:/data
+      - ${DOCKER_DIR}/nginxproxymanager/letsencrypt:/etc/letsencrypt
   cloudflared:
     labels:
       backup: true
     restart: unless-stopped
     container_name: cloudflared
     image: cloudflare/cloudflared:latest
-    command: "tunnel run"
+    command: tunnel run
     networks:
       apps:
         ipv4_address: ${MACVLAN_CLOUDFLARED_IP}
     volumes:
-      - '${DOCKER_DIR}/cloudflared/config:/home/nonroot/.cloudflared/'
+      - ${DOCKER_DIR}/cloudflared/config:/home/nonroot/.cloudflared/
     environment:
       - TZ=${TZ}
       - TUNNEL_TOKEN=${CLOUDFLARED_TUNNEL_TOKEN}
@@ -55,26 +45,9 @@ services:
       apps:
         ipv4_address: ${MACVLAN_DOCKGE_IP}
     volumes:
-      - '/var/run/docker.sock:/var/run/docker.sock'
-      - '${DOCKER_DIR}/dockge:/app/data'
-      - '${DOCKER_HOME}:${DOCKER_HOME}'
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${DOCKER_DIR}/dockge:/app/data
+      - ${DOCKER_HOME}:${DOCKER_HOME}
     environment:
-      - 'DOCKGE_STACKS_DIR=${DOCKER_HOME}'
+      - DOCKGE_STACKS_DIR=${DOCKER_HOME}
       - DOCKGE_ENABLE_CONSOLE=true
-
-  portainer:
-    labels:
-      backup: true
-    restart: unless-stopped
-    container_name: portainer
-    privileged: true
-    image: portainer/portainer-ce:latest
-    networks:
-      apps:
-        ipv4_address: ${MACVLAN_PORTAINER_IP}
-    volumes:
-      - '${DOCKER_DIR}/portainer/config:/data'
-      - '/var/run/docker.sock:/var/run/docker.sock'
-    environment:
-      - TZ=${TZ}
-      - START_DOCKER=false

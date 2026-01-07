@@ -13,9 +13,9 @@ services:
       apps:
         ipv4_address: ${MACVLAN_MQTT_HOST}
     volumes:
-      - "${DOCKER_DIR}/mqtt/config:/mosquitto/config"
-      - "${DOCKER_DIR}/mqtt/data:/mosquitto/data"
-      - "${DOCKER_DIR}/mqtt/log:/mosquitto/log"
+      - ${DOCKER_DIR}/mqtt/config:/mosquitto/config
+      - ${DOCKER_DIR}/mqtt/data:/mosquitto/data
+      - ${DOCKER_DIR}/mqtt/log:/mosquitto/log
     environment:
       - TZ=${TZ}
       - PUID=${PUID}
@@ -24,13 +24,13 @@ services:
   zigbee2mqtt:
     restart: unless-stopped
     container_name: zigbee2mqtt
-    image: "koenkk/zigbee2mqtt"
+    image: koenkk/zigbee2mqtt
     networks:
       apps:
         ipv4_address: ${MACVLAN_ZIGBEE2MQTT_IP}
     privileged: true
     volumes:
-      - '${DOCKER_DIR}/zigbee2mqtt/config:/app/data'
+      - ${DOCKER_DIR}/zigbee2mqtt/config:/app/data
     environment:
       - TZ=${TZ}
       - PUID=${PUID}
@@ -40,13 +40,13 @@ services:
   homeassistant:
     restart: unless-stopped
     container_name: homeassistant
-    image: "homeassistant/home-assistant:stable"
+    image: homeassistant/home-assistant:stable
     networks:
       apps:
         ipv4_address: ${MACVLAN_HOMEASSISTANT_IP}
     volumes:
-      - '${DOCKER_DIR}/homeassistant/config:/config'
-      - "${MERGERFS_ROOT}/Media/HomeAssistant:/media"
+      - ${DOCKER_DIR}/homeassistant/config:/config
+      - ${MERGERFS_ROOT}/Media/HomeAssistant:/media
     environment:
       - TZ=${TZ}
       - PUID=${PUID}
@@ -57,7 +57,7 @@ services:
       backup: true
     restart: unless-stopped
     container_name: mqttx
-    image: "emqx/mqttx-web"
+    image: emqx/mqttx-web
     networks:
       apps:
         ipv4_address: ${MACVLAN_MQTTX_IP}

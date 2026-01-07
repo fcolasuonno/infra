@@ -14,10 +14,10 @@ services:
       apps:
         ipv4_address: ${MACVLAN_BACKREST_IP}
     volumes:
-      - "${DOCKER_DIR}/backrest/data:/data"
-      - "${DOCKER_DIR}/backrest/config:/config"
-      - "${DOCKER_DIR}/backrest/cache:/cache"
-      - "${DOCKER_BACKUP_DIR}:/userdata"
+      - ${DOCKER_DIR}/backrest/data:/data
+      - ${DOCKER_DIR}/backrest/config:/config
+      - ${DOCKER_DIR}/backrest/cache:/cache
+      - ${DOCKER_BACKUP_DIR}:/userdata
     environment:
       - BACKREST_DATA=/data
       - BACKREST_CONFIG=/config/config.json
