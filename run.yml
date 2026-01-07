@@ -51,11 +51,6 @@
         tags:
           - docker
 
-      - import_playbook: deploy_stacks.yml
-        tags:
-          - containers
-          - compose
-
     #
     # Security
     #
