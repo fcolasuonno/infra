@@ -22,13 +22,13 @@
   tasks:
     - name: Check if macvlan network exists
       community.docker.docker_network_info:
-        name: "{{ macvlan_network_name | default('apps') }}"
+        name: "compose_apps"
       register: macvlan_network_info
       tags: always
 
     - name: Attempt to create macvlan network
       community.docker.docker_network:
-        name: "{{ macvlan_network_name | default('apps') }}"
+        name: "compose_apps"
         driver: macvlan
         driver_options:
           parent: "{{ macvlan_interface }}"

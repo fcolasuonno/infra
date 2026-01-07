@@ -1,7 +1,7 @@
 
 networks:
   apps:
-    name: ${MACVLAN_NETWORK_NAME}
+    name: "compose_apps"
     external: true
 
 services:
