@@ -11,7 +11,7 @@ services:
     image: eclipse-mosquitto
     networks:
       apps:
-        ipv4_address: ${MACVLAN_MQTT_HOST}
+        ipv4_address: ${MACVLAN_MQTT_IP}
     volumes:
       - ${DOCKER_DIR}/mqtt/config:/mosquitto/config
       - ${DOCKER_DIR}/mqtt/data:/mosquitto/data

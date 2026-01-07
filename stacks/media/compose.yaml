@@ -13,7 +13,7 @@ services:
     image: lscr.io/linuxserver/plex:latest
     networks:
       apps:
-        ipv4_address: ${MACVLAN_PLEX_HOST}
+        ipv4_address: ${MACVLAN_PLEX_IP}
     privileged: true
     devices:
       - /dev/dri:/dev/dri

@@ -51,3 +51,5 @@ services:
     environment:
       - DOCKGE_STACKS_DIR=${DOCKER_HOME}
       - DOCKGE_ENABLE_CONSOLE=true
+
+  
