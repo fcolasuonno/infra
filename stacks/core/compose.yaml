@@ -5,20 +5,29 @@ networks:
     external: true
 
 services:
-  nginxproxymanager:
+  caddy:
     restart: unless-stopped
-    container_name: nginxproxymanager
-    image: jc21/nginx-proxy-manager:latest
+    container_name: caddy
+    build:
+      context: ./caddy
     networks:
       apps:
-        ipv4_address: ${MACVLAN_NGINXPROXYMANAGER_IP}
+        ipv4_address: ${MACVLAN_CADDY_IP}
     ports:
       - 80:80
-      - 81:81
       - 443:443
+      - 2015:2015
     volumes:
-      - ${DOCKER_DIR}/nginxproxymanager/data:/data
-      - ${DOCKER_DIR}/nginxproxymanager/letsencrypt:/etc/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${DOCKER_DIR}/caddy/data:/data
+      - ${DOCKER_DIR}/caddy/config:/config
+      - ./Caddyfile.mqtt:/etc/caddy/Caddyfile.mqtt # Mount the custom Caddyfile
+    labels:
+      caddy.email: ${CLOUDFLARE_CADDY_EMAIL}
+      caddy.acme_dns: "cloudflare ${CLOUDFLARE_CADDY_API_TOKEN}"
+    environment:
+      - CADDY_EXTRA_CONFIGS=/etc/caddy/Caddyfile.mqtt # Include this custom Caddyfile
+
   cloudflared:
     labels:
       backup: true
@@ -38,6 +47,8 @@ services:
   dockge:
     labels:
       backup: true
+      caddy: "dockge.muletto.colasuonno.net"
+      caddy.reverse_proxy: "{{upstreams 5001}}"
     restart: unless-stopped
     container_name: dockge
     image: louislam/dockge:1
@@ -51,5 +62,3 @@ services:
     environment:
       - DOCKGE_STACKS_DIR=${DOCKER_HOME}
       - DOCKGE_ENABLE_CONSOLE=true
-
-  

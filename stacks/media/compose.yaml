@@ -8,6 +8,8 @@ services:
   plex:
     labels:
       backup: true
+      caddy: "plex.muletto.colasuonno.net"
+      caddy.reverse_proxy: "{{upstreams 32400}}"
     restart: unless-stopped
     container_name: plex
     image: lscr.io/linuxserver/plex:latest
@@ -35,6 +37,8 @@ services:
   jellyfin:
     labels:
       backup: true
+      caddy: "jellyfin.muletto.colasuonno.net"
+      caddy.reverse_proxy: "{{upstreams 8096}}"
     restart: unless-stopped
     container_name: jellyfin
     image: ghcr.io/linuxserver/jellyfin:latest
@@ -66,6 +70,8 @@ services:
   calibre-web:
     labels:
       backup: true
+      caddy: "calibre-web.muletto.colasuonno.net"
+      caddy.reverse_proxy: "{{upstreams 8083}}"
     restart: unless-stopped
     container_name: calibre-web
     image: lscr.io/linuxserver/calibre-web:latest
@@ -83,6 +89,8 @@ services:
   kavita:
     labels:
       backup: true
+      caddy: "kavita.muletto.colasuonno.net"
+      caddy.reverse_proxy: "{{upstreams 5000}}"
     restart: unless-stopped
     container_name: kavita
     image: lscr.io/linuxserver/kavita:latest
@@ -101,6 +109,8 @@ services:
   watchstate:
     labels:
       backup: true
+      caddy: "watchstate.muletto.colasuonno.net"
+      caddy.reverse_proxy: "{{upstreams 8080}}"
     image: ghcr.io/arabcoders/watchstate:latest
     container_name: watchstate
     restart: unless-stopped

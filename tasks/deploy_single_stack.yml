@@ -11,13 +11,28 @@
     group: "users"
     mode: "0755"
 
-- name: "Template compose.yaml for {{ stack_name }}"
-  ansible.builtin.template:
+- name: "Copy compose.yaml for {{ stack_name }}"
+  ansible.builtin.copy:
     src: "{{ stack_file.path }}/compose.yaml"
     dest: "{{ remote_stacks_dir }}/{{ stack_name }}/compose.yaml"
     owner: "{{ username }}"
     group: "users"
     mode: "0644"
+
+- name: "Check if caddy directory exists for {{ stack_name }}"
+  stat:
+    path: "{{ stack_file.path }}/caddy"
+  register: caddy_dir_stat
+  delegate_to: localhost
+  become: false
+
+- name: "Copy caddy directory for {{ stack_name }}"
+  ansible.builtin.copy:
+    src: "{{ stack_file.path }}/caddy"
+    dest: "{{ remote_stacks_dir }}/{{ stack_name }}/"
+    owner: "{{ username }}"
+    group: "users"
+  when: caddy_dir_stat.stat.exists
 
 - name: "Check if .env template exists for {{ stack_name }}"
   ansible.builtin.stat:

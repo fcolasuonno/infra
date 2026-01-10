@@ -1,0 +1,11 @@
+{
+  # Global options
+  debug
+}
+
+:1883 {
+  reverse_proxy mqtt:1883 {
+    # This ensures raw TCP is proxied without Caddy doing HTTP/TLS handshaking
+    transport tcp
+  }
+}

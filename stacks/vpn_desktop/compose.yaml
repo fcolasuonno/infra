@@ -8,6 +8,8 @@ services:
   gluetun:
     labels:
       backup: true
+      caddy: "rdesktop.muletto.colasuonno.net"
+      caddy.reverse_proxy: "{{upstreams 3000}}"
     image: qmcgaw/gluetun
     container_name: gluetun
     restart: unless-stopped

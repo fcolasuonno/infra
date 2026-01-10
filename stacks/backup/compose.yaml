@@ -8,6 +8,8 @@ services:
   backrest:
     labels:
       backup: true
+      caddy: "backrest.muletto.colasuonno.net"
+      caddy.reverse_proxy: "{{upstreams 9898}}"
     image: garethgeorge/backrest
     container_name: backrest
     networks:

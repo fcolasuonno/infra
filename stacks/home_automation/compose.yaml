@@ -6,6 +6,10 @@ networks:
 
 services:
   mqtt:
+    labels:
+      caddy: "wss-mqtt.muletto.colasuonno.net"
+      caddy.reverse_proxy: "{{upstreams 9001}}"
+      caddy.websocket: "true"
     restart: unless-stopped
     container_name: mqtt
     image: eclipse-mosquitto
@@ -22,6 +26,9 @@ services:
       - PGID=${PGID}
 
   zigbee2mqtt:
+    labels:
+      caddy: "zigbee2mqtt.muletto.colasuonno.net"
+      caddy.reverse_proxy: "{{upstreams 8080}}"
     restart: unless-stopped
     container_name: zigbee2mqtt
     image: koenkk/zigbee2mqtt
@@ -38,6 +45,9 @@ services:
       - START_DOCKER=false
 
   homeassistant:
+    labels:
+      caddy: "hass.muletto.colasuonno.net, homeassistant.muletto.colasuonno.net"
+      caddy.reverse_proxy: "{{upstreams 8123}}"
     restart: unless-stopped
     container_name: homeassistant
     image: homeassistant/home-assistant:stable
@@ -55,6 +65,8 @@ services:
   mqttx:
     labels:
       backup: true
+      caddy: "mqttx.muletto.colasuonno.net"
+      caddy.reverse_proxy: "{{upstreams 80}}"
     restart: unless-stopped
     container_name: mqttx
     image: emqx/mqttx-web

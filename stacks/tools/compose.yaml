@@ -6,6 +6,9 @@ networks:
 
 services:
   changedetection:
+    labels:
+      caddy: "changedetection.muletto.colasuonno.net"
+      caddy.reverse_proxy: "{{upstreams 5000}}"
     image: ghcr.io/dgtlmoon/changedetection.io
     container_name: changedetection
     hostname: changedetection
@@ -23,6 +26,8 @@ services:
   cloudcmd:
     labels:
       backup: true
+      caddy: "cloudcmd.muletto.colasuonno.net"
+      caddy.reverse_proxy: "{{upstreams 8000}}"
     restart: unless-stopped
     container_name: cloudcmd
     image: coderaiser/cloudcmd
@@ -41,6 +46,8 @@ services:
   homarr:
     labels:
       backup: true
+      caddy: "homarr.muletto.colasuonno.net, muletto.colasuonno.net"
+      caddy.reverse_proxy: "{{upstreams 7575}}"
     restart: unless-stopped
     container_name: homarr
     image: ghcr.io/ajnart/homarr:latest
@@ -57,6 +64,8 @@ services:
   code-server:
     labels:
       backup: true
+      caddy: "code-server.muletto.colasuonno.net, codeserver.muletto.colasuonno.net"
+      caddy.reverse_proxy: "{{upstreams 8443}}"
     image: lscr.io/linuxserver/code-server:latest
     container_name: code-server
     networks:

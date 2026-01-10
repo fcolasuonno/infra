@@ -8,6 +8,8 @@ services:
   bambustudio:
     labels:
       backup: true
+      caddy: "bambustudio.muletto.colasuonno.net"
+      caddy.reverse_proxy: "{{upstreams 3000}}"
     image: lscr.io/linuxserver/bambustudio:latest
     container_name: bambustudio
     networks:
@@ -31,6 +33,8 @@ services:
   orcaslicer:
     labels:
       backup: true
+      caddy: "orcaslicer.muletto.colasuonno.net"
+      caddy.reverse_proxy: "{{upstreams 3000}}"
     image: lscr.io/linuxserver/orcaslicer:latest
     container_name: orcaslicer
     networks:
