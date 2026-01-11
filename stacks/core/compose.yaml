@@ -8,15 +8,13 @@ services:
   caddy:
     restart: unless-stopped
     container_name: caddy
-    build:
-      context: ./caddy
+    image: fcolasuonno/caddy-docker-proxy-cloudflare-dns
     networks:
       apps:
         ipv4_address: ${MACVLAN_CADDY_IP}
     ports:
       - 80:80
       - 443:443
-      - 2015:2015
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${DOCKER_DIR}/caddy/data:/data

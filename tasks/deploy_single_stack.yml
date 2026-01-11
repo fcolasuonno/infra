@@ -19,28 +19,6 @@
     group: "users"
     mode: "0644"
 
-- name: "Check if caddy directory exists for {{ stack_name }}"
-  stat:
-    path: "{{ stack_file.path }}/caddy"
-  register: caddy_dir_stat
-  delegate_to: localhost
-  become: false
-
-- name: "Copy caddy directory for {{ stack_name }}"
-  ansible.builtin.copy:
-    src: "{{ stack_file.path }}/caddy"
-    dest: "{{ remote_stacks_dir }}/{{ stack_name }}/"
-    owner: "{{ username }}"
-    group: "users"
-  when: caddy_dir_stat.stat.exists
-
-- name: "Check if .env template exists for {{ stack_name }}"
-  ansible.builtin.stat:
-    path: "{{ stack_file.path }}/.env.j2"
-  register: env_template_stat
-  delegate_to: localhost
-  become: false
-
 - name: "Template .env file for {{ stack_name }}"
   ansible.builtin.template:
     src: "{{ stack_file.path }}/.env.j2"
@@ -48,7 +26,6 @@
     owner: "{{ username }}"
     group: "users"
     mode: "0600"
-  when: env_template_stat.stat.exists
 
 - name: "Deploy {{ stack_name }} stack with docker-compose"
   community.docker.docker_compose_v2:
