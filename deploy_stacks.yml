@@ -60,15 +60,6 @@
         mode: "0755"
       tags: home_automation
 
-    - name: Copy mosquitto.conf
-      ansible.builtin.copy:
-        src: "{{ local_stacks_dir }}/home_automation/mosquitto.conf"
-        dest: "{{ docker_dir }}/mqtt/config/mosquitto.conf"
-        owner: "{{ username }}"
-        group: "users"
-        mode: "0644"
-      tags: home_automation
-
     - name: Generate mosquitto password
       ansible.builtin.shell:
         cmd: "docker run --rm -v {{ docker_dir }}/mqtt/config:/mosquitto/config eclipse-mosquitto mosquitto_passwd -b -c /mosquitto/config/mosquitto.passwd mosquitto {{ mqtt_password }}"

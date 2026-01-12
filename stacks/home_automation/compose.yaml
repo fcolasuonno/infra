@@ -1,3 +1,14 @@
+configs:
+  mosquitto_config:
+    content: |
+      user mosquitto
+      password_file /mosquitto/passwd/mosquitto.passwd
+      port 1883
+      listener 9001
+      protocol websockets
+      persistence true
+      persistence_location /mosquitto/data
+      allow_anonymous false
 
 networks:
   apps:
@@ -13,8 +24,11 @@ services:
     networks:
       apps:
         ipv4_address: ${MACVLAN_MQTT_IP}
+    configs:
+      - source: mosquitto_config
+        target: /mosquitto/config/mosquitto.conf
     volumes:
-      - ${DOCKER_DIR}/mqtt/config:/mosquitto/config
+      - ${DOCKER_DIR}/mqtt/config:/mosquitto/passwd
       - ${DOCKER_DIR}/mqtt/data:/mosquitto/data
       - ${DOCKER_DIR}/mqtt/log:/mosquitto/log
     environment:
