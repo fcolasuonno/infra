@@ -8,8 +8,6 @@ services:
   gluetun:
     labels:
       backup: true
-      caddy: "rdesktop.muletto.colasuonno.net"
-      caddy.reverse_proxy: "{{upstreams 3000}}"
     image: qmcgaw/gluetun
     container_name: gluetun
     restart: unless-stopped
@@ -21,7 +19,7 @@ services:
       apps:
         ipv4_address: ${MACVLAN_GLUETUN_IP}
     ports:
-      - 3000:3000
+      - 3000:3000 # rdesktop
       - 3001:3001
     volumes:
       - ${DOCKER_DIR}/gluetun:/gluetun
@@ -38,6 +36,8 @@ services:
   rdesktop:
     labels:
       backup: true
+      caddy: rdesktop.muletto.colasuonno.net
+      caddy.reverse_proxy: gluetun:3000
     restart: unless-stopped
     image: lscr.io/linuxserver/firefox:latest
     container_name: rdesktop
