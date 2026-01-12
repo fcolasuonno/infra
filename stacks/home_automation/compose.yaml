@@ -1,9 +1,8 @@
 
 networks:
   apps:
-    name: "compose_apps"
+    name: compose_apps
     external: true
-
 services:
   mqtt:
     restart: unless-stopped
@@ -22,10 +21,27 @@ services:
       - TZ=${TZ}
       - PUID=${PUID}
       - PGID=${PGID}
-
+  mqttui:
+    labels:
+      backup: true
+      caddy: mqttui.muletto.colasuonno.net
+      caddy.reverse_proxy: "{{upstreams 5000}}"
+    restart: unless-stopped
+    container_name: mqttui
+    image: terdia07/mqttui:latest
+    networks:
+      apps:
+        ipv4_address: ${MACVLAN_MQTTUI_IP}
+    environment:
+      - MQTT_BROKER=mqtt
+      - MQTT_USERNAME=${MQTT_USERNAME}
+      - MQTT_PASSWORD=${MQTT_PASSWORD}
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
   zigbee2mqtt:
     labels:
-      caddy: "zigbee2mqtt.muletto.colasuonno.net"
+      caddy: zigbee2mqtt.muletto.colasuonno.net
       caddy.reverse_proxy: "{{upstreams 8080}}"
     restart: unless-stopped
     container_name: zigbee2mqtt
@@ -41,10 +57,9 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - START_DOCKER=false
-
   homeassistant:
     labels:
-      caddy: "hass.muletto.colasuonno.net, homeassistant.muletto.colasuonno.net"
+      caddy: hass.muletto.colasuonno.net, homeassistant.muletto.colasuonno.net
       caddy.reverse_proxy: "{{upstreams 8123}}"
     restart: unless-stopped
     container_name: homeassistant
@@ -59,21 +74,6 @@ services:
       - TZ=${TZ}
       - PUID=${PUID}
       - PGID=${PGID}
-
-  mqttx:
-    labels:
-      backup: true
-    restart: unless-stopped
-    container_name: mqttx
-    image: emqx/mqttx-web
-    networks:
-      apps:
-        ipv4_address: ${MACVLAN_MQTTX_IP}
-    environment:
-      - TZ=${TZ}
-      - PUID=${PUID}
-      - PGID=${PGID}
-
   apcupsd:
     labels:
       backup: true
