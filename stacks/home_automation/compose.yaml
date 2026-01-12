@@ -6,13 +6,11 @@ networks:
 
 services:
   mqtt:
-    labels:
-      caddy: "wss-mqtt.muletto.colasuonno.net"
-      caddy.reverse_proxy: "{{upstreams 9001}}"
-      caddy.websocket: "true"
     restart: unless-stopped
     container_name: mqtt
     image: eclipse-mosquitto
+    labels:
+      caddy.layer4.:1883.route.proxy: "{{ upstreams 1883 }}"
     networks:
       apps:
         ipv4_address: ${MACVLAN_MQTT_IP}
@@ -65,8 +63,6 @@ services:
   mqttx:
     labels:
       backup: true
-      caddy: "mqttx.muletto.colasuonno.net"
-      caddy.reverse_proxy: "{{upstreams 80}}"
     restart: unless-stopped
     container_name: mqttx
     image: emqx/mqttx-web
