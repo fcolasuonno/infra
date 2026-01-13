@@ -1,9 +1,7 @@
-
 networks:
   apps:
-    name: "compose_apps"
+    name: compose_apps
     external: true
-
 services:
   gluetun:
     labels:
@@ -21,6 +19,12 @@ services:
     ports:
       - 3000:3000 # rdesktop
       - 3001:3001
+      - 9696:9696 # prowlarr
+      - 7878:7878 # radarr
+      - 8989:8989 # sonarr
+      - 6767:6767 # bazarr
+      - 9091:9091 # transmission
+      - 51413:51413 # transmission
     volumes:
       - ${DOCKER_DIR}/gluetun:/gluetun
     environment:
@@ -32,13 +36,14 @@ services:
       - WIREGUARD_PUBLIC_KEY=${SURFSHARK_PUBLIC_KEY}
       - WIREGUARD_ADDRESSES=${SURFSHARK_ADDRESS}
       - SERVER_COUNTRIES=${SURFSHARK_COUNTRIES}
-
   rdesktop:
     labels:
       backup: true
       caddy: rdesktop.muletto.colasuonno.net
       caddy.reverse_proxy: gluetun:3000
     restart: unless-stopped
+    depends_on:
+      - gluetun
     image: lscr.io/linuxserver/firefox:latest
     container_name: rdesktop
     network_mode: service:gluetun
@@ -51,11 +56,104 @@ services:
       - DRINODE=/dev/dri/renderD128
       - NO_FULL=true
       - START_DOCKER=false
-      - FM_HOME=/downloads
+      - FM_HOME=/storage/Downloads
       - DOCKER_MODS=linuxserver/mods:universal-package-install
-      - INSTALL_PACKAGES=wget|megatools|openjdk-17-jre|libmediainfo0v5|fonts-dejavu|bash|lxterminal|transmission|xrdp|thunar|adwaita-icon-theme|wireguard-tools|python3|python3-requests|pkexec|policykit-1|psmisc|python3-packaging|python3-psutil|python3-xdg
+      - INSTALL_PACKAGES=wget|megatools|openjdk-17-jre|libmediainfo0v5|fonts-dejavu|bash|lxterminal|xrdp|thunar|adwaita-icon-theme
     volumes:
       - ${DOCKER_DIR}/rdesktop/config:/config
-      - ${MERGERFS_ROOT}/Media:/media
-      - ${MERGERFS_ROOT}/Downloads:/downloads
+      - ${MERGERFS_ROOT}:/storage
     shm_size: 1gb
+  prowlarr:
+    labels:
+      backup: true
+      caddy: prowlarr.muletto.colasuonno.net
+      caddy.reverse_proxy: gluetun:9696
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    depends_on:
+      - gluetun
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - UMASK=002
+    volumes:
+      - ${DOCKER_DIR}/prowlarr:/config
+    network_mode: service:gluetun
+    restart: unless-stopped
+  radarr:
+    labels:
+      backup: true
+      caddy: radarr.muletto.colasuonno.net
+      caddy.reverse_proxy: gluetun:7878
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    depends_on:
+      - gluetun
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - UMASK=002
+    volumes:
+      - ${DOCKER_DIR}/radarr:/config
+      - ${MERGERFS_ROOT}:/storage
+    network_mode: service:gluetun
+    restart: unless-stopped
+  sonarr:
+    labels:
+      backup: true
+      caddy: sonarr.muletto.colasuonno.net
+      caddy.reverse_proxy: gluetun:8989
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    depends_on:
+      - gluetun
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - UMASK=002
+    volumes:
+      - ${DOCKER_DIR}/sonarr:/config
+      - ${MERGERFS_ROOT}:/storage
+    network_mode: service:gluetun
+    restart: unless-stopped
+  bazarr:
+    labels:
+      backup: true
+      caddy: bazarr.muletto.colasuonno.net
+      caddy.reverse_proxy: gluetun:6767
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    depends_on:
+      - gluetun
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - UMASK=002
+    volumes:
+      - ${DOCKER_DIR}/bazarr:/config
+      - ${MERGERFS_ROOT}:/storage
+    network_mode: service:gluetun
+    restart: unless-stopped
+  transmission:
+    labels:
+      backup: true
+      caddy: transmission.muletto.colasuonno.net
+      caddy.reverse_proxy: gluetun:9091
+    image: lscr.io/linuxserver/transmission:latest
+    container_name: transmission
+    depends_on:
+      - gluetun
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - UMASK=002
+    volumes:
+      - ${DOCKER_DIR}/transmission:/config
+      - ${MERGERFS_ROOT}:/storage
+    network_mode: service:gluetun
+    restart: unless-stopped
