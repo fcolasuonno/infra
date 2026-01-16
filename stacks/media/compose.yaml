@@ -50,14 +50,8 @@ services:
       - /dev/dri:/dev/dri
     volumes:
       - ${DOCKER_DIR}/jellyfin:/config
-      - ${MERGERFS_ROOT}/Media/TV:/data/TV
       - ${MERGERFS_ROOT_SLOW}/Media/Transcodes:/config/data/transcodes
-      - ${MERGERFS_ROOT}/Media/Metadata:/metadata
-      - ${MERGERFS_ROOT}/Media/Cache:/data/Cache
-      - ${MERGERFS_ROOT}/Media/Movies:/data/Movies
-      - ${MERGERFS_ROOT}/Media/Movies_ITA:/data/Movies_ITA
-      - ${MERGERFS_ROOT}/Media/Music:/data/Music
-      - ${MERGERFS_ROOT}/Media/Audiobook:/data/Audiobook
+      - ${MERGERFS_ROOT}:/storage
       - /etc/localtime:/etc/localtime:ro
     environment:
       - DOCKER_MODS="linuxserver/mods:jellyfin-opencl-intel"
@@ -66,7 +60,25 @@ services:
       - PGID=${PGID}
       - START_DOCKER=false
       - DRINODE=/dev/dri/renderD128
-
+  jellyseer:
+    labels:
+      backup: true
+      caddy: jellyseer.muletto.colasuonno.net
+      caddy.reverse_proxy: "{{upstreams 5055}}"
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseer
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - LOG_LEVEL=debug
+    volumes:
+      - ${DOCKER_DIR}/jellyseer:/app/config
+      - ${MERGERFS_ROOT}:/storage
+    networks:
+      apps:
+        ipv4_address: ${MACVLAN_JELLYSEER_IP}
+    restart: unless-stopped
   calibre-web:
     labels:
       backup: true
@@ -105,17 +117,3 @@ services:
       - TZ=${TZ}
       - PUID=${PUID}
       - PGID=${PGID}
-
-  watchstate:
-    labels:
-      backup: true
-      caddy: "watchstate.muletto.colasuonno.net"
-      caddy.reverse_proxy: "{{upstreams 8080}}"
-    image: ghcr.io/arabcoders/watchstate:latest
-    container_name: watchstate
-    restart: unless-stopped
-    networks:
-      apps:
-        ipv4_address: ${MACVLAN_WATCHSTATE_IP}
-    volumes:
-      - ${DOCKER_DIR}/watchstate/data:/config:rw
